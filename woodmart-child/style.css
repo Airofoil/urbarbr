@@ -11,8 +11,59 @@
 
 /* start here */
 
+/* Footer */
 .footer-column {
 	display: flex;
-	align-items: center;
+/* 	align-items: center;  */
 	justify-content: center;
+}
+
+.widget_nav_menu ul li a {
+	font-family: "Poppins", Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    text-transform: capitalize;
+    color: rgb(136,150,162)!important;
+}
+
+/* Homepage */
+.testimonials-des {
+	color: #ffffff;
+	font-family: "Poppins", Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+	line-height: 26.5px;
+}
+
+.top-picks {
+	aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	margin-bottom: 0;
+}
+
+.top-picks p {
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 20px;
+	text-transform: uppercase;
+}
+
+.homepage-title-top {
+	color: #586B7D;
+	font-weight: 600;
+	font-size: 20px;
+	text-transform: capitalize;
+	line-height: 24px;
+	opacity: 0.5;
+}
+
+.homepage-title {
+	color: #102C45;
+	font-weight: 700;
+	font-size: 35px;
+	text-transform: capitalize;
+	line-height: 42px;
 }
