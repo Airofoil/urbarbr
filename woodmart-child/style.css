@@ -67,3 +67,29 @@
 	text-transform: capitalize;
 	line-height: 42px;
 }
+
+.homepage-title-over {
+	font-family: Poppins;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 40px;
+	line-height: 42px;
+	color: #102C45;
+}
+
+@media only screen and (min-width: 1300px) {
+	.homeurbarbrmemo .section-title {
+		width: 180px;
+	}
+}
+
+.homeurbarbrmemo .section-title {
+	width: 160px;
+	margin: 0 auto -24px;
+	z-index: 1;
+	position: relative;
+}
+
+.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
+	min-height: 526px!important;
+}
