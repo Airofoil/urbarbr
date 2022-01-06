@@ -28,6 +28,27 @@
 }
 
 /* Homepage */
+.home-banner-wel {
+	font-style: normal;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 24px;
+	text-transform: capitalize;
+	color: #001F35;
+	opacity: 0.5;
+	margin-bottom: 15px;
+}
+
+.home-banner-title {
+	font-weight: bold;
+	font-size: 48px;
+	line-height: 58px;
+}
+
+.testimonials-section {
+	margin-top: 30px;
+}
+
 .testimonials-des {
 	color: #ffffff;
 	font-family: "Poppins", Arial, Helvetica, sans-serif;
@@ -58,6 +79,7 @@
 	text-transform: capitalize;
 	line-height: 24px;
 	opacity: 0.5;
+	margin-bottom: 15px;
 }
 
 .homepage-title {
@@ -77,12 +99,6 @@
 	color: #102C45;
 }
 
-@media only screen and (min-width: 1300px) {
-	.homeurbarbrmemo .section-title {
-		width: 180px;
-	}
-}
-
 .homeurbarbrmemo .section-title {
 	width: 160px;
 	margin: 0 auto -24px;
@@ -92,4 +108,150 @@
 
 .home-image-hover .vc-hoverbox .vc-hoverbox-inner {
 	min-height: 526px!important;
+}
+
+.homeurbarbrmemo .home-memo-subscribe-form {
+	position: relative;
+    margin: -30px 17px 60px;
+    padding: 30px 20px;
+    z-index: 1;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.memo-form-title {
+	margin-bottom: 0;
+	font-weight: 500;
+	font-size: 19px;
+	line-height: 23px;
+	color: #8896A2;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+	color: #9A9A9A !important;
+	opacity: 1;
+	letter-spacing: 0.03em;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #9A9A9A !important;
+    opacity: 1;
+	letter-spacing: 0.03em;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #9A9A9A !important;
+    opacity: 1;
+	letter-spacing: 0.03em;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #9A9A9A !important;
+    opacity: 1;
+	letter-spacing: 0.03em;
+}
+
+.wpcf7-submit {
+	background: #657F97;
+    width: 55%;
+    color: #ffffff;
+    text-transform: inherit;
+}
+
+.wpcf7-submit#barber {
+	margin-bottom: 20px;
+}
+	
+div.wpcf7 .wpcf7-spinner {
+	margin-left: 0;
+}
+
+.product-section-title {
+	font-weight: 600;
+	font-size: 50px;
+	line-height: 50.5px;
+	color: #284158;
+	margin-top: 50px;
+}
+
+.product-section-des {
+	font-style: normal;
+	font-weight: normal;
+	font-size: 22px;
+	line-height: 42px;
+	color: #102C45;
+}
+
+.product-section .production-section-button {
+	width: 100%;
+	background: #102C45;
+	color: #ffffff;
+    text-transform: capitalize;
+}
+
+.product-section .production-section-button:hover {
+	color: #ffffff;
+    background-color: rgba(101,101,101,1);
+}
+
+.slide-product .wd-hover-tiled .product-wrapper {
+	box-shadow: none;
+}
+
+.slide-product .wd-hover-tiled .product-element-bottom {
+	background-color: unset;
+}
+
+@media only screen and (min-width: 1300px) {
+	.homeurbarbrmemo .section-title {
+		width: 180px;
+	}
+	
+	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
+		min-height: 500px!important;
+	}
+	
+	.homeurbarbrmemo .home-memo-subscribe-form {
+		max-width: 62.5%;
+	}
+}
+
+@media only screen and (min-width: 1024px) and (max-width 1299px) {
+	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
+		min-height: 380px!important;
+	}
+}
+
+@media only screen and (min-width: 768px) and (max-width 1024px) {
+	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
+		min-height: 310px!important;
+	}
+	
+	.homeurbarbrmemo .home-memo-subscribe-form {
+		max-width: 70%;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
+		min-height: 340px!important;
+	}	
+}
+
+@media (min-width: 640px) {
+	.homeurbarbrmemo .home-memo-subscribe-form {
+		width: 80%;
+		margin: -55px auto 23px;
+		padding: 30px 60px;
+	}
+	
+	.wpcf7-submit {
+		width: 49%;	
+	}
+	
+	.wpcf7-submit#barber {
+		margin-right: 1%;
+		margin-bottom: 0;
+	}
+
+	.wpcf7-submit#customer {
+		margin-left: 1%;
+	}
 }
