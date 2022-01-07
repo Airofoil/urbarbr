@@ -11,6 +11,10 @@
 
 /* start here */
 
+.main-page-wrapper {
+	margin-top: 90px;
+}
+
 /* Footer */
 .footer-column {
 	display: flex;
@@ -28,6 +32,10 @@
 }
 
 /* Homepage */
+body.home .main-page-wrapper {
+	margin-top: -40px!important;
+}
+
 .home-banner-wel {
 	font-style: normal;
 	font-weight: 600;
@@ -199,6 +207,15 @@ div.wpcf7 .wpcf7-spinner {
 	background-color: unset;
 }
 
+.accordion-slider p.as-layer.testimonials-double-quote.testimonials-double-quote {
+	font-style: normal;
+	font-weight: normal;
+	font-size: 100px;
+	line-height: 26px;
+	letter-spacing: 0.05em;
+	color: #FFFFFF;
+}
+
 @media only screen and (min-width: 1300px) {
 	.homeurbarbrmemo .section-title {
 		width: 180px;
@@ -253,5 +270,11 @@ div.wpcf7 .wpcf7-spinner {
 
 	.wpcf7-submit#customer {
 		margin-left: 1%;
+	}
+}
+
+@media (max-width: 639px) {
+	.footer-column-3, .footer-column-4, .footer-column-5 {
+		justify-content: unset;
 	}
 }
