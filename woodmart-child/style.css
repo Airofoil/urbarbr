@@ -284,7 +284,20 @@ div.wpcf7 .wpcf7-spinner {
 	display: none;
 }
 
-.woocommerce-billing-fields #billing_company, .woocommerce-billing-fields #billing_country_field, .woocommerce-billing-fields #billing_address_1_field, .woocommerce-billing-fields #billing_address_2_field, .woocommerce-billing-fields #billing_city_field, .woocommerce-billing-fields #billing_state_field, .woocommerce-billing-fields #billing_postcode_field, .woocommerce-billing-fields #billing_phone_field
+.woocommerce-billing-fields #billing_company, .woocommerce-billing-fields #billing_country_field, .woocommerce-billing-fields #billing_address_1_field, .woocommerce-billing-fields #billing_address_2_field, .woocommerce-billing-fields #billing_city_field, .woocommerce-billing-fields #billing_state_field, .woocommerce-billing-fields #billing_postcode_field
 {
 	display: none!important;
+}
+
+#order_review_heading {
+	text-align: left;
+	text-transform: capitalize;
+}
+
+.checkout-order-review:before, .checkout-order-review:after {
+	display: none;
+}
+
+.checkout-order-review {
+	background-color: unset;
 }
