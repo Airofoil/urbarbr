@@ -115,3 +115,6 @@ function my_custom_payment_fragment( $fragments ) {
 
 	return $fragments;
 }
+
+
+	
