@@ -138,6 +138,10 @@ function my_custom_payment_fragment( $fragments ) {
 	return $fragments;
 }
 
+<<<<<<< HEAD
+
+	
+=======
 function filter_gettext( $translated, $text, $domain  ) {
   if( $text == 'Your order' && is_checkout() && ! is_wc_endpoint_url() ) {
       // Loop through cart items
@@ -151,3 +155,4 @@ function filter_gettext( $translated, $text, $domain  ) {
   return $translated;
 }
 add_filter( 'gettext',  'filter_gettext', 10, 3 );
+>>>>>>> 3d2c64f8b3dac4705759d9ccf49f8859d655d33d
