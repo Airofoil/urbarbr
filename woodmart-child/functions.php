@@ -106,3 +106,29 @@ function wpse27856_set_content_type(){
     return "text/html";
 }
 add_filter( 'wp_mail_content_type','wpse27856_set_content_type' );
+
+//add_action( 'woocommerce_after_single_product_summary', 'comments_template', 50 );
+add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
+function woo_remove_product_tabs( $tabs ) {
+    unset( $tabs['reviews'] );  // Removes the reviews tab
+    return $tabs;
+}
+function new_orders_columns( $columns = array() ) {
+    // Hide the columns
+    if( isset($columns['order-total']) ) {
+        // Unsets the columns which you want to hide
+        unset( $columns['order-number'] );
+        unset( $columns['order-date'] );
+        unset( $columns['order-status'] );
+        unset( $columns['order-total'] );
+        unset( $columns['order-actions'] );
+    }
+    // Add new columns
+    $columns['order-number'] = __( 'Order', 'woocommerce' );
+    $columns['rating'] = __( 'Rating', 'woocommerce' );
+	$columns['order-total'] = __( 'Total', 'woocommerce' );
+    $columns['order-actions'] = __( 'Actions', 'woocommerce' );
+
+    return $columns;
+}
+add_filter( 'woocommerce_account_orders_columns', 'new_orders_columns' );
