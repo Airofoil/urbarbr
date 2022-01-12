@@ -83,6 +83,32 @@ function wpse27856_set_content_type(){
 }
 add_filter( 'wp_mail_content_type','wpse27856_set_content_type' );
 
+//add_action( 'woocommerce_after_single_product_summary', 'comments_template', 50 );
+add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
+function woo_remove_product_tabs( $tabs ) {
+    unset( $tabs['reviews'] );  // Removes the reviews tab
+    return $tabs;
+}
+function new_orders_columns( $columns = array() ) {
+    // Hide the columns
+    if( isset($columns['order-total']) ) {
+        // Unsets the columns which you want to hide
+        unset( $columns['order-number'] );
+        unset( $columns['order-date'] );
+        unset( $columns['order-status'] );
+        unset( $columns['order-total'] );
+        unset( $columns['order-actions'] );
+    }
+    // Add new columns
+    $columns['order-number'] = __( 'Order', 'woocommerce' );
+    $columns['rating'] = __( 'Rating', 'woocommerce' );
+	$columns['order-total'] = __( 'Total', 'woocommerce' );
+    $columns['order-actions'] = __( 'Actions', 'woocommerce' );
+
+    return $columns;
+}
+add_filter( 'woocommerce_account_orders_columns', 'new_orders_columns' );
+
 /**
  * Moving the payments
  */
@@ -138,10 +164,6 @@ function my_custom_payment_fragment( $fragments ) {
 	return $fragments;
 }
 
-<<<<<<< HEAD
-
-	
-=======
 function filter_gettext( $translated, $text, $domain  ) {
   if( $text == 'Your order' && is_checkout() && ! is_wc_endpoint_url() ) {
       // Loop through cart items
@@ -155,4 +177,4 @@ function filter_gettext( $translated, $text, $domain  ) {
   return $translated;
 }
 add_filter( 'gettext',  'filter_gettext', 10, 3 );
->>>>>>> 3d2c64f8b3dac4705759d9ccf49f8859d655d33d
+
