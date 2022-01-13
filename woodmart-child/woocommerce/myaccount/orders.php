@@ -302,55 +302,42 @@ form.comment-form .comment-form-rating .stars{
 
 <script>
 jQuery(document).ready(function($){
-	<?php if($rating){ ?>
-		rating_text = '<p class="stars selected"><span>';
-	<?php }else{?>
-		rating_text = '<p class="stars"><span>';
-	<?php } ?>
 	
-	<?php if($rating && $rating == '1'){?>
-		rating_text += '<a class="star-1 active" href="#">1</a>\
+	$( 'select[name="rating"]' ).each(function(){
+		if($(this).data('rating')){
+			rating_text = '<p class="stars selected"><span>';
+			if($(this).data('rating') == '1'){
+				rating_text += '<a class="star-1 active" href="#">1</a>\
 				<a class="star-2" href="#">2</a>\
 				<a class="star-3" href="#">3</a>\
 				<a class="star-4" href="#">4</a>\
 				<a class="star-5" href="#">5</a>';
-	<?php }else if($rating && $rating == '2'){ ?>
-		rating_text += '<a class="star-1" href="#">1</a>\
+			}else if($(this).data('rating') == '2'){
+				rating_text += '<a class="star-1" href="#">1</a>\
 				<a class="star-2 active" href="#">2</a>\
 				<a class="star-3" href="#">3</a>\
 				<a class="star-4" href="#">4</a>\
 				<a class="star-5" href="#">5</a>';
-	<?php }else if($rating && $rating == '3'){ ?>
-		rating_text += '<a class="star-1" href="#">1</a>\
+			}else if($(this).data('rating') == '3'){
+				rating_text += '<a class="star-1" href="#">1</a>\
 				<a class="star-2" href="#">2</a>\
 				<a class="star-3 active" href="#">3</a>\
 				<a class="star-4" href="#">4</a>\
 				<a class="star-5" href="#">5</a>';
-	<?php }else if($rating && $rating == '4'){ ?>
-		rating_text += '<a class="star-1" href="#">1</a>\
+			}else if($(this).data('rating') == '4'){
+				rating_text += '<a class="star-1" href="#">1</a>\
 				<a class="star-2" href="#">2</a>\
 				<a class="star-3" href="#">3</a>\
 				<a class="star-4 active" href="#">4</a>\
 				<a class="star-5" href="#">5</a>';
-	<?php }else if($rating && $rating == '5'){ ?>
-		rating_text += '<a class="star-1" href="#">1</a>\
+			}else{
+				rating_text += '<a class="star-1" href="#">1</a>\
 				<a class="star-2" href="#">2</a>\
 				<a class="star-3" href="#">3</a>\
 				<a class="star-4" href="#">4</a>\
 				<a class="star-5 active" href="#">5</a>';
-	<?php }else{ ?>
-		rating_text += '<a class="star-1" href="#">1</a>\
-				<a class="star-2" href="#">2</a>\
-				<a class="star-3" href="#">3</a>\
-				<a class="star-4" href="#">4</a>\
-				<a class="star-5" href="#">5</a>';
-	<?php } ?>
-	rating_text += '</span></p>';
-
-	$( 'select[name="rating"]' ).each(function(){
-		if($(this).data('rating')){
-			rating_text = '<p class="stars selected"><span>';
-			
+			}
+			rating_text += '</span></p>';
 		}else{
 			rating_text = '<p class="stars"><span>\
 				<a class="star-1" href="#">1</a>\

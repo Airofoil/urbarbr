@@ -70,7 +70,7 @@ function urbarber_woocommerce_order_status_completed( $order_id ) {
 			$booking_product = get_wc_product_booking( $product_id );
 			
 			$resource = $booking_product->get_resource( $booking->get_resource_id() );	
-			$html_addon .= '<strong>Booking Type:</strong> ' . (is_object( $resource ) ? $resource->get_title() : '');
+			$html_addon .= '<strong>Barber name:</strong> ' . (is_object( $resource ) ? $resource->get_title() : '');
 			$html_addon .= '<br><br>';
 			
 			$html_addon .= '<strong>Booking person:</strong> '. ($booking->has_persons() ? array_sum( $booking->get_persons() ) : 0);
