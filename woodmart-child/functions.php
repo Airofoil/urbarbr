@@ -181,8 +181,6 @@ function filter_gettext( $translated, $text, $domain  ) {
   return $translated;
 }
 add_filter( 'gettext',  'filter_gettext', 10, 3 );
-<<<<<<< HEAD
-=======
 
 add_filter( 'woocommerce_add_to_cart_validation', 'bbloomer_only_one_in_cart', 9999, 2 );
 function bbloomer_only_one_in_cart( $passed, $added_product_id ) {
@@ -215,4 +213,3 @@ function new_orders_columns( $columns = array() ) {
     return $columns;
 }
 add_filter( 'woocommerce_account_orders_columns', 'new_orders_columns' );
->>>>>>> 7f4018a8169d0948990fc6632f44cc0beeca65a9
