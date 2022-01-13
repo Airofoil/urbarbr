@@ -27,8 +27,10 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 		$order      = wc_get_order( $customer_order ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$item_count = $order->get_item_count() - $order->get_item_count_refunded();
 		$product_name = array();
+		$product_id = array();
 		foreach($order->get_items() as $item) {
 			$product_name[] = $item['name'];
+			$product_id[] = $item->get_product_id();
 		}
 		?>
 		<div class="woocommerce-orders-table-wrapper"> 
@@ -37,9 +39,116 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 					<tr>
 						<?php foreach ( wc_get_account_orders_columns() as $column_id => $column_name ) : ?>
 							<?php if ( 'order-number' === $column_id ){ ?>
-								<th class="woocommerce-orders-table__header woocommerce-orders-table__header-<?php echo esc_attr( $column_id ); ?>"><span class="nobr"><?php echo esc_html( $product_name[0] ); ?></span></th>
-							<?php }else if ('rating' === $column_id ){ ?>
-								<th>Rating</th>
+								<th class="woocommerce-orders-table__header woocommerce-orders-table__header-<?php echo esc_attr( $column_id ); ?>"><span class=""><?php echo esc_html( $product_name[0] ); ?></span></th>
+							<?php }else if ('rating' === $column_id ){ 
+								?>
+								<th>
+									<?php
+										global $wpdb;
+										global $current_user;
+      									get_currentuserinfo();
+										$commenter    = $current_user;
+										
+										$dupe = $wpdb->prepare(
+											"SELECT comment_ID FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved != 'trash' AND ( comment_author = %s ",
+											wp_unslash( $product_id[0] ),
+											wp_unslash( $commenter->display_name)
+										);
+										if ( $commenter->user_email) {
+											$dupe .= $wpdb->prepare(
+												'AND comment_author_email = %s ',
+												wp_unslash( $commenter->user_email )
+											);
+										}
+										$dupe .= $wpdb->prepare(
+											') LIMIT 1'
+										);
+										
+										$dupe_id = $wpdb->get_var( $dupe );
+										
+										if($dupe_id){
+											$comment_meta = $wpdb->prepare(
+												"SELECT meta_value FROM wp_commentmeta WHERE comment_id = %d AND meta_key = 'rating'",
+												wp_unslash( $dupe_id )
+											);
+											$comment_meta .= $wpdb->prepare(
+												' LIMIT 1'
+											);
+											$rating = $wpdb->get_var( $comment_meta );
+										}else{
+											$rating = null;
+										}
+										if($dupe_id && $rating){
+											echo '<div id="review_form" class="review_form rated">';
+										}else{
+											echo '<div id="review_form" class="review_form>';
+										}
+									?>
+	
+										<?php
+										$comment_form = array(
+											/* translators: %s is product title */
+											'title_reply'         => '',
+											/* translators: %s is product title */
+											'title_reply_to'      => esc_html__( 'Leave a Reply to %s', 'woocommerce' ),
+											'title_reply_before'  => '<span id="reply-title" class="comment-reply-title">',
+											'title_reply_after'   => '</span>',
+											'comment_notes_after' => '',
+											'label_submit'        => esc_html__( 'Rate now', 'woocommerce' ),
+											'logged_in_as'        => '',
+											'comment_field'       => '',
+										);
+
+										$name_email_required = (bool) get_option( 'require_name_email', 1 );
+										$fields              = array(
+											'author' => array(
+												'label'    => __( 'Name', 'woocommerce' ),
+												'type'     => 'text',
+												'value'    => $commenter->ID,
+												'required' => $name_email_required,
+											),
+											'email'  => array(
+												'label'    => __( 'Email', 'woocommerce' ),
+												'type'     => 'email',
+												'value'    => $commenter->display_name),
+												'required' => $name_email_required,
+										);
+									
+
+										$comment_form['fields'] = array();
+
+										foreach ( $fields as $key => $field ) {
+											$field_html  = '<p class="comment-form-' . esc_attr( $key ) . '">';
+											$field_html .= '<label for="' . esc_attr( $key ) . '">' . esc_html( $field['label'] );
+
+											if ( $field['required'] ) {
+												$field_html .= '&nbsp;<span class="required">*</span>';
+											}
+
+											$field_html .= '</label><input id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" type="' . esc_attr( $field['type'] ) . '" value="' . esc_attr( $field['value'] ) . '" size="30" ' . ( $field['required'] ? 'required' : '' ) . ' /></p>';
+
+											$comment_form['fields'][ $key ] = $field_html;
+										}
+
+										$account_page_url = wc_get_page_permalink( 'myaccount' );
+										if ( $account_page_url ) {
+											/* translators: %s opening and closing link tags respectively */
+											$comment_form['must_log_in'] = '<p class="must-log-in">' . sprintf( esc_html__( 'You must be %1$slogged in%2$s to post a review.', 'woocommerce' ), '<a href="' . esc_url( $account_page_url ) . '">', '</a>' ) . '</p>';
+										}
+
+										$comment_form['comment_field'] = '<div class="comment-form-rating"><label for="rating">' . esc_html__( '', 'woocommerce' ) . '</label><select name="rating" id="rating" data-rating="'. $rating .'">
+												<option value="">' . esc_html__( 'Rate&hellip;', 'woocommerce' ) . '</option>
+												<option value="5">' . esc_html__( 'Perfect', 'woocommerce' ) . '</option>
+												<option value="4">' . esc_html__( 'Good', 'woocommerce' ) . '</option>
+												<option value="3">' . esc_html__( 'Average', 'woocommerce' ) . '</option>
+												<option value="2">' . esc_html__( 'Not that bad', 'woocommerce' ) . '</option>
+												<option value="1">' . esc_html__( 'Very poor', 'woocommerce' ) . '</option>
+											</select></div>';
+									
+										comment_form( apply_filters( 'woocommerce_product_review_comment_form_args', $comment_form ), $product_id[0] );
+										?>
+									</div>
+								</th>
 							<?php }else if ( 'order-actions' === $column_id ){ ?>
 								<th>Tomorrow</th>
 							<?php }else{ ?>
@@ -126,4 +235,148 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 .account-orders-table tbody{
 	background: #fff;
 }
+form.comment-form{
+	display: flex;
+    flex-wrap: nowrap;
+	max-width: 80px;
+}
+form.comment-form .comment-form-rating{
+	margin-bottom: 0;
+	display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.review_form.rated form.comment-form input[name="submit"]{
+	display:none;
+}
+.review_form.rated  form.comment-form .comment-form-rating .stars{
+	pointer-events:none;
+}
+form.comment-form input[name="submit"]{
+	background-color: transparent !important;
+	background: transparent;
+    color: #90C3F2 !important;
+    text-transform: none;
+	padding: 0 !important;
+	font-weight: initial;
+	margin-left: 8px;
+}
+
+form.comment-form .comment-form-rating label[for="rating"]{
+	display:none;
+}
+form.comment-form .comment-form-rating .stars{
+	margin-bottom:0;
+}
+.stars a:before, .stars a:hover ~ a:before, .stars a.active ~ a:before, .stars.selected:hover a:hover ~ a:before {
+    content: "\f149";
+    color: #B1B1B1;
+}
+.stars a:before {
+    font-size: 14px;
+    font-family: "woodmart-font";
+}
+.stars span {
+    display: flex;
+    font-size: 0;
+}
+.stars a {
+    width: 15px;
+    text-align: center;
+}
+.stars:hover a:before, .stars.selected a:before, .stars.selected:hover a:before {
+    content: "\f148";
+    color: #EABE12;
+}
+
+.account-orders-table th{
+	width:100px;
+	max-width:100px;
+}
+.account-orders-table th:first-child{
+	width:150;
+	max-width:150px;
+}
+
 </style>
+
+<script>
+jQuery(document).ready(function($){
+	
+	$( 'select[name="rating"]' ).each(function(){
+		if($(this).data('rating')){
+			rating_text = '<p class="stars selected"><span>';
+			if($(this).data('rating') == '1'){
+				rating_text += '<a class="star-1 active" href="#">1</a>\
+				<a class="star-2" href="#">2</a>\
+				<a class="star-3" href="#">3</a>\
+				<a class="star-4" href="#">4</a>\
+				<a class="star-5" href="#">5</a>';
+			}else if($(this).data('rating') == '2'){
+				rating_text += '<a class="star-1" href="#">1</a>\
+				<a class="star-2 active" href="#">2</a>\
+				<a class="star-3" href="#">3</a>\
+				<a class="star-4" href="#">4</a>\
+				<a class="star-5" href="#">5</a>';
+			}else if($(this).data('rating') == '3'){
+				rating_text += '<a class="star-1" href="#">1</a>\
+				<a class="star-2" href="#">2</a>\
+				<a class="star-3 active" href="#">3</a>\
+				<a class="star-4" href="#">4</a>\
+				<a class="star-5" href="#">5</a>';
+			}else if($(this).data('rating') == '4'){
+				rating_text += '<a class="star-1" href="#">1</a>\
+				<a class="star-2" href="#">2</a>\
+				<a class="star-3" href="#">3</a>\
+				<a class="star-4 active" href="#">4</a>\
+				<a class="star-5" href="#">5</a>';
+			}else{
+				rating_text += '<a class="star-1" href="#">1</a>\
+				<a class="star-2" href="#">2</a>\
+				<a class="star-3" href="#">3</a>\
+				<a class="star-4" href="#">4</a>\
+				<a class="star-5 active" href="#">5</a>';
+			}
+			rating_text += '</span></p>';
+		}else{
+			rating_text = '<p class="stars"><span>\
+				<a class="star-1" href="#">1</a>\
+				<a class="star-2" href="#">2</a>\
+				<a class="star-3" href="#">3</a>\
+				<a class="star-4" href="#">4</a>\
+				<a class="star-5" href="#">5</a>\
+				</span></p>';
+		}
+		$(this).hide().before(rating_text);
+	});
+	
+	
+	console.log($('.comment-respond p.stars a'));
+	$(document).on( 'click', '.comment-respond p.stars a', function() {
+		console.log('clicked');
+		var $star   	= $( this ),
+			$rating 	= $( this ).closest( '.comment-respond' ).find( 'select[name="rating"]' ),
+			$container 	= $( this ).closest( '.stars' );
+
+		$rating.val( $star.text() );
+		console.log( $star.text());
+		$star.siblings( 'a' ).removeClass( 'active' );
+		$star.addClass( 'active' );
+		$container.addClass( 'selected' );
+
+		return false;
+	} )
+	$(document).on( 'click', '.comment-respond input[name="submit"]', function() {
+		console.log('clicked submit');
+		var $rating = $( this ).closest( '.comment-respond' ).find( 'select[name="rating"]' ),
+			rating  = $rating.val();
+
+		if ( $rating.length > 0 && ! rating && wc_single_product_params.review_rating_required === 'yes' ) {
+			window.alert( wc_single_product_params.i18n_required_rating_text );
+
+			return false;
+		}
+	} );
+})
+
+</script>
