@@ -7,6 +7,12 @@ function woodmart_child_enqueue_styles() {
 }
 add_action( 'wp_enqueue_scripts', 'woodmart_child_enqueue_styles', 10010 );
 
+function my_theme_scripts() {
+    
+	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js');
+}
+add_action( 'wp_enqueue_scripts', 'my_theme_scripts' );
+
 function urbarber_woocommerce_order_status_completed( $order_id ) {
 	
     $to = 'jhan@jamesanthonyconsulting.com.au'; //test account
