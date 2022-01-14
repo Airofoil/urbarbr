@@ -302,3 +302,60 @@ div.wpcf7 .wpcf7-spinner {
 .checkout-order-review {
 	background-color: unset;
 }
+
+
+
+
+
+
+
+.archive .product-grid-item {
+	width: 100%;
+	max-width: 100%;
+	flex: 0 0 100%;
+}
+
+.archive .product-grid-item .product-wrapper {
+	padding: 20px;
+	background-color: #fdfdfd;
+	box-shadow: unset;
+}
+
+
+.archive .product-grid-item .product-element-top {
+	display: flex;
+	padding: 20px;
+	background-color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.product-element-top .wd-buttons.wd-pos-r-t {
+	display: none;
+}
+
+.archive .product-grid-item .product-element-top .product-image-link {
+	max-width: 100px;
+	aspect-ratio: 1 / 1;
+}
+
+.archive .product-grid-item .product-element-top .product-image-link img {
+	aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.jac-barber-details {
+	margin-left: 20px;
+	width: 100%;
+}
+
+.jac-products-header-top {
+	display: flex;
+}
+
+.jac-products-header-top-left {
+	width: 100%;
+}
+
+.jac-products-header-top-right {
+	width: 100px;
+}
