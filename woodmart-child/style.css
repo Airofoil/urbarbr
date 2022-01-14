@@ -217,10 +217,6 @@ div.wpcf7 .wpcf7-spinner {
 	color: #FFFFFF;
 }
 
-form.cart div.wd-wishlist-btn.wd-action-btn.wd-style-text.wd-wishlist-icon, .wd-wishlist-btn {
-	display: none;
-} 
-
 @media only screen and (min-width: 1300px) {
 	.homeurbarbrmemo .section-title {
 		width: 180px;
