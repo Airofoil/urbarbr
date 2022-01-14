@@ -48,10 +48,11 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 										global $current_user;
       									get_currentuserinfo();
 										$commenter    = $current_user;
-										
+									
 										$dupe = $wpdb->prepare(
-											"SELECT comment_ID FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved != 'trash' AND ( comment_author = %s ",
+											"SELECT comment_ID FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_content = %s AND comment_approved != 'trash' AND ( comment_author = %s ",
 											wp_unslash( $product_id[0] ),
+											wp_unslash( $customer_order->ID ),
 											wp_unslash( $commenter->display_name)
 										);
 										if ( $commenter->user_email) {
@@ -60,10 +61,11 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 												wp_unslash( $commenter->user_email )
 											);
 										}
+						
 										$dupe .= $wpdb->prepare(
 											') LIMIT 1'
 										);
-										
+										// echo $dupe;
 										$dupe_id = $wpdb->get_var( $dupe );
 										
 										if($dupe_id){
@@ -81,7 +83,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 										if($dupe_id && $rating){
 											echo '<div id="review_form" class="review_form rated">';
 										}else{
-											echo '<div id="review_form" class="review_form>';
+											echo '<div id="review_form" class="review_form">';
 										}
 									?>
 	
@@ -104,14 +106,14 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 											'author' => array(
 												'label'    => __( 'Name', 'woocommerce' ),
 												'type'     => 'text',
-												'value'    => $commenter->ID,
+												'value'    => $commenter->display_name,
 												'required' => $name_email_required,
 											),
 											'email'  => array(
 												'label'    => __( 'Email', 'woocommerce' ),
 												'type'     => 'email',
-												'value'    => $commenter->display_name),
-												'required' => $name_email_required,
+												'value'    => $commenter->user_email,
+											),
 										);
 									
 
@@ -144,13 +146,51 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 												<option value="2">' . esc_html__( 'Not that bad', 'woocommerce' ) . '</option>
 												<option value="1">' . esc_html__( 'Very poor', 'woocommerce' ) . '</option>
 											</select></div>';
-									
+										$comment_form['comment_field'] .= '<p class="comment-form-order-id" style="display:none"><label for="comment"></label><input type="hidden" name="comment" value="'.$customer_order->ID.'"></p>';
 										comment_form( apply_filters( 'woocommerce_product_review_comment_form_args', $comment_form ), $product_id[0] );
 										?>
 									</div>
 								</th>
 							<?php }else if ( 'order-actions' === $column_id ){ ?>
-								<th>Tomorrow</th>
+								<th>
+								<?php 
+								
+								foreach($order->get_items() as $item_id => $item) { //only allow for one booking in single order
+									$booking_ids = WC_Booking_Data_Store::get_booking_ids_from_order_item_id( $item_id );
+									foreach ( $booking_ids as $booking_id ) {
+										$booking = new WC_Booking( $booking_id );
+									}
+								}
+
+								$booking_time = $booking->get_start_date( null, null, true );
+								// echo $booking_time;
+								
+								$timezone = $booking->get_local_timezone();
+								date_default_timezone_set($timezone);
+								$current_timpstamp = time();
+								
+								$booking_timestamp = strtotime($booking_time);
+								// 00:00:00
+								$current_timestamp_start = strtotime(date("Y-m-d  H:i:s", mktime(0,0,0,date("n", $current_timpstamp),date("j",$current_timpstamp) ,date("Y", $current_timpstamp))));  
+								
+								$diffDays = $booking_timestamp - $current_timestamp_start;
+								$diffDays = $diffDays / (60 * 60 * 24);
+
+								if(floor($diffDays) == 0){
+									$diffDays = 'Today ' . date('g:i A', $booking_timestamp);
+								}else if(floor($diffDays)  == 1){
+									$diffDays = 'Tomorrow';
+								}else if(floor($diffDays) == -1){
+									$diffDays = 'Yesterday';
+								}else if($diffDays>0){
+									$diffDays = floor($diffDays) .' days later';
+								}else{
+									$diffDays = abs(floor($diffDays)) . ' days ago';
+								}
+								
+								echo $diffDays;
+								?>
+								</th>
 							<?php }else{ ?>
 								<th></th>
 							<?php }?>
@@ -352,7 +392,8 @@ jQuery(document).ready(function($){
 	
 	
 	console.log($('.comment-respond p.stars a'));
-	$(document).on( 'click', '.comment-respond p.stars a', function() {
+	$(document).on( 'click', '.comment-respond p.stars a', function(e) {
+		e.preventDefault();
 		console.log('clicked');
 		var $star   	= $( this ),
 			$rating 	= $( this ).closest( '.comment-respond' ).find( 'select[name="rating"]' ),
