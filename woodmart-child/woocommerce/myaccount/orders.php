@@ -39,7 +39,12 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 					<tr>
 						<?php foreach ( wc_get_account_orders_columns() as $column_id => $column_name ) : ?>
 							<?php if ( 'order-number' === $column_id ){ ?>
-								<th class="woocommerce-orders-table__header woocommerce-orders-table__header-<?php echo esc_attr( $column_id ); ?>"><span class=""><?php echo esc_html( $product_name[0] ); ?></span></th>
+								<th class="woocommerce-orders-table__header woocommerce-orders-table__header-<?php echo esc_attr( $column_id ); ?>">
+									<div class="barber-profile-column">
+										<div class="profile-img" style="background:#C4C4C4;background-image:url(<?php echo wp_get_attachment_url( wc_get_product($product_id[0])->get_image_id() ); ?>)"></div>
+										<span class=""><?php echo esc_html( $product_name[0] ); ?></span>
+									</div>
+								</th>
 							<?php }else if ('rating' === $column_id ){ 
 								?>
 								<th>
@@ -146,13 +151,16 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 												<option value="2">' . esc_html__( 'Not that bad', 'woocommerce' ) . '</option>
 												<option value="1">' . esc_html__( 'Very poor', 'woocommerce' ) . '</option>
 											</select></div>';
+										if($dupe_id && $rating){
+											$comment_form['comment_field'] .= '<p class="individual_rating">'. $rating .'</p>';
+										}
 										$comment_form['comment_field'] .= '<p class="comment-form-order-id" style="display:none"><label for="comment"></label><input type="hidden" name="comment" value="'.$customer_order->ID.'"></p>';
 										comment_form( apply_filters( 'woocommerce_product_review_comment_form_args', $comment_form ), $product_id[0] );
 										?>
 									</div>
 								</th>
 							<?php }else if ( 'order-actions' === $column_id ){ ?>
-								<th>
+								<th class="booking-time">
 								<?php 
 								
 								foreach($order->get_items() as $item_id => $item) { //only allow for one booking in single order
@@ -187,7 +195,7 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 								}else{
 									$diffDays = abs(floor($diffDays)) . ' days ago';
 								}
-								
+
 								echo $diffDays;
 								?>
 								</th>
@@ -220,19 +228,22 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 										<?php elseif ( 'order-total' === $column_id ) : ?>
 											<?php
 											/* translators: 1: formatted order total 2: total order items */
-											echo esc_html($meta->key);
+											
+											preg_match_all('!\d+\.*\d*!', esc_html($meta->key), $matches);
+											echo '$'.$matches[0][0];
 											?>
 
 										<?php elseif ( 'order-actions' === $column_id ) : ?>
 											<?php
-											$actions = wc_get_account_orders_actions( $order );
+											// $actions = wc_get_account_orders_actions( $order );
 
-											if ( ! empty( $actions ) ) {
-												foreach ( $actions as $key => $action ) { // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-													echo '<a href="' . esc_url( $action['url'] ) . '" class="woocommerce-button button ' . sanitize_html_class( $key ) . '">' . esc_html( $action['name'] ) . '</a>';
-												}
-											}
+											// if ( ! empty( $actions ) ) {
+											// 	foreach ( $actions as $key => $action ) { // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+											// 		echo '<a href="' . esc_url( $action['url'] ) . '" class="woocommerce-button button ' . sanitize_html_class( $key ) . '">' . esc_html( $action['name'] ) . '</a>';
+											// 	}
+											// }
 											?>
+											<span class="order-actions">Re-order</span>
 										<?php endif; ?>
 									</td>
 								<?php endforeach; ?>
@@ -267,24 +278,41 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 
 <?php do_action( 'woocommerce_after_account_orders', $has_orders ); ?>
 <style>
+.booking-time{
+	text-transform: initial;
+	font-size: 90%;
+	font-weight:500;
+}
 .woocommerce-orders-table-wrapper{
 	background: #f8f9f9;
     padding: 10px 30px;
     margin-top: 30px;
 }
+.individual_rating{
+	margin-bottom: 0 !important;
+    margin-top: 5px;
+    font-size: 90%;
+    font-weight: normal;
+}
 .account-orders-table tbody{
 	background: #fff;
+}
+.account-orders-table thead th{
+	color: #284158;
 }
 form.comment-form{
 	display: flex;
     flex-wrap: nowrap;
-	max-width: 80px;
+	max-width: 125px;
 }
 form.comment-form .comment-form-rating{
 	margin-bottom: 0;
 	display: flex;
     flex-wrap: nowrap;
     align-items: center;
+}
+form.comment-form .form-submit .submit{
+	font-size:16px;
 }
 .review_form.rated form.comment-form input[name="submit"]{
 	display:none;
@@ -300,6 +328,7 @@ form.comment-form input[name="submit"]{
 	padding: 0 !important;
 	font-weight: initial;
 	margin-left: 8px;
+	margin-bottom:5px;
 }
 
 form.comment-form .comment-form-rating label[for="rating"]{
@@ -310,10 +339,11 @@ form.comment-form .comment-form-rating .stars{
 }
 .stars a:before, .stars a:hover ~ a:before, .stars a.active ~ a:before, .stars.selected:hover a:hover ~ a:before {
     content: "\f149";
-    color: #B1B1B1;
+	color: #FFC702;
+	font-weight: 100;
 }
 .stars a:before {
-    font-size: 14px;
+    font-size: 20px;
     font-family: "woodmart-font";
 }
 .stars span {
@@ -321,7 +351,7 @@ form.comment-form .comment-form-rating .stars{
     font-size: 0;
 }
 .stars a {
-    width: 15px;
+    width: 24px;
     text-align: center;
 }
 .stars:hover a:before, .stars.selected a:before, .stars.selected:hover a:before {
@@ -330,13 +360,65 @@ form.comment-form .comment-form-rating .stars{
 }
 
 .account-orders-table th{
-	width:100px;
-	max-width:100px;
+	width:auto;
+	/* max-width:100px; */
 }
 .account-orders-table th:first-child{
-	width:150;
-	max-width:150px;
+    width: 25%;
 }
+.profile-img{
+	height: 40px;
+    min-width: 40px;
+	width: 40px;
+	background-size: cover !important;
+	background-repeat: no-repeat !important;
+	background-position: center !important;
+    clip-path: circle();
+    text-align: center;
+	margin-right: 20px;
+}
+
+.barber-profile-column{
+	display:flex;
+	flex-wrap:nowrap;
+	align-items: center;
+}
+.barber-profile-column span{
+	/* width:160px; */
+}
+.order-actions{
+	color: #0A9E44;
+}
+.account-orders-table td{
+	color: #284158;
+	font-weight: var(--wd-title-font-weight);
+    font-style: var(--wd-title-font-style);
+    font-size: 16px;
+    font-family: var(--wd-title-font);
+}
+.account-orders-table th{
+	text-transform: none !important;
+}
+
+.order-actions{
+	cursor: pointer;
+}
+/* media */
+@media screen and (max-width: 1024px){
+	.woocommerce-orders-table thead, .woocommerce-orders-table th{
+		display:block !important;
+	}
+	.woocommerce-orders-table td:before {
+		display: none !important;
+	}
+	.woocommerce-orders-table tbody, .woocommerce-orders-table tfoot, .woocommerce-orders-table tr {
+		display: table-header-group !important;
+	}
+	.woocommerce-orders-table td{
+		display: revert !important;
+	}
+}
+
 
 </style>
 
