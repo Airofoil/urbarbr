@@ -113,6 +113,61 @@ function wpse27856_set_content_type(){
 }
 add_filter( 'wp_mail_content_type','wpse27856_set_content_type' );
 
+/**
+ * Moving the payments
+ */
+add_action( 'woocommerce_checkout_shipping', 'my_custom_display_payments', 20 );
+
+/**
+ * Displaying the Payment Gateways 
+ */
+function my_custom_display_payments() {
+  if ( WC()->cart->needs_payment() ) {
+    $available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+    WC()->payment_gateways()->set_current_gateway( $available_gateways );
+  } else {
+    $available_gateways = array();
+  }
+  ?>
+  <div id="checkout_payments">
+    <h3><?php esc_html_e( 'Payment Method', 'woocommerce' ); ?></h3>
+    <?php if ( WC()->cart->needs_payment() ) : ?>
+    <ul class="wc_payment_methods payment_methods methods">
+    <?php
+    if ( ! empty( $available_gateways ) ) {
+      foreach ( $available_gateways as $gateway ) {
+        wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $gateway ) );
+      }
+    } else {
+      echo '<li class="woocommerce-notice woocommerce-notice--info woocommerce-info">' . apply_filters( 'woocommerce_no_available_payment_methods_message', WC()->customer->get_billing_country() ? esc_html__( 'Sorry, it seems that there are no available payment methods for your state. Please contact us if you require assistance or wish to make alternate arrangements.', 'woocommerce' ) : esc_html__( 'Please fill in your details above to see available payment methods.', 'woocommerce' ) ) . '</li>'; // @codingStandardsIgnoreLine
+    }
+    ?>
+    </ul>
+  <?php endif; ?>
+  </div>
+<?php
+}
+
+/**
+ * Adding the payment fragment to the WC order review AJAX response
+ */
+add_filter( 'woocommerce_update_order_review_fragments', 'my_custom_payment_fragment' );
+
+/**
+ * Adding our payment gateways to the fragment #checkout_payments so that this HTML is replaced with the updated one.
+ */
+function my_custom_payment_fragment( $fragments ) {
+	ob_start();
+
+	my_custom_display_payments();
+
+	$html = ob_get_clean();
+
+	$fragments['#checkout_payments'] = $html;
+
+	return $fragments;
+}
+
 function filter_gettext( $translated, $text, $domain  ) {
   if( $text == 'Your order' && is_checkout() && ! is_wc_endpoint_url() ) {
       // Loop through cart items
@@ -139,26 +194,33 @@ function woo_remove_product_tabs( $tabs ) {
     return $tabs;
 }
 
-function new_orders_columns( $columns = array() ) {
-    // Hide the columns
-    if( isset($columns['order-total']) ) {
-        // Unsets the columns which you want to hide
-        unset( $columns['order-number'] );
-        unset( $columns['order-date'] );
-        unset( $columns['order-status'] );
-        unset( $columns['order-total'] );
-        unset( $columns['order-actions'] );
-    }
-    // Add new columns
-    $columns['order-number'] = __( 'Order', 'woocommerce' );
-    $columns['rating'] = __( 'Rating', 'woocommerce' );
-	$columns['order-total'] = __( 'Total', 'woocommerce' );
-    $columns['order-actions'] = __( 'Actions', 'woocommerce' );
+add_action( 'template_redirect', 'select_services' );
+function select_services() {
+  // Make sure the request is for a user-facing page
+  if ( 
+    ! is_singular() && 
+    ! is_page() && 
+    ! is_single() && 
+    ! is_archive() && 
+    ! is_home() &&
+    ! is_front_page() 
+  ) {
+    return false;
+  }
 
-    return $columns;
-}
-add_filter( 'woocommerce_account_orders_columns', 'new_orders_columns' );
+  // Otherwise do your thing
+  ?><script>
+	document.addEventListener("DOMContentLoaded", function(event) {
+		const url = window.location.href;
+		let hash = url.split('#')
+		let items = hash.slice(1);
+		let items_together = items[0].replace(/[^,a-zA-Z ]/g, "");
+		let services = items_together.split(',');
 
-function woo_custom_order_button_text() {
-    return __( 'Pay Now', 'woocommerce' ); 
+		for (const i in services) {
+			document.querySelectorAll(`input[type='checkbox'][value=${services[i]}]`)[0].checked = true;
+		}
+	}); 
+	 </script> 
+  <?php  
 }
