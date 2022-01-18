@@ -194,6 +194,26 @@ function woo_remove_product_tabs( $tabs ) {
     return $tabs;
 }
 
+function new_orders_columns( $columns = array() ) {
+    // Hide the columns
+    if( isset($columns['order-total']) ) {
+        // Unsets the columns which you want to hide
+        unset( $columns['order-number'] );
+        unset( $columns['order-date'] );
+        unset( $columns['order-status'] );
+        unset( $columns['order-total'] );
+        unset( $columns['order-actions'] );
+    }
+    // Add new columns
+    $columns['order-number'] = __( 'Order', 'woocommerce' );
+    $columns['rating'] = __( 'Rating', 'woocommerce' );
+	$columns['order-total'] = __( 'Total', 'woocommerce' );
+    $columns['order-actions'] = __( 'Actions', 'woocommerce' );
+
+    return $columns;
+}
+add_filter( 'woocommerce_account_orders_columns', 'new_orders_columns' );
+
 add_action( 'template_redirect', 'select_services' );
 function select_services() {
   // Make sure the request is for a user-facing page
