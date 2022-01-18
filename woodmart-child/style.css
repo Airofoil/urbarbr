@@ -413,3 +413,36 @@ body:not(.home) .whb-sticked .whb-color-light .wd-tools-element {
 body:not(.home) .whb-sticked .wd-tools-element:hover>a {
 	color: #ffffff;
 }
+
+.woocommerce-additional-fields #order_comments {
+	border: 1px solid #8896A2;
+	box-sizing: border-box;
+	border-radius: 10px;
+}
+
+.woocommerce-billing-fields input[type='email'], .woocommerce-billing-fields input[type='text'], .woocommerce-billing-fields input[type='tel'] {
+	border: unset;
+    border-bottom: 0.5px solid #102C45;
+	padding: 0;
+	font-weight: 500;
+	color: #284158!important;
+    -webkit-text-fill-color: #284158!important;
+}
+
+.woocommerce-billing-fields p.form-row {
+	display: flex;
+	align-items: end;
+}
+
+.woocommerce-billing-fields p.form-row label {
+	margin-bottom: 0;
+	width: 35%;
+}
+
+.woocommerce-billing-fields p.form-row span {
+	width: 65%;
+}
+
+.woocommerce-billing-fields p.form-row-first, p.form-row-last {
+	width: 100%;
+}

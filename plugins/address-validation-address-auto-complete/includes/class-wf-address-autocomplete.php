@@ -132,7 +132,7 @@ class Elex_Address_Autocomplete {
 		}
 		$fields['billing']['billing_autocomplete']   = array(
 			'label'       => $label,
-			'placeholder' => _x( 'Search for address', 'placeholder', 'woocommerce' ),
+			'placeholder' => _x( '', 'placeholder', 'woocommerce' ),
 			'required'    => $is_required,
 			'class'       => array( 'form-row-wide' ),
 			'clear'       => true,
