@@ -616,8 +616,17 @@ class TInvWL_Public_Wishlist_View
 		$redirect_url = $_product['data']->add_to_cart_url();
 		remove_filter('clean_url', 'tinvwl_clean_url', 10);
 
-		$product_services = $_product['meta']['addon-8640-services-0'];
+		$product_id = strval($_product['meta']['product_id']);
+		$addons = 'addon-' . $product_id . '-service-0';
+		$product_services = $_product['meta'][$addons];
+
+		
+		if ($product_services === null) {
+			$addons = 'addon-' . $product_id . '-services-0';
+			$product_services = $_product['meta'][$addons];
+		}
 		// restore global product data.
+	
 		$product = $_product_tmp;
 
 		$quantity = apply_filters('tinvwl_product_add_to_cart_quantity', $quantity, $_product['data']);
