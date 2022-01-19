@@ -446,3 +446,139 @@ body:not(.home) .whb-sticked .wd-tools-element:hover>a {
 .woocommerce-billing-fields p.form-row-first, p.form-row-last {
 	width: 100%;
 }
+
+.jac-about-us-fir-section {
+	background: linear-gradient(to bottom, #ffffff 43%, rgba(169, 178, 187, 0.1) 43%);
+}
+
+.jac-button {
+	border-radius: 3px;
+}
+
+.about-us-section-title .title-subtitle, .about-us-3rd-section-title .title-subtitle, .about-us-fourth-section-title .title-subtitle, .contact-us-section-title .title-subtitle {
+	font-weight: 600;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 24px;
+    text-transform: capitalize;
+    color: #586B7D;
+    opacity: 0.5;
+    margin: 5px 0px;
+}
+
+.about-us-section-title h4.title {
+	font-style: normal;
+	font-weight: bold;
+	font-size: 48px;
+	line-height: 58px;
+	color: #102C45;
+	margin: 5px 0px;
+}
+
+.jac-about-us-fir-section-des, .jac-about-us-3rd-section-des {
+	font-weight: 500;
+    line-height: 21px;
+    color: #03090E;
+    opacity: 0.5;
+}
+
+.jac-about-us-sec-section-title, .about-us-3rd-section-title h4.title, .about-us-fourth-section-title h4.title, .contact-us-section-title h4.title {
+	font-weight: bold;
+    font-size: 32px;
+    line-height: 42px;
+    text-align: center;
+    color: #102C45;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.jac-about-us-sec-section-des {
+	font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    text-align: center;
+    color: #03090E;
+    opacity: 0.5;
+    margin: 20px auto;
+    max-width: 660px;
+}
+
+.jac-about-us-sec-section {
+	padding-bottom: 50px;
+}
+
+.about-us-3rd-section-title h4.title {
+	color: #ffffff;
+	text-align: left;
+	margin: 5px 0;
+}
+
+.jac-about-us-3rd-section-des {
+	color: #FDFDFD;
+}
+
+.about-us-fourth-section-title h4.title, .contact-us-section-title h4.title {
+	text-align: left;
+}
+
+.reg-first-row {
+	display: flex;
+}
+
+.reg-first-row .contact-info-left, .reg-first-row .contact-info-right {
+	width: 50%;
+}
+
+.reg-first-row .contact-info-left {
+	padding-right: 3%;
+}
+
+.reg-first-row .contact-info-right {
+	padding-left: 3%;
+}
+
+@media (max-width: 639px) {
+	.reg-first-row .contact-info-left, .reg-first-row .contact-info-right {
+		width: 100%;
+		padding: 0;
+	}
+	
+	.jac-about-us-fir-section .first-column, .jac-about-us-trd-section .second-column {
+		padding-bottom: 20px;
+	}
+}
+
+.reg-first-row input, .reg-second-row textarea {
+	border: unset;
+    border-bottom: 0.5px solid #102C45;
+    padding: 0;
+	font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+	min-height: unset;
+}
+
+.reg-second-row .message-title {
+	font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 30px;
+    color: var(--wd-form-color);
+    opacity: 0.8;
+}
+
+.reg-second-row textarea {
+	margin-top: 10px;
+	color: #000000;
+}
+
+.reg-thrir-row input[type='submit'] {
+	float: right;
+    width: 140px;
+    background: #102C45;
+    border-radius: 3px;
+}
+
+.reg-thrir-row input[type='submit']:hover {
+	color: #ffffff;
+}
