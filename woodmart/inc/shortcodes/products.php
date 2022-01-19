@@ -378,6 +378,7 @@ if ( ! function_exists( 'woodmart_get_default_product_shortcode_atts' ) ) {
 		return array(
 			'element_title' => '',
 			'post_type'  => 'product',
+			'display_item' => 'product',
 			'layout' => 'grid',
 			'include'  => '',
 			'custom_query'  => '',
