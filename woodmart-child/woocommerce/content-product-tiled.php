@@ -11,13 +11,27 @@
 	$display_addon = woodmart_loop_prop( 'display_addon' );
 	do_action( 'woocommerce_before_shop_loop_item' ); 
 	$show_brife_product_tile = is_front_page();
+	
 	$service_label = '';
 	$service_fee = '';
-	foreach ($product->get_meta_data() as $index => $data) {  //TODO: need algorithm to sort by best selling
-		if($data->key == '_product_addons'){
-			if(isset($data->value[0]['options'][0])){
-				$service_label = $data->value[0]['options'][0]['label'];
-				$service_fee = '$' . number_format((float)($data->value[0]['options'][0]['price']), 2, '.', '');
+
+	$search = $wpdb->prepare(
+				"SELECT * FROM $wpdb->postmeta WHERE meta_key LIKE 'addon_sales_%' AND post_id = %d ORDER BY meta_value DESC",
+				$product_id 
+			);
+	$search_results = $wpdb->get_results(
+		$search
+	);
+	if($search_results && count($search_results)>0){
+		$service_label = $search_results[0]->meta_key;
+		$service_label = str_replace('_', ' ', substr($service_label,(strlen('addon_sales_')-1)));
+		
+		foreach ($product->get_meta_data() as $index => $data) {  //TODO: need algorithm to sort by best selling
+			if($data->key == '_product_addons'){
+				
+				if(isset($data->value[0]['options'][0]) && trim(strtolower($data->value[0]['options'][0]['label'])) == trim(strtolower($service_label))){
+					$service_fee = '$' . number_format((float)($data->value[0]['options'][0]['price']), 2, '.', '');
+				}
 			}
 		}
 	}
@@ -192,6 +206,10 @@
 		}
 		.jac-products-header-top-left > div > span.barber_location{
 			float: right;
+			color:#000000;
+			font-weight: 500;
+		}
+		.barber_service_price{
 			color:#000000;
 			font-weight: 500;
 		}
