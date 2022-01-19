@@ -69,6 +69,18 @@ if( ! function_exists( 'woodmart_get_products_shortcode_params' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				array(
+					'type' => 'dropdown',
+					'heading' => esc_html__( 'Display item', 'woodmart' ),
+					'param_name' => 'display_item',
+					'value' =>  array(
+						array( 'product', esc_html__( 'Products', 'woodmart' ) ),
+						array( 'addons', esc_html__( 'Product Add-ons', 'woodmart' ) ),
+					),
+					'hint' => esc_html__( 'Select actual item you want to display', 'woodmart' ),
+					'edit_field_class' => 'vc_col-sm-6 vc_column',
+				),
+
+				array(
 					'type' => 'autocomplete',
 					'heading' => esc_html__( 'Include only', 'woodmart' ),
 					'param_name' => 'include',
