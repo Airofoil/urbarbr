@@ -235,15 +235,16 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 
 										<?php elseif ( 'order-actions' === $column_id ) : ?>
 											<?php
-											// $actions = wc_get_account_orders_actions( $order );
-
+											$actions = wc_get_account_orders_actions( $order );
+											$addOn = str_replace(" ", "-", strtolower($meta->value)); 
+									
 											// if ( ! empty( $actions ) ) {
 											// 	foreach ( $actions as $key => $action ) { // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 											// 		echo '<a href="' . esc_url( $action['url'] ) . '" class="woocommerce-button button ' . sanitize_html_class( $key ) . '">' . esc_html( $action['name'] ) . '</a>';
 											// 	}
 											// }
 											?>
-											<span class="order-actions">Re-order</span>
+											<a class = 'order-actions' href= <?php  echo get_permalink($item->get_product_id()) . "#" . $addOn ?> ><span class="order-actions">Re-order</span></a>
 										<?php endif; ?>
 									</td>
 								<?php endforeach; ?>
