@@ -8,10 +8,19 @@
 	$product_details = $product->get_data();
 	$product_full_description = $product_details['description'];
 	$product_short_description = $product_details['short_description'];
-
+	$display_addon = woodmart_loop_prop( 'display_addon' );
 	do_action( 'woocommerce_before_shop_loop_item' ); 
-
 	$show_brife_product_tile = is_front_page();
+	$service_label = '';
+	$service_fee = '';
+	foreach ($product->get_meta_data() as $index => $data) {  //TODO: need algorithm to sort by best selling
+		if($data->key == '_product_addons'){
+			if(isset($data->value[0]['options'][0])){
+				$service_label = $data->value[0]['options'][0]['label'];
+				$service_fee = '$' . number_format((float)($data->value[0]['options'][0]['price']), 2, '.', '');
+			}
+		}
+	}
 ?>
 
 <div class="product-wrapper">
@@ -32,23 +41,37 @@
 		<div class="jac-barber-details <?php echo $show_brife_product_tile?"brief-product-tile":""; ?>">
 			<div class="jac-products-header-top">
 				<div class="jac-products-header-top-left">
-					<h5 class="jac-barber-name"><?php echo $product_title ?></h5>
-					<?php if($show_brife_product_tile && get_field( "short_description",$product_id) && get_field( "short_description",$product_id)!=""){
+					<h5 class="jac-barber-name">
+						<?php  if(!$display_addon || !$show_brife_product_tile){
+							echo $product_title;
+						}else{
+							echo $service_label;
+						} ?>
+					</h5>
+					<?php if(!$display_addon || !$show_brife_product_tile){}else{
+						echo '<p class="short_description">' . $product_title . '</p>';
+					} ?>
+					<?php if($show_brife_product_tile && !$display_addon  && get_field( "short_description",$product_id) && get_field( "short_description",$product_id)!=""){
 						echo '<p class="short_description">' . get_field( "short_description",$product_id) . '</p>';
 					} ?>
-					<?php if(!$show_brife_product_tile){
-						echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
+					<?php if(!$display_addon){ ?>
+						<?php if(!$show_brife_product_tile){
+							echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
+						}?>
+						<div>
+							<span> <?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>
+							<?php if ( comments_open() && !$show_brife_product_tile ){ echo "Reviews"; } ?> </span>
+							<?php if($show_brife_product_tile){
+								echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
+							}?>
+							
+							<?php if($show_brife_product_tile){
+								echo '<span class="barber_location">' . get_field( "barber_location",$product_id) . '</span>';
+							} ?>
+						</div>
+					<?php }else{
+						echo '<div class="barber_service_price"> From ' . $service_fee . '</div>';
 					}?>
-					<div><span> <?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>
-					<?php if ( comments_open() && !$show_brife_product_tile ){ echo "Reviews"; } ?> </span>
-					<?php if($show_brife_product_tile){
-						echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
-					}?>
-					
-					<?php if($show_brife_product_tile){
-						echo '<span class="barber_location">' . get_field( "barber_location",$product_id) . '</span>';
-					} ?>
-					</div>
 				</div>
 				<?php if(!$show_brife_product_tile){ ?>
 					<div class="jac-products-header-top-right">
@@ -170,6 +193,7 @@
 		.jac-products-header-top-left > div > span.barber_location{
 			float: right;
 			color:#000000;
+			font-weight: 500;
 		}
 		.short_description{
 			margin-bottom: 6px;
