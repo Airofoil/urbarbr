@@ -228,8 +228,9 @@ do_action( 'woocommerce_before_account_orders', $has_orders ); ?>
 										<?php elseif ( 'order-total' === $column_id ) : ?>
 											<?php
 											/* translators: 1: formatted order total 2: total order items */
-											preg_match_all('!\d+!', esc_html($meta->key), $matches);
-											echo $matches[0]; 
+											
+											preg_match_all('!\d+\.*\d*!', esc_html($meta->key), $matches);
+											echo '$'.$matches[0][0];
 											?>
 
 										<?php elseif ( 'order-actions' === $column_id ) : ?>
@@ -338,7 +339,8 @@ form.comment-form .comment-form-rating .stars{
 }
 .stars a:before, .stars a:hover ~ a:before, .stars a.active ~ a:before, .stars.selected:hover a:hover ~ a:before {
     content: "\f149";
-    color: #B1B1B1;
+	color: #FFC702;
+	font-weight: 100;
 }
 .stars a:before {
     font-size: 20px;
@@ -396,6 +398,10 @@ form.comment-form .comment-form-rating .stars{
 }
 .account-orders-table th{
 	text-transform: none !important;
+}
+
+.order-actions{
+	cursor: pointer;
 }
 /* media */
 @media screen and (max-width: 1024px){
