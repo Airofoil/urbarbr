@@ -234,8 +234,8 @@ function select_services() {
 		const url = window.location.href;
 		let hash = url.split('#')
 		let items = hash.slice(1);
-		let items_together = items[0].replace(/["'{}%2134567890:]/g, "");
-		let services = items_together.split(',');
+		let items_arr = items[0].replace(/["'{}%2134567890:]/g, "");
+		let services = items_arr.split(',');
 
 		for (const i in services) {
 			document.querySelectorAll(`input[type='checkbox'][value=${services[i]}]`)[0].checked = true;
