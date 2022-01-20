@@ -582,3 +582,26 @@ body:not(.home) .whb-sticked .wd-tools-element:hover>a {
 .reg-thrir-row input[type='submit']:hover {
 	color: #ffffff;
 }
+
+body .main-page-wrapper {
+	min-height: 75vh;
+}
+
+.woocommerce-MyAccount-navigation ul li.is-active>a {
+	color: #ffffff;
+    background-color: #284158;
+}
+
+.woocommerce-MyAccount-navigation ul li a {
+	border-radius: 5px;
+    border: 1px solid #8896A2;
+    margin: 10px 0px;
+}
+
+.whb-sticked .whb-color-light:not(.whb-with-bg) {
+	background-color:  rgb(16, 44, 69, 0.3);
+}
+
+body:not(.home) .whb-color-light:not(.whb-with-bg) {
+	background-color: transparent;
+}

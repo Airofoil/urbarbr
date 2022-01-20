@@ -317,5 +317,133 @@ function wc_registration_form_function() {
  }
  add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
 
+/**
+* @snippet       Hide Edit Address Tab @ My Account
+* @how-to        Get CustomizeWoo.com FREE
+* @author        Rodolfo Melogli
+* @testedwith    WooCommerce 5.0
+* @donate $9     https://businessbloomer.com/bloomer-armada/
+*/
+ 
+add_filter( 'woocommerce_account_menu_items', 'bbloomer_remove_address_my_account', 9999 );
+ 
+function bbloomer_remove_address_my_account( $items ) {
+	// unset( $items['dashboard'] );
+	// unset( $items['downloads'] );
+	// unset( $items['payment-methods'] );
+	// unset( $items['downloads'] );
+	// unset( $items['bookings'] );
 
+	$items = array(
+		'edit-account'    => __( 'My Profile', 'woocommerce' ),
+		// 'edit-address'    => _n( 'My Addresses', 'Address', (int) wc_shipping_enabled(), 'woocommerce' ),
+		'orders'          => __( 'My Orders', 'woocommerce' ),
+		'wishlist'   	  => __( 'My Wishlist', 'woocommerce' ),
+		'my-review'   	  => __( 'My Review', 'woocommerce' ),
+		'customer-logout' => __( 'Logout', 'woocommerce' ),
+	);
+
+   return $items;
+}
+
+/**
+* @snippet       Rename Edit Address Tab @ My Account
+* @how-to        Get CustomizeWoo.com FREE
+* @author        Rodolfo Melogli
+* @testedwith    WooCommerce 5.0
+* @donate $9     https://businessbloomer.com/bloomer-armada/
+*/
+ 
+// add_filter( 'woocommerce_account_menu_items', 'bbloomer_rename_address_my_account', 9999 );
+ 
+// function bbloomer_rename_address_my_account( $items ) {
+// //    $items['edit-account'] = 'My Profile';
+// //    $items['orders'] = 'My Orders';
+//    $items['wishlist'] = 'My Wishlist';
+//    return $items;
+// }
+
+/**
+ * @snippet       WooCommerce Add New Tab @ My Account
+ * @how-to        Get CustomizeWoo.com FREE
+ * @author        Rodolfo Melogli
+ * @compatible    WooCommerce 5.0
+ * @donate $9     https://businessbloomer.com/bloomer-armada/
+ */
+  
+// ------------------
+// 1. Register new endpoint (URL) for My Account page
+// Note: Re-save Permalinks or it will give 404 error
+  
+function bbloomer_add_my_review_endpoint() {
+    add_rewrite_endpoint( 'my-review', EP_ROOT | EP_PAGES );
+}
+  
+add_action( 'init', 'bbloomer_add_my_review_endpoint' );
+  
+// ------------------
+// 2. Add new query var
+  
+function bbloomer_my_review_query_vars( $vars ) {
+    $vars[] = 'my-review';
+    return $vars;
+}
+  
+add_filter( 'query_vars', 'bbloomer_my_review_query_vars', 0 );
+  
+// ------------------
+// 3. Insert the new endpoint into the My Account menu
+  
+function bbloomer_add_my_review_link_my_account( $items ) {
+    $items['my-review'] = 'My Review';
+    return $items;
+}
+  
+add_filter( 'woocommerce_account_menu_items', 'bbloomer_add_my_review_link_my_account' );
+  
+// ------------------
+// 4. Add content to the new tab
+  
+function bbloomer_my_review_content() {
+   echo '<h3>My Review</h3>';
+//    echo do_shortcode( ' /* your shortcode here */ ' );
+	echo '<p>Coming soon</p>';
+}
+  
+add_action( 'woocommerce_account_my-review_endpoint', 'bbloomer_my_review_content' );
+// Note: add_action must follow 'woocommerce_account_{your-endpoint-slug}_endpoint' format
+
+/**
+* @snippet       Merge Two "My Account" Tabs @ WooCommerce Account
+* @how-to        Get CustomizeWoo.com FREE
+* @author        Rodolfo Melogli
+* @compatible    WooCommerce 5.0
+* @donate $9     https://businessbloomer.com/bloomer-armada/
+*/
+ 
+// -------------------------------
+// 1. First, hide the tab that needs to be merged/moved (edit-address in this case)
+ 
+// add_filter( 'woocommerce_account_menu_items', 'bbloomer_remove_address_my_account', 999 );
+ 
+// function bbloomer_remove_address_my_account( $items ) {
+//    unset( $items['edit-address'] );
+//    return $items;
+// }
+ 
+// -------------------------------
+// 2. Second, print the ex tab content (woocommerce_account_edit_address) into an existing tab (woocommerce_account_edit-account_endpoint). See notes below!
+ 
+add_action( 'woocommerce_account_edit-account_endpoint', 'woocommerce_account_edit_address' );
+ 
+// NOTES
+// 1. to select a given tab, use 'woocommerce_account_ENDPOINTSLUG_endpoint' hook
+// 2. to print a given tab content, use any of these:
+// 'woocommerce_account_orders'
+// 'woocommerce_account_view_order'
+// 'woocommerce_account_downloads'
+// 'woocommerce_account_edit_address'
+// 'woocommerce_account_payment_methods'
+// 'woocommerce_account_add_payment_method'
+// 'woocommerce_account_edit_account'
  
