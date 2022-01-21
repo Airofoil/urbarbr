@@ -606,6 +606,21 @@ body:not(.home) .whb-color-light:not(.whb-with-bg) {
 	border-radius: 3px;
 }
 
+@media (max-width: 710px) {
+	.registration-wrapper {
+		width: 90%;
+	}
+	.form-item-right {
+		float: left;
+	}
+}	
+
+@media (max-width: 1024px) and (min-width: 710px) {
+	.registration-wrapper {
+		width: 60%;
+	}
+}	
+
 .form-item-right {
 	float: right;
 }
