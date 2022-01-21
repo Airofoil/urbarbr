@@ -387,3 +387,47 @@ add_action( 'woocommerce_account_edit-account_endpoint', 'woocommerce_account_ed
 // 'woocommerce_account_payment_methods'
 // 'woocommerce_account_add_payment_method'
 // 'woocommerce_account_edit_account'
+
+add_action( 'woocommerce_before_calculate_totals', 'custom_cart_items_prices', 10, 1 );
+function custom_cart_items_prices( $cart ) {
+
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) )
+        return;
+
+    if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 )
+        return;
+
+    // Loop through cart items
+    foreach ( $cart->get_cart() as $cart_item ) {
+
+		// echo '<pre>'; print_r($cart_item);  echo '</pre>';
+
+        // Get an instance of the WC_Product object
+        $product = $cart_item['data'];
+
+		// echo '<pre>'; print_r($product);  echo '</pre>';
+
+        // Get the product name (Added Woocommerce 3+ compatibility)
+        $original_name = method_exists( $product, 'get_name' ) ? $product->get_name() : $product->post->post_title;
+
+        // SET THE NEW NAME
+        $new_name = 'mydesiredproductname';
+
+		if (array_key_exists("type", $cart_item['booking']) && !empty($cart_item['booking']['type']))
+		{
+		// echo '<pre>'; print_r("Key & Value exists!");  echo '</pre>';
+			$new_name = $cart_item['booking']['type'];
+		}
+		else
+		{
+			$new_name = $original_name;
+			// echo '<pre>'; print_r("Key or Value does not exist!");  echo '</pre>';
+		}
+
+        // Set the new name (WooCommerce versions 2.5.x to 3+)
+        if( method_exists( $product, 'set_name' ) )
+            $product->set_name( $new_name );
+        else
+            $product->post->post_title = $new_name;
+    }
+}
