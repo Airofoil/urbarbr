@@ -19,18 +19,17 @@
 				"SELECT * FROM $wpdb->postmeta WHERE meta_key LIKE 'addon_sales_%' AND post_id = %d ORDER BY meta_value DESC",
 				$product_id 
 			);
-	$search_results = $wpdb->get_results(
-		$search
-	);
+	$search_results = $wpdb->get_results($search);
 	if($search_results && count($search_results)>0){
 		$service_label = $search_results[0]->meta_key;
 		$service_label = str_replace('_', ' ', substr($service_label,(strlen('addon_sales_')-1)));
 		
-		foreach ($product->get_meta_data() as $index => $data) {  //TODO: need algorithm to sort by best selling
+		foreach ($product->get_meta_data() as $index => $data) { 
 			if($data->key == '_product_addons'){
-				
-				if(isset($data->value[0]['options'][0]) && trim(strtolower($data->value[0]['options'][0]['label'])) == trim(strtolower($service_label))){
-					$service_fee = '$' . number_format((float)($data->value[0]['options'][0]['price']), 2, '.', '');
+				foreach($data->value[0]['options'] as $index=>$value){
+					if(trim(strtolower($value['label'])) == trim(strtolower($service_label))){
+						$service_fee = '$' . number_format((float)($value['price']), 2, '.', '');
+					}
 				}
 			}
 		}
@@ -173,10 +172,10 @@
 			font-weight: bold;
 			font-size: 90%;
 		}
-		.jac-products-header-top-left .star-rating:before{
+		/* .jac-products-header-top-left .star-rating:before{
 			content: "\f149" !important;
 			color:#FFC702 !important;
-		}
+		} */
 		.jac-products-header-top-left .product-grid-item .star-rating{
 			margin-bottom: 2px;
 		}
@@ -208,6 +207,7 @@
 			float: right;
 			color:#000000;
 			font-weight: 500;
+			    max-width: 65px;
 		}
 		.barber_service_price{
 			color:#000000;
