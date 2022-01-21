@@ -11,7 +11,7 @@
 
 /* start here */
 
-.main-page-wrapper {
+body .main-page-wrapper {
 	margin-top: 90px;
 }
 
@@ -303,12 +303,6 @@ div.wpcf7 .wpcf7-spinner {
 	background-color: unset;
 }
 
-
-
-
-
-
-
 .archive .product-grid-item {
 	width: 100%;
 	max-width: 100%;
@@ -316,8 +310,6 @@ div.wpcf7 .wpcf7-spinner {
 }
 
 .archive .product-grid-item .product-wrapper {
-	padding: 20px;
-	background-color: #fdfdfd;
 	box-shadow: unset;
 }
 
@@ -354,10 +346,6 @@ div.wpcf7 .wpcf7-spinner {
 
 .jac-products-header-top-left {
 	width: 100%;
-}
-
-.jac-products-header-top-right {
-	width: 100px;
 }
 
 #order_review .wd-table-wrapper {
@@ -406,13 +394,13 @@ body:not(.home) .wd-tools-element:hover>a {
 	color: #102C45;
 }
 
-body:not(.home) .whb-sticked .whb-color-light .wd-tools-element {
+/* body:not(.home) .whb-sticked .whb-color-light .wd-tools-element {
 	--wd-header-el-color: #FFFFFF;
 }
 
 body:not(.home) .whb-sticked .wd-tools-element:hover>a {
 	color: #ffffff;
-}
+} */
 
 .woocommerce-additional-fields #order_comments {
 	border: 1px solid #8896A2;
@@ -604,4 +592,59 @@ body .main-page-wrapper {
 
 body:not(.home) .whb-color-light:not(.whb-with-bg) {
 	background-color: transparent;
+}
+
+.page-id-9 .page-id-8830 body div.main-page-wrapper {
+	min-height: 57vh;
+}
+
+.registration-wrapper {
+	width: 35%; 
+	margin: 0 auto;
+	border: 1px solid #D3D3D3;
+	padding: 2rem 3rem 5rem 3rem;
+	border-radius: 3px;
+}
+
+@media (max-width: 710px) {
+	.registration-wrapper {
+		width: 90%;
+	}
+	.form-item-right {
+		float: left;
+	}
+}	
+
+@media (max-width: 1024px) and (min-width: 710px) {
+	.registration-wrapper {
+		width: 60%;
+	}
+}	
+
+.form-item-right {
+	float: right;
+}
+
+.form-item-left {
+	float: left;
+}
+
+.clear {
+	clear: both;
+}
+
+.bold-label {
+	font-weight: 600;
+}
+
+form.lost_reset_password {
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    max-width: 470px;
+}
+
+div.wd-wishlist-btn a {
+	display: none;
 }

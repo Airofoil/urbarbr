@@ -112,62 +112,6 @@ function wpse27856_set_content_type(){
 }
 add_filter( 'wp_mail_content_type','wpse27856_set_content_type' );
 
-/**
-
- * Moving the payments
-
- */
-
-add_action( 'woocommerce_checkout_shipping', 'my_custom_display_payments', 20 );
-/**
- * Displaying the Payment Gateways 
- */
-function my_custom_display_payments() {
-  if ( WC()->cart->needs_payment() ) {
-    $available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
-    WC()->payment_gateways()->set_current_gateway( $available_gateways );
-  } else {
-    $available_gateways = array();
-  }
-  ?>
-  <div id="checkout_payments">
-    <h3><?php esc_html_e( 'Payment Method', 'woocommerce' ); ?></h3>
-    <?php if ( WC()->cart->needs_payment() ) : ?>
-    <ul class="wc_payment_methods payment_methods methods">
-    <?php
-    if ( ! empty( $available_gateways ) ) {
-      foreach ( $available_gateways as $gateway ) {
-        wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $gateway ) );
-      }
-    } else {
-      echo '<li class="woocommerce-notice woocommerce-notice--info woocommerce-info">' . apply_filters( 'woocommerce_no_available_payment_methods_message', WC()->customer->get_billing_country() ? esc_html__( 'Sorry, it seems that there are no available payment methods for your state. Please contact us if you require assistance or wish to make alternate arrangements.', 'woocommerce' ) : esc_html__( 'Please fill in your details above to see available payment methods.', 'woocommerce' ) ) . '</li>'; // @codingStandardsIgnoreLine
-    }
-    ?>
-    </ul>
-  <?php endif; ?>
-  </div>
-<?php
-}
-/**
- * Adding the payment fragment to the WC order review AJAX response
- */
-add_filter( 'woocommerce_update_order_review_fragments', 'my_custom_payment_fragment' );
-
-/**
- * Adding our payment gateways to the fragment #checkout_payments so that this HTML is replaced with the updated one.
- */
-function my_custom_payment_fragment( $fragments ) {
-	ob_start();
-
-	my_custom_display_payments();
-
-	$html = ob_get_clean();
-
-	$fragments['#checkout_payments'] = $html;
-
-	return $fragments;
-}
-
 function filter_gettext( $translated, $text, $domain  ) {
   if( $text == 'Your order' && is_checkout() && ! is_wc_endpoint_url() ) {
       // Loop through cart items
@@ -223,7 +167,7 @@ add_action( 'template_redirect', 'select_services' );
 function select_services() {
   // Make sure the request is for a user-facing page
   if ( 
- 	! is_product()
+    ! is_product()
   ) {
     return false;
   }
@@ -253,7 +197,6 @@ function cng_author_base() {
     $wp_rewrite->author_base = $author_slug;
 }*/
 
-
 // REGISTRATION SHORTCODE
 function wc_registration_form_function() {
 	if ( is_admin() ) return;
@@ -264,51 +207,49 @@ function wc_registration_form_function() {
 	do_action( 'woocommerce_before_customer_login_form' );
   
 	?>
-	<div style="width: 50%; margin: 0 auto;">
-	 <form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?> >
- 
-		 <?php do_action( 'woocommerce_register_form_start' ); ?>
- 
-		 <?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
- 
-			 <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-				 <label for="reg_username"><?php esc_html_e( 'Username', 'woocommerce' ); ?>&nbsp;<span class="required">*</span></label>
-				 <input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="reg_username" autocomplete="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
-			 </p>
- 
-		 <?php endif; ?>
- 
-		 <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-			 <label for="reg_email"><?php esc_html_e( 'Email address', 'woocommerce' ); ?>&nbsp;<span class="required">*</span></label>
-			 <input type="email" class="woocommerce-Input woocommerce-Input--text input-text" name="email" id="reg_email" autocomplete="email" value="<?php echo ( ! empty( $_POST['email'] ) ) ? esc_attr( wp_unslash( $_POST['email'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
-		 </p>
- 
-		 <?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
- 
-			 <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-				 <label for="reg_password"><?php esc_html_e( 'Password', 'woocommerce' ); ?>&nbsp;<span class="required">*</span></label>
-				 <input type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" />
-			 </p>
- 
-		 <?php else : ?>
- 
-			 <p><?php esc_html_e( 'A password will be sent to your email address.', 'woocommerce' ); ?></p>
- 
-		 <?php endif; ?>
- 
-		 <?php do_action( 'woocommerce_register_form' ); ?>
- 
-		 <p class="woocommerce-form-row form-row">
-			 <?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
-			 <button type="submit" class="woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'Sign up', 'woocommerce' ); ?></button>
-		 </p>
- 
-		 <?php do_action( 'woocommerce_register_form_end' ); ?>
- 
-	 </form>
-	 <a href="/my_account">Login here</a>
+	<div class="registration-wrapper">
+		<h2 style="text-align: center;">Become a Member</h2>
+		<p style="text-align: center;">Become a member - don't miss out on deals, offers, discounts and bonus vouchers</p>
+		<form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?> >
+	
+			<?php do_action( 'woocommerce_register_form_start' ); ?>
+	
+			<?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
+	
+				<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+					<label for="reg_username"><?php esc_html_e( 'Username', 'woocommerce' ); ?>&nbsp;<span class="required"></span></label>
+					<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="reg_username" autocomplete="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
+				</p>
+	
+			<?php endif; ?>
+	
+			<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+				<label for="reg_email"><?php esc_html_e( 'Email address', 'woocommerce' ); ?>&nbsp;<span class="required"></span></label>
+				<input type="email" class="woocommerce-Input woocommerce-Input--text input-text" name="email" id="reg_email" autocomplete="email" value="<?php echo ( ! empty( $_POST['email'] ) ) ? esc_attr( wp_unslash( $_POST['email'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
+			</p>
+	
+			<?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
+	
+				<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+					<label for="reg_password"><?php esc_html_e( 'Password', 'woocommerce' ); ?>&nbsp;<span class="required"></span></label>
+					<input type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" />
+				</p>
+	
+			<?php else : ?>
+	
+				<p><?php esc_html_e( 'A password will be sent to your email address.', 'woocommerce' ); ?></p>
+	
+			<?php endif; ?>
 	
 	
+			<p class="woocommerce-form-row form-row">
+				<?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
+				<button type="submit" style="width: 30%; border-radius: 3px" class="form-item-right woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'Sign up', 'woocommerce' ); ?></button>
+				<a class="form-item-left" style="text-decoration: underline;" href="/my-account">Login here</a>
+			</p>
+	
+			<?php do_action( 'woocommerce_register_form_end' ); ?>
+		</form>
 	</div>
 	<?php
 	  
@@ -446,4 +387,3 @@ add_action( 'woocommerce_account_edit-account_endpoint', 'woocommerce_account_ed
 // 'woocommerce_account_payment_methods'
 // 'woocommerce_account_add_payment_method'
 // 'woocommerce_account_edit_account'
- 
