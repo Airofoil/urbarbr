@@ -647,4 +647,28 @@ form.lost_reset_password {
 
 div.wd-wishlist-btn a {
 	display: none;
+<<<<<<< HEAD
+=======
+}
+
+.site-content {
+	margin-bottom: 0;
+}
+
+.website-wrapper .wd-prefooter {
+	padding-bottom: 0;
+}
+
+.page-id-5288 .main-page-wrapper {
+	background-color: rgba(169,178,187,0.1) !important;
+}
+
+.jac-about-us-fourth-section {
+	padding-top: 20px;
+	padding-bottom: 50px;
+}
+
+.woocommerce-cart .woocommerce-cart-form__cart-item .product-name .variation-BookingType {
+	display: none;
+>>>>>>> b554102b7cef95e0f5a10e88e6a186b4fca9e26f
 }
