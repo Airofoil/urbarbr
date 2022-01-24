@@ -408,7 +408,12 @@ body:not(.home) .whb-sticked .wd-tools-element:hover>a {
 	border-radius: 10px;
 }
 
-.woocommerce-billing-fields input[type='email'], .woocommerce-billing-fields input[type='text'], .woocommerce-billing-fields input[type='tel'] {
+.woocommerce-billing-fields input[type='email'],
+.woocommerce-billing-fields input[type='text'],
+.woocommerce-billing-fields input[type='tel'],
+.woocommerce-EditAccountForm .woocommerce-form-row input[type='email'],
+.woocommerce-EditAccountForm .woocommerce-form-row input[type='text'],
+.woocommerce-EditAccountForm .woocommerce-form-row input[type='tel'] {
 	border: unset;
     border-bottom: 0.5px solid #102C45;
 	padding: 0;
