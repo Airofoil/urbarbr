@@ -349,7 +349,46 @@ add_filter( 'woocommerce_account_menu_items', 'bbloomer_add_my_review_link_my_ac
 function bbloomer_my_review_content() {
    echo '<h3>My Review</h3>';
 //    echo do_shortcode( ' /* your shortcode here */ ' );
-	echo '<p>Coming soon</p>';
+	// echo '<p>Coming soon</p>';
+	$user_id = get_current_user_id();
+    // $recent_comments = get_comments( array(
+	// 	// 'number'    => -1,
+	// 	'status'    => 'approve',
+	// 	'user_id' => $user_id
+    // ) );
+
+	$args = array(
+		'orderby' => 'date',
+		'post_type' => 'product',
+		// 'number' => '4',
+		'post_author' => $user_id
+	);
+
+	$comments = get_comments($args);
+	foreach($comments as $comment) :
+		echo '<div>'; 
+		// echo('Review By: ' . $comment->comment_author . '<br />');
+		echo('<a href="' . post_permalink($comment->ID)
+	. '">' . $comment->post_title . '</a>' . '<br />');
+		echo($comment->comment_date . '<br />');
+		echo('<div class="star-rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating"><span style="width:' . ( get_comment_meta( $comment->comment_ID, 'rating', true ) / 5 ) * 100 . '%"><strong itemprop="ratingValue">' . get_comment_meta( $comment->comment_ID, 'rating', true ) . '</strong></span></div><br />');
+		echo( $comment->comment_content );
+		echo '</div>';
+	endforeach;
+
+	// echo '<pre>'; print_r($recent_comments);  echo '</pre>';
+
+    // echo '<ul>';
+    // foreach($recent_comments as $recent_comment) {
+	// 	echo '<li>';
+	// 	echo wp_get_attachment_url( get_post_thumbnail_id($recent_comment->comment_post_ID) );
+	// 	echo '<a href="'.get_comment_link($recent_comment).'" target="_blank">'.get_the_title($recent_comment->comment_post_ID).'</a>';
+	// 	echo $recent_comment->comment_content;
+	// 	echo $recent_comment->comment_date;
+	// 	echo '</li>';
+
+	// }
+	// echo '</ul>';
 }
   
 add_action( 'woocommerce_account_my-review_endpoint', 'bbloomer_my_review_content' );
@@ -431,4 +470,24 @@ function custom_cart_items_prices( $cart ) {
         else
             $product->post->post_title = $new_name;
     }
+}
+
+function my_custom_js_css() {
+    echo '<script src="wp-content/themes/woodmart-child/js/jquery.datetimepicker.js"></script><link rel="stylesheet" type="text/css" href="wp-content/themes/woodmart-child/jquery.datetimepicker.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script>
+';
+}
+add_action( 'wp_head', 'my_custom_js_css' );
+
+/**
+ * @snippet       Redirect to Checkout Upon Add to Cart - WooCommerce
+ * @how-to        Get CustomizeWoo.com FREE
+ * @author        Rodolfo Melogli
+ * @compatible    Woo 3.8
+ * @donate $9     https://businessbloomer.com/bloomer-armada/
+ */
+  
+add_filter( 'woocommerce_add_to_cart_redirect', 'bbloomer_redirect_checkout_add_cart' );
+ 
+function bbloomer_redirect_checkout_add_cart() {
+   return wc_get_checkout_url();
 }

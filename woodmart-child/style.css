@@ -231,13 +231,13 @@ div.wpcf7 .wpcf7-spinner {
 	}
 }
 
-@media only screen and (min-width: 1024px) and (max-width 1299px) {
+@media only screen and (min-width: 1024px) and (max-width: 1299px) {
 	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
 		min-height: 380px!important;
 	}
 }
 
-@media only screen and (min-width: 768px) and (max-width 1024px) {
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
 	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
 		min-height: 310px!important;
 	}
@@ -408,7 +408,12 @@ body:not(.home) .whb-sticked .wd-tools-element:hover>a {
 	border-radius: 10px;
 }
 
-.woocommerce-billing-fields input[type='email'], .woocommerce-billing-fields input[type='text'], .woocommerce-billing-fields input[type='tel'] {
+.woocommerce-billing-fields input[type='email'],
+.woocommerce-billing-fields input[type='text'],
+.woocommerce-billing-fields input[type='tel'],
+.woocommerce-EditAccountForm .woocommerce-form-row input[type='email'],
+.woocommerce-EditAccountForm .woocommerce-form-row input[type='text'],
+.woocommerce-EditAccountForm .woocommerce-form-row input[type='tel'] {
 	border: unset;
     border-bottom: 0.5px solid #102C45;
 	padding: 0;
@@ -647,8 +652,6 @@ form.lost_reset_password {
 
 div.wd-wishlist-btn a {
 	display: none;
-<<<<<<< HEAD
-=======
 }
 
 .site-content {
@@ -670,5 +673,31 @@ div.wd-wishlist-btn a {
 
 .woocommerce-cart .woocommerce-cart-form__cart-item .product-name .variation-BookingType {
 	display: none;
->>>>>>> b554102b7cef95e0f5a10e88e6a186b4fca9e26f
+}
+
+.booking-services-search{
+	border: 1px solid #001F35;
+    background: #fff;
+    max-width: 300px;
+    margin-right: 20px;
+}
+.booking-date-search{
+	border: 1px solid #001F35 !important;
+    background-color: #fff !important;
+    max-width: 250px !important;
+    margin-right: 20px;
+}
+.your-location-search{
+	max-width:200px;
+	margin-right: 20px;
+}
+.searchform.woodmart-ajax-search.jac-test-class{
+	display: flex;
+    justify-content: flex-start;
+}
+.searchform .searchsubmit{
+    position: unset !important;
+	color: #001F35 !important;
+	border: 1px solid #001F35 !important;
+    background: #fff;
 }
