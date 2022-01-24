@@ -431,3 +431,9 @@ function custom_cart_items_prices( $cart ) {
             $product->post->post_title = $new_name;
     }
 }
+
+function my_custom_js_css() {
+    echo '<script src="wp-content/themes/woodmart-child/js/jquery.datetimepicker.js"></script><link rel="stylesheet" type="text/css" href="wp-content/themes/woodmart-child/jquery.datetimepicker.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script>
+';
+}
+add_action( 'wp_head', 'my_custom_js_css' );
