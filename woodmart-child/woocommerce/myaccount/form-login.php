@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_before_customer_login_form' ); ?>
 	<div class="registration-wrapper" >
 
-		<h2 style="text-align: center;"><?php esc_html_e( 'Login', 'woocommerce' ); ?></h2>
+		<h2 style="text-align: center;"><?php esc_html_e( 'Log in', 'woocommerce' ); ?></h2>
 		<p style="text-align: center;">Become a member - don't miss out on deals, offers, discounts and bonus vouchers</p>
 		<form class="woocommerce-form woocommerce-form-login login" method="post">
 
@@ -50,7 +50,7 @@ do_action( 'woocommerce_before_customer_login_form' ); ?>
 				</div>
 				<div class="clear">
 					<?php wp_nonce_field( 'woocommerce-login', 'woocommerce-login-nonce' ); ?>
-					<button type="submit" style ="width: 25%; border-radius: 3px" class="woocommerce-button button woocommerce-form-login__submit form-item-right" name="login" value="<?php esc_attr_e( 'Log in', 'woocommerce' ); ?>">Login</button>
+					<button type="submit" style ="width: 35%; border-radius: 3px" class="woocommerce-button button woocommerce-form-login__submit form-item-right" name="login" value="<?php esc_attr_e( 'Log in', 'woocommerce' ); ?>">Log in</button>
 					<a class ="form-item-left" style="text-decoration: underline;" href="/registration-form">Become a member</a>
 				</div>
 			</p>

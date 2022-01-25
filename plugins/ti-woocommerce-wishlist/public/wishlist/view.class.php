@@ -631,11 +631,8 @@ class TInvWL_Public_Wishlist_View
 
 		$quantity = apply_filters('tinvwl_product_add_to_cart_quantity', $quantity, $_product['data']);
 		if (apply_filters('tinvwl_product_add_to_cart_need_redirect', false, $_product['data'], $redirect_url, $_product)) {
-			?><script>
-				window.location.replace('<?php echo $redirect_url . "#" . $product_services ?>')
-			</script> <?php  
-
-			// wp_redirect(apply_filters('tinvwl_product_add_to_cart_redirect_url', $redirect_url, $_product['data'], $_product)); // @codingStandardsIgnoreLine WordPress.VIP.RestrictedFunctions.wp_redirect
+			$updated_url = $redirect_url . "#" . $product_services;
+			wp_redirect(apply_filters('tinvwl_product_add_to_cart_redirect_url', $updated_url, $_product['data'], $_product)); // @codingStandardsIgnoreLine WordPress.VIP.RestrictedFunctions.wp_redirect
 			exit;
 		} 
 		elseif (apply_filters('tinvwl_allow_addtocart_in_wishlist', true, $wishlist, $owner)) {
