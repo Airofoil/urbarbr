@@ -17,20 +17,26 @@
 	justify-content: center;
 }
 .booking-services-search{
-	border: 1px solid #001F35;
+	/* border: 1px solid #001F35; */
     background: #fff;
     max-width: 300px;
     margin-right: 20px;
+	font-weight: 500;
 }
 .booking-date-search{
 	border: 1px solid #001F35 !important;
     background-color: #fff !important;
     max-width: 250px !important;
     margin-right: 20px;
+	background: #fff !important;
+	font-weight: 500;
+	border-radius: 4px !important;
 }
 .your-location-search{
 	max-width:200px;
 	margin-right: 20px;
+	padding: 0 20px 0;
+	border-radius: 4px;
 }
 .searchform.woodmart-ajax-search.jac-test-class{
 	display: flex;
@@ -39,6 +45,13 @@
 .searchform .searchsubmit{
     position: unset !important;
 	color: #001F35 !important;
-	border: 1px solid #001F35 !important;
+	/* border: 1px solid #001F35 !important; */
     background: #fff;
+}
+#post-8343 > .entry-content > .vc_row:first-child{
+	overflow:visible;
+}
+.booking-services-search button.dropdown-toggle{
+	border: 1px solid #001F35;
+    height: 100%;
 }

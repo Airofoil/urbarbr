@@ -3,9 +3,14 @@
  * Enqueue script and styles for child theme
  */
 function woodmart_child_enqueue_styles() {
-	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'woodmart-style' ), woodmart_get_theme_info( 'Version' ) );
+	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css') );
 }
 add_action( 'wp_enqueue_scripts', 'woodmart_child_enqueue_styles', 10010 );
+
+function my_theme_scripts() {
+	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js');
+}
+add_action( 'wp_enqueue_scripts', 'my_theme_scripts' );
 
 function urbarber_woocommerce_order_status_completed( $order_id ) {
 	
@@ -107,12 +112,32 @@ function wpse27856_set_content_type(){
 }
 add_filter( 'wp_mail_content_type','wpse27856_set_content_type' );
 
-//add_action( 'woocommerce_after_single_product_summary', 'comments_template', 50 );
-add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
+function filter_gettext( $translated, $text, $domain  ) {
+  if( $text == 'Your order' && is_checkout() && ! is_wc_endpoint_url() ) {
+      // Loop through cart items
+      foreach( WC()->cart->get_cart() as $cart_item ) {
+          // Is virtual
+          if ( $cart_item['data']->is_virtual() ) {
+              $translated = __( 'Booking Details', $domain );
+          }
+      }
+  }
+  return $translated;
+}
+add_filter( 'gettext',  'filter_gettext', 10, 3 );
+
+add_filter( 'woocommerce_add_to_cart_validation', 'bbloomer_only_one_in_cart', 9999, 2 );
+function bbloomer_only_one_in_cart( $passed, $added_product_id ) {
+   wc_empty_cart();
+   return $passed;
+}
+
+//add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
 function woo_remove_product_tabs( $tabs ) {
     unset( $tabs['reviews'] );  // Removes the reviews tab
     return $tabs;
 }
+
 function new_orders_columns( $columns = array() ) {
     // Hide the columns
     if( isset($columns['order-total']) ) {
@@ -133,8 +158,339 @@ function new_orders_columns( $columns = array() ) {
 }
 add_filter( 'woocommerce_account_orders_columns', 'new_orders_columns' );
 
+add_filter( 'woocommerce_order_button_text', 'woo_custom_order_button_text' ); 
+function woo_custom_order_button_text() {
+    return __( 'Pay Now', 'woocommerce' ); 
+}
+
+add_action( 'template_redirect', 'select_services' );
+function select_services() {
+  // Make sure the request is for a user-facing page
+  if ( 
+    ! is_product()
+  ) {
+    return false;
+  }
+
+  // Otherwise do your thing
+  ?><script>
+	document.addEventListener("DOMContentLoaded", function(event) {
+		const url = window.location.href;
+		let hash = url.split('#')
+		let items = hash.slice(1);
+		let items_together = items[0].replace(/["'{}%2134567890:]/g, "");
+		let services = items_together.split(',');
+
+		for (const i in services) {
+			document.querySelectorAll(`input[type='checkbox'][value=${services[i]}]`)[0].checked = true;
+		}
+	}); 
+	 </script> 
+  <?php  
+}
+
+/* Change the base Author url from '/author/' to '/profile/' - JDH * /
+add_action('init', 'cng_author_base');
+function cng_author_base() {
+    global $wp_rewrite;
+    $author_slug = 'profile';
+    $wp_rewrite->author_base = $author_slug;
+}*/
+
+// REGISTRATION SHORTCODE
+function wc_registration_form_function() {
+	if ( is_admin() ) return;
+	if ( is_user_logged_in() ) return;
+  
+	ob_start();
+  
+	do_action( 'woocommerce_before_customer_login_form' );
+  
+	?>
+	<div class="registration-wrapper">
+		<h2 style="text-align: center;">Become a Member</h2>
+		<p style="text-align: center;">Become a member - don't miss out on deals, offers, discounts and bonus vouchers</p>
+		<form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?> >
+	
+			<?php do_action( 'woocommerce_register_form_start' ); ?>
+	
+			<?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
+	
+				<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+					<label for="reg_username"><?php esc_html_e( 'Username', 'woocommerce' ); ?>&nbsp;<span class="required"></span></label>
+					<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="reg_username" autocomplete="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
+				</p>
+	
+			<?php endif; ?>
+	
+			<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+				<label for="reg_email"><?php esc_html_e( 'Email address', 'woocommerce' ); ?>&nbsp;<span class="required"></span></label>
+				<input type="email" class="woocommerce-Input woocommerce-Input--text input-text" name="email" id="reg_email" autocomplete="email" value="<?php echo ( ! empty( $_POST['email'] ) ) ? esc_attr( wp_unslash( $_POST['email'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
+			</p>
+	
+			<?php if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) : ?>
+	
+				<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+					<label for="reg_password"><?php esc_html_e( 'Password', 'woocommerce' ); ?>&nbsp;<span class="required"></span></label>
+					<input type="password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" />
+				</p>
+	
+			<?php else : ?>
+	
+				<p><?php esc_html_e( 'A password will be sent to your email address.', 'woocommerce' ); ?></p>
+	
+			<?php endif; ?>
+	
+	
+			<p class="woocommerce-form-row form-row">
+				<?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
+				<button type="submit" style="width: 30%; border-radius: 3px" class="form-item-right woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'Sign up', 'woocommerce' ); ?></button>
+				<a class="form-item-left" style="text-decoration: underline;" href="/my-account">Login here</a>
+			</p>
+	
+			<?php do_action( 'woocommerce_register_form_end' ); ?>
+		</form>
+	</div>
+	<?php
+	  
+	return ob_get_clean();
+	 
+ }
+ add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
+
+/**
+* @snippet       Hide Edit Address Tab @ My Account
+* @how-to        Get CustomizeWoo.com FREE
+* @author        Rodolfo Melogli
+* @testedwith    WooCommerce 5.0
+* @donate $9     https://businessbloomer.com/bloomer-armada/
+*/
+ 
+add_filter( 'woocommerce_account_menu_items', 'bbloomer_remove_address_my_account', 9999 );
+ 
+function bbloomer_remove_address_my_account( $items ) {
+	// unset( $items['dashboard'] );
+	// unset( $items['downloads'] );
+	// unset( $items['payment-methods'] );
+	// unset( $items['downloads'] );
+	// unset( $items['bookings'] );
+
+	$items = array(
+		'edit-account'    => __( 'My Profile', 'woocommerce' ),
+		// 'edit-address'    => _n( 'My Addresses', 'Address', (int) wc_shipping_enabled(), 'woocommerce' ),
+		'orders'          => __( 'My Orders', 'woocommerce' ),
+		'wishlist'   	  => __( 'My Wishlist', 'woocommerce' ),
+		'my-review'   	  => __( 'My Review', 'woocommerce' ),
+		'customer-logout' => __( 'Logout', 'woocommerce' ),
+	);
+
+   return $items;
+}
+
+/**
+* @snippet       Rename Edit Address Tab @ My Account
+* @how-to        Get CustomizeWoo.com FREE
+* @author        Rodolfo Melogli
+* @testedwith    WooCommerce 5.0
+* @donate $9     https://businessbloomer.com/bloomer-armada/
+*/
+ 
+// add_filter( 'woocommerce_account_menu_items', 'bbloomer_rename_address_my_account', 9999 );
+ 
+// function bbloomer_rename_address_my_account( $items ) {
+// //    $items['edit-account'] = 'My Profile';
+// //    $items['orders'] = 'My Orders';
+//    $items['wishlist'] = 'My Wishlist';
+//    return $items;
+// }
+
+/**
+ * @snippet       WooCommerce Add New Tab @ My Account
+ * @how-to        Get CustomizeWoo.com FREE
+ * @author        Rodolfo Melogli
+ * @compatible    WooCommerce 5.0
+ * @donate $9     https://businessbloomer.com/bloomer-armada/
+ */
+  
+// ------------------
+// 1. Register new endpoint (URL) for My Account page
+// Note: Re-save Permalinks or it will give 404 error
+  
+function bbloomer_add_my_review_endpoint() {
+    add_rewrite_endpoint( 'my-review', EP_ROOT | EP_PAGES );
+}
+  
+add_action( 'init', 'bbloomer_add_my_review_endpoint' );
+  
+// ------------------
+// 2. Add new query var
+  
+function bbloomer_my_review_query_vars( $vars ) {
+    $vars[] = 'my-review';
+    return $vars;
+}
+  
+add_filter( 'query_vars', 'bbloomer_my_review_query_vars', 0 );
+  
+// ------------------
+// 3. Insert the new endpoint into the My Account menu
+  
+function bbloomer_add_my_review_link_my_account( $items ) {
+    $items['my-review'] = 'My Review';
+    return $items;
+}
+  
+add_filter( 'woocommerce_account_menu_items', 'bbloomer_add_my_review_link_my_account' );
+  
+// ------------------
+// 4. Add content to the new tab
+  
+function bbloomer_my_review_content() {
+   echo '<h3>My Review</h3>';
+//    echo do_shortcode( ' /* your shortcode here */ ' );
+	// echo '<p>Coming soon</p>';
+	$user_id = get_current_user_id();
+    // $recent_comments = get_comments( array(
+	// 	// 'number'    => -1,
+	// 	'status'    => 'approve',
+	// 	'user_id' => $user_id
+    // ) );
+
+	$args = array(
+		'orderby' => 'date',
+		'post_type' => 'product',
+		// 'number' => '4',
+		'post_author' => $user_id
+	);
+
+	$comments = get_comments($args);
+	foreach($comments as $comment) :
+		echo '<div>'; 
+		// echo('Review By: ' . $comment->comment_author . '<br />');
+		echo('<a href="' . post_permalink($comment->ID)
+	. '">' . $comment->post_title . '</a>' . '<br />');
+		echo($comment->comment_date . '<br />');
+		echo('<div class="star-rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating"><span style="width:' . ( get_comment_meta( $comment->comment_ID, 'rating', true ) / 5 ) * 100 . '%"><strong itemprop="ratingValue">' . get_comment_meta( $comment->comment_ID, 'rating', true ) . '</strong></span></div><br />');
+		echo( $comment->comment_content );
+		echo '</div>';
+	endforeach;
+
+	// echo '<pre>'; print_r($recent_comments);  echo '</pre>';
+
+    // echo '<ul>';
+    // foreach($recent_comments as $recent_comment) {
+	// 	echo '<li>';
+	// 	echo wp_get_attachment_url( get_post_thumbnail_id($recent_comment->comment_post_ID) );
+	// 	echo '<a href="'.get_comment_link($recent_comment).'" target="_blank">'.get_the_title($recent_comment->comment_post_ID).'</a>';
+	// 	echo $recent_comment->comment_content;
+	// 	echo $recent_comment->comment_date;
+	// 	echo '</li>';
+
+	// }
+	// echo '</ul>';
+}
+  
+add_action( 'woocommerce_account_my-review_endpoint', 'bbloomer_my_review_content' );
+// Note: add_action must follow 'woocommerce_account_{your-endpoint-slug}_endpoint' format
+
+/**
+* @snippet       Merge Two "My Account" Tabs @ WooCommerce Account
+* @how-to        Get CustomizeWoo.com FREE
+* @author        Rodolfo Melogli
+* @compatible    WooCommerce 5.0
+* @donate $9     https://businessbloomer.com/bloomer-armada/
+*/
+ 
+// -------------------------------
+// 1. First, hide the tab that needs to be merged/moved (edit-address in this case)
+ 
+// add_filter( 'woocommerce_account_menu_items', 'bbloomer_remove_address_my_account', 999 );
+ 
+// function bbloomer_remove_address_my_account( $items ) {
+//    unset( $items['edit-address'] );
+//    return $items;
+// }
+ 
+// -------------------------------
+// 2. Second, print the ex tab content (woocommerce_account_edit_address) into an existing tab (woocommerce_account_edit-account_endpoint). See notes below!
+ 
+add_action( 'woocommerce_account_edit-account_endpoint', 'woocommerce_account_edit_address' );
+ 
+// NOTES
+// 1. to select a given tab, use 'woocommerce_account_ENDPOINTSLUG_endpoint' hook
+// 2. to print a given tab content, use any of these:
+// 'woocommerce_account_orders'
+// 'woocommerce_account_view_order'
+// 'woocommerce_account_downloads'
+// 'woocommerce_account_edit_address'
+// 'woocommerce_account_payment_methods'
+// 'woocommerce_account_add_payment_method'
+// 'woocommerce_account_edit_account'
+
+add_action( 'woocommerce_before_calculate_totals', 'custom_cart_items_prices', 10, 1 );
+function custom_cart_items_prices( $cart ) {
+
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) )
+        return;
+
+    if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 )
+        return;
+
+    // Loop through cart items
+    foreach ( $cart->get_cart() as $cart_item ) {
+
+		// echo '<pre>'; print_r($cart_item);  echo '</pre>';
+
+        // Get an instance of the WC_Product object
+        $product = $cart_item['data'];
+
+		// echo '<pre>'; print_r($product);  echo '</pre>';
+
+        // Get the product name (Added Woocommerce 3+ compatibility)
+        $original_name = method_exists( $product, 'get_name' ) ? $product->get_name() : $product->post->post_title;
+
+        // SET THE NEW NAME
+        $new_name = 'mydesiredproductname';
+
+		if (array_key_exists("type", $cart_item['booking']) && !empty($cart_item['booking']['type']))
+		{
+		// echo '<pre>'; print_r("Key & Value exists!");  echo '</pre>';
+			$new_name = $cart_item['booking']['type'];
+		}
+		else
+		{
+			$new_name = $original_name;
+			// echo '<pre>'; print_r("Key or Value does not exist!");  echo '</pre>';
+		}
+
+        // Set the new name (WooCommerce versions 2.5.x to 3+)
+        if( method_exists( $product, 'set_name' ) )
+            $product->set_name( $new_name );
+        else
+            $product->post->post_title = $new_name;
+    }
+}
+
+
 function my_custom_js_css() {
-    echo '<script src="wp-content/themes/woodmart-child/js/jquery.datetimepicker.js"></script><link rel="stylesheet" type="text/css" href="wp-content/themes/woodmart-child/jquery.datetimepicker.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script>
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
 ';
 }
 add_action( 'wp_head', 'my_custom_js_css' );
+
+/**
+ * @snippet       Redirect to Checkout Upon Add to Cart - WooCommerce
+ * @how-to        Get CustomizeWoo.com FREE
+ * @author        Rodolfo Melogli
+ * @compatible    Woo 3.8
+ * @donate $9     https://businessbloomer.com/bloomer-armada/
+ */
+  
+add_filter( 'woocommerce_add_to_cart_redirect', 'bbloomer_redirect_checkout_add_cart' );
+ 
+function bbloomer_redirect_checkout_add_cart() {
+   return wc_get_checkout_url();
+}

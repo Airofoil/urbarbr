@@ -83,7 +83,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 		);
 
 		if( $ajax ) {
-			$class .= ' woodmart-ajax-search';
+			$class .= ' woodmart-ajax-search jac-test-class';
 			woodmart_enqueue_js_library( 'autocomplete' );
 			woodmart_enqueue_js_script( 'ajax-search' );
 			foreach ($ajax_args as $key => $value) {
@@ -149,8 +149,43 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<span class="wd-close-search wd-action-btn wd-style-icon wd-cross-icon<?php echo woodmart_get_old_classes( ' woodmart-close-search' ); ?>"><a aria-label="<?php esc_attr_e( 'Close search form', 'woodmart' ); ?>"></a></span>
 				<?php endif ?>
 				<form role="search" method="get" class="searchform <?php echo esc_attr( $class ); ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>" <?php echo ! empty( $data ) ? $data : ''; ?>>
-					<input type="text" class="s" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo get_search_query(); ?>" name="s" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>" title="<?php echo esc_attr( $placeholder ); ?>" />
+					<!-- 		TEST DATA			 -->
+					
+					<?php if($post_type == 'product'){ ?>
+						<input class="your-location-search" placeholder="Set your location" name="your-location" aria-label=".form-select-sm" style="background-color:#001F35;color:#fff;font-weight:500">
+					<?php } ?>
+					
+					<!-- 		TEST DATA			 -->
+					<?php if($post_type == 'product'){ 
+						global $wpdb;	
+						$global_services = array();
+
+						$search = $wpdb->prepare(" SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_product_addons' ");
+						$search_results = $wpdb->get_results($search);
+						foreach($search_results as $service){
+							foreach(unserialize($service->meta_value)[0]['options'] as $option){
+								$global_services[] = $option['label'];
+							}
+						}
+						$global_services = array_unique($global_services);
+						?>
+						<select class="form-select form-select-sm booking-services-search selectpicker" name="booking-services" aria-label=".form-select-sm">
+						 	<option value="default" hidden >Select a service</option>
+							 	<?php foreach($global_services as $service){?>
+									<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
+								<?php } ?>
+						</select>
+					<?php }else{?>
+						<input type="text" class="s" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo get_search_query(); ?>" name="s" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>" title="<?php echo esc_attr( $placeholder ); ?>" />
+					<?php } ?>
 					<input type="hidden" name="post_type" value="<?php echo esc_attr( $post_type ); ?>">
+					
+					<!-- 		TEST DATA			 -->
+					<?php if($post_type == 'product'){ ?>
+						<input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time">
+					<?php } ?>
+					<!-- 		TEST DATA			 -->
+					
 					<?php if( $show_categories && $post_type == 'product' ) woodmart_show_categories_dropdown(); ?>
 					<button type="submit" class="searchsubmit<?php echo esc_attr( $btn_classes ); ?>">
 						<span>
