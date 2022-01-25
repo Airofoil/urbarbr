@@ -1,5 +1,39 @@
 <?php 
 	global $woocommerce, $product;
+	$searching_location = $_GET['your-location'];
+	$searching_service = $_GET['booking-services'];
+	$searching_date = $_GET['booking-date'];
+	$filtering = false;
+	if($searching_location || $searching_service || $searching_date){
+		$filtering = true;
+		$qualified = false;
+	}else{
+		$qualified = true;
+	}
+	
+	if($searching_service && $searching_service != "default"){
+		foreach ($product->get_meta_data() as $index => $data) { 
+			if($data->key == '_product_addons'){
+				foreach($data->value[0]['options'] as $index=>$value){
+					if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$searching_service)))){
+						$qualified = true;
+					}
+				}
+			}
+		}
+	}elseif($searching_service== "default"){
+		$qualified = true;
+	}
+
+	if($searching_date){
+// 		echo date("Y-m-d H:00:00",strtotime($searching_date));
+// 		var_dump($product->get_min_date());
+// 		var_dump($product->get_max_date());
+		
+	}
+	
+	
+// 	echo $filtering?"true":"false";
 	$average = $product->get_average_rating();
 	$review_count = $product->get_review_count();
 	$product_title = $product->get_name();
@@ -35,7 +69,7 @@
 		}
 	}
 ?>
-
+<?php if($qualified){ ?>
 <div class="product-wrapper">
 	<div class="product-element-top">
 		<a href="<?php echo esc_url( get_permalink() ); ?>" class="product-image-link">
@@ -172,7 +206,7 @@
 			font-weight: bold;
 			font-size: 90%;
 		}
-		/* .jac-products-header-top-left .star-rating:before{
+/* 		.jac-products-header-top-left .star-rating:before{
 			content: "\f149" !important;
 			color:#FFC702 !important;
 		} */
@@ -207,7 +241,7 @@
 			float: right;
 			color:#000000;
 			font-weight: 500;
-			    max-width: 65px;
+			max-width: 65px;
 		}
 		.barber_service_price{
 			color:#000000;
@@ -259,3 +293,4 @@
 			<?php woodmart_product_sale_countdown(); ?>
 		<?php endif ?>
 </div>
+<?php } ?>
