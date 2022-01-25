@@ -231,13 +231,13 @@ div.wpcf7 .wpcf7-spinner {
 	}
 }
 
-@media only screen and (min-width: 1024px) and (max-width: 1299px) {
+@media only screen and (min-width: 1024px) and (max-width 1299px) {
 	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
 		min-height: 380px!important;
 	}
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
+@media only screen and (min-width: 768px) and (max-width 1024px) {
 	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
 		min-height: 310px!important;
 	}
@@ -436,7 +436,7 @@ body:not(.home) .whb-sticked .wd-tools-element:hover>a {
 	width: 65%;
 }
 
-.woocommerce-billing-fields p.form-row-first, p.form-row-last {
+.woocommerce-billing-fields p.form-row-first, .woocommerce-billing-fields p.form-row-last {
 	width: 100%;
 }
 
@@ -606,9 +606,11 @@ body:not(.home) .whb-color-light:not(.whb-with-bg) {
 .registration-wrapper {
 	width: 35%; 
 	margin: 0 auto;
+	margin-top: 3rem;
 	border: 1px solid #D3D3D3;
 	padding: 2rem 3rem 5rem 3rem;
 	border-radius: 3px;
+	background: white;
 }
 
 @media (max-width: 710px) {
@@ -680,16 +682,20 @@ div.wd-wishlist-btn a {
     background: #fff;
     max-width: 300px;
     margin-right: 20px;
+	font-weight: 500;
 }
 .booking-date-search{
 	border: 1px solid #001F35 !important;
-    background-color: #fff !important;
+    background-color: #fff !important;
+	background: #fff !important;
     max-width: 250px !important;
     margin-right: 20px;
+	font-weight: 500;
 }
 .your-location-search{
 	max-width:200px;
 	margin-right: 20px;
+	padding: 0 20px 0;
 }
 .searchform.woodmart-ajax-search.jac-test-class{
 	display: flex;
@@ -700,4 +706,26 @@ div.wd-wishlist-btn a {
 	color: #001F35 !important;
 	border: 1px solid #001F35 !important;
     background: #fff;
+}
+#post-8343 > .entry-content > .vc_row:first-child{
+	overflow:visible;
+}
+
+body.page-id-9:not(.logged_in) .main-page-wrapper, body.page-id-8830 .main-page-wrapper {
+	padding-top: 90px;
+	margin-top: 0px;
+}
+
+
+body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-wrapper {
+	background: url("./images/background-image.png");
+	height: 100%;
+	/* Center and scale the image nicely */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.logged-in .main-page-wrapper {
+	background-image: none;
 }
