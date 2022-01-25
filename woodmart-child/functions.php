@@ -346,7 +346,7 @@ add_filter( 'woocommerce_account_menu_items', 'bbloomer_add_my_review_link_my_ac
 // 4. Add content to the new tab
   
 function bbloomer_my_review_content() {
-   echo '<h3>My Review</h3>';
+   echo '<h3 class="my-reviews-title">My Reviews</h3>';
 //    echo do_shortcode( ' /* your shortcode here */ ' );
 	// echo '<p>Coming soon</p>';
 	$user_id = get_current_user_id();
@@ -359,21 +359,29 @@ function bbloomer_my_review_content() {
 	$args = array(
 		'orderby' => 'date',
 		'post_type' => 'product',
-		// 'number' => '4',
+		// 'number' => '2',
 		'post_author' => $user_id
 	);
 
 	$comments = get_comments($args);
+
 	foreach($comments as $comment) :
-		echo '<div>'; 
-		// echo('Review By: ' . $comment->comment_author . '<br />');
-		echo('<a href="' . post_permalink($comment->ID)
-	. '">' . $comment->post_title . '</a>' . '<br />');
-		echo($comment->comment_date . '<br />');
+
+		$jac_comment_date = date("Y/m/d", strtotime($comment->comment_date));
+
+		// echo '<div class="my-reviews-all">';
+		echo '<div class="my-reviews-all"><div class="reviews-barber-pic reviews-first-col"><img src="'.wp_get_attachment_url( get_post_thumbnail_id($comment->comment_post_ID) ).'"></div>';
+
+		echo '<div class="reviews-sec-col"><div class="reviews-first-row"><div class="reviews-in-first-col">';
+		echo '<div class="barber-title"><a href="'.post_permalink($comment->comment_post_ID).'" target="_blank">'.get_the_title($comment->comment_post_ID).'</a></div>';
 		echo('<div class="star-rating" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating"><span style="width:' . ( get_comment_meta( $comment->comment_ID, 'rating', true ) / 5 ) * 100 . '%"><strong itemprop="ratingValue">' . get_comment_meta( $comment->comment_ID, 'rating', true ) . '</strong></span></div><br />');
-		echo( $comment->comment_content );
-		echo '</div>';
+		echo '</div><div class="reviews-in-sec-col">' . get_day_name($jac_comment_date) . '</div></div>';
+
+		echo '<div class="reviews-sec-row">' . $comment->comment_content . '</div></div></div>';
+		// echo '</div>';
 	endforeach;
+
+	// echo '<pre>'; print_r($comments);  echo '</pre>';
 
 	// echo '<pre>'; print_r($recent_comments);  echo '</pre>';
 
@@ -388,6 +396,37 @@ function bbloomer_my_review_content() {
 
 	// }
 	// echo '</ul>';
+}
+
+function get_day_name($date) {
+
+    // $date = date('Y/m/d', $timestamp);
+
+    if($date == date('Y/m/d')) {
+      $date = 'Today';
+    } 
+    else if($date == date('Y/m/d',strtotime("-1 days"))) {
+      $date = 'Yesterday';
+    }
+	else if($date == date('Y/m/d',strtotime("-2 days"))) {
+		$date = '2 days ago';
+	}
+	else if($date == date('Y/m/d',strtotime("-3 days"))) {
+		$date = '3 days ago';
+	}
+	else if($date == date('Y/m/d',strtotime("-4 days"))) {
+		$date = '4 days ago';
+	}
+	else if($date == date('Y/m/d',strtotime("-5 days"))) {
+		$date = '5 days ago';
+	}
+	else if($date == date('Y/m/d',strtotime("-6 days"))) {
+		$date = '6 days ago';
+	}
+	else if($date == date('Y/m/d',strtotime("-7 days"))) {
+		$date = '7 days ago';
+	}
+    return $date;
 }
   
 add_action( 'woocommerce_account_my-review_endpoint', 'bbloomer_my_review_content' );

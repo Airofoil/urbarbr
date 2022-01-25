@@ -285,7 +285,13 @@ div.wpcf7 .wpcf7-spinner {
 	display: none;
 }
 
-.woocommerce-billing-fields #billing_company, .woocommerce-billing-fields #billing_country_field, .woocommerce-billing-fields #billing_address_1_field, .woocommerce-billing-fields #billing_address_2_field, .woocommerce-billing-fields #billing_city_field, .woocommerce-billing-fields #billing_state_field, .woocommerce-billing-fields #billing_postcode_field
+.woocommerce-billing-fields #billing_company, 
+.woocommerce-billing-fields #billing_country_field, 
+/*.woocommerce-billing-fields #billing_address_1_field, */
+.woocommerce-billing-fields #billing_address_2_field, 
+.woocommerce-billing-fields #billing_city_field, 
+.woocommerce-billing-fields #billing_state_field, 
+.woocommerce-billing-fields #billing_postcode_field
 {
 	display: none!important;
 }
@@ -734,4 +740,67 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
 
 .logged-in .main-page-wrapper {
 	background-image: none;
+}
+
+.footer-text .footer-text-column {
+	align-items: baseline!important;
+}
+
+.reviews-barber-pic img {
+	width: 55px;
+    border-radius: 50%;
+    height: 55px;
+    object-fit: cover;
+}
+
+.my-reviews-all {
+	display: flex;
+	margin: 20px 0;
+}
+
+.reviews-barber-pic {
+	min-width: 80px;
+}
+
+.reviews-sec-col {
+	width: -webkit-fill-available;
+}
+
+.reviews-first-row {
+	justify-content: space-between;
+    display: flex;
+}
+
+.reviews-in-first-col {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.reviews-in-first-col .star-rating {
+	margin-left: 20px;
+	font-weight: 600;
+    font-size: 16px;
+}
+
+.reviews-in-sec-col {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 21px;
+	color: #284158;
+}
+
+.reviews-in-first-col .barber-title {
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 20px;
+	color: #284158;
+}
+
+.reviews-sec-row {
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 21px;
+	color: #777778;
 }
