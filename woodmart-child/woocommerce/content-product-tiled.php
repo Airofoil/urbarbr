@@ -1,5 +1,7 @@
 <?php 
 	global $woocommerce, $product;
+	$product_id = $product->get_id();
+
 	$searching_location = $_GET['your-location'];
 	$searching_service = $_GET['booking-services'];
 	$searching_date = $_GET['booking-date'];
@@ -26,18 +28,36 @@
 	}
 
 	if($searching_date){
-// 		echo date("Y-m-d H:00:00",strtotime($searching_date));
-// 		var_dump($product->get_min_date());
-// 		var_dump($product->get_max_date());
+		global $wpdb;
+		$search_tmp = $wpdb->prepare(
+				"SELECT * FROM wp_wc_booking_relationships WHERE product_id = %d ORDER BY sort_order DESC",
+				$product_id 
+			);
+		$relationship = $wpdb->get_results($search_tmp);
+		$resource_id = $relationship[0]->resource_id;
+		// var_dump($resource_id);
+		$search_tmp = $wpdb->prepare(
+				"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
+				$resource_id 
+			);
+		$availability = $wpdb->get_results($search_tmp);
 		
+		$date_info = unserialize($availability[0]->meta_value)[0];
+		$from_date = $date_info['from_date'] . ' ' . $date_info['from'];
+		$to_date = $date_info['to_date'] . ' ' . $date_info['to'];
+		if($searching_date < $to_date && $from_date < $searching_date){
+			$qualified = true;
+		}else{
+			$qualified = false;
+		}
 	}
+	
 	
 	
 // 	echo $filtering?"true":"false";
 	$average = $product->get_average_rating();
 	$review_count = $product->get_review_count();
 	$product_title = $product->get_name();
-	$product_id = $product->get_id();
 
 	$product_details = $product->get_data();
 	$product_full_description = $product_details['description'];
