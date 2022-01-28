@@ -29,18 +29,32 @@
 
 	if($searching_date){
 		global $wpdb;
+// 		$search_tmp = $wpdb->prepare(
+// 				"SELECT * FROM wp_wc_booking_relationships WHERE product_id = %d ORDER BY sort_order DESC",
+// 				$product_id 
+// 			);
+// 		$relationship = $wpdb->get_results($search_tmp);
+// 		$resource_id = $relationship[0]->resource_id;
+// 		// var_dump($resource_id);
+// 		$search_tmp = $wpdb->prepare(
+// 				"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
+// 				$resource_id 
+// 			);
+
 		$search_tmp = $wpdb->prepare(
-				"SELECT * FROM wp_wc_booking_relationships WHERE product_id = %d ORDER BY sort_order DESC",
-				$product_id 
-			);
-		$relationship = $wpdb->get_results($search_tmp);
-		$resource_id = $relationship[0]->resource_id;
-		// var_dump($resource_id);
-		$search_tmp = $wpdb->prepare(
-				"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
-				$resource_id 
-			);
+			"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
+			$product_id 
+		);
+		
 		$availability = $wpdb->get_results($search_tmp);
+		
+		// $dates_info = unserialize($availability[0]->meta_value);
+
+		// foreach($dates_info as $date_info) {
+		// 	echo '<pre>'; print_r($date_info);  echo '</pre>';
+		// }
+
+		// echo '<pre>'; print_r($availability);  echo '</pre>';
 		
 		$date_info = unserialize($availability[0]->meta_value)[0];
 		$from_date = $date_info['from_date'] . ' ' . $date_info['from'];
