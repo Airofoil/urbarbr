@@ -804,3 +804,19 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
 	line-height: 21px;
 	color: #777778;
 }
+
+.cart-content-wrapper .woocommerce-error,
+.woocommerce-MyAccount-content .woocommerce-error,
+.woocommerce-checkout .woocommerce-error {
+  display: none;
+}
+
+.tinv-wishlist .woocommerce-error li {
+  margin-left: 65px;
+}
+
+@media screen and (orientation: portrait) {
+  .home .whb-main-header .whb-general-header {
+    background-color: rgb(16, 44, 69, 0.3) !important;
+  }
+}
