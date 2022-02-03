@@ -854,7 +854,8 @@ body.page-id-8830 .main-page-wrapper {
 }
 
 .cart-content-wrapper .woocommerce-error,
-.woocommerce-MyAccount-content .woocommerce-error {
+.woocommerce-MyAccount-content .woocommerce-error,
+.woocommerce-checkout .woocommerce-error {
   display: none;
 }
 
