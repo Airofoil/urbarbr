@@ -28,28 +28,52 @@
 	}
 
 	if($searching_date){
+
 		global $wpdb;
-		$search_tmp = $wpdb->prepare(
-				"SELECT * FROM wp_wc_booking_relationships WHERE product_id = %d ORDER BY sort_order DESC",
-				$product_id 
-			);
-		$relationship = $wpdb->get_results($search_tmp);
-		$resource_id = $relationship[0]->resource_id;
-		// var_dump($resource_id);
-		$search_tmp = $wpdb->prepare(
-				"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
-				$resource_id 
-			);
-		$availability = $wpdb->get_results($search_tmp);
+
+		$qualified = false;
+
+		$min_date = date('Y-m-d', strtotime(substr($searching_date,0,-3)));
+
+		$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
 		
-		$date_info = unserialize($availability[0]->meta_value)[0];
-		$from_date = $date_info['from_date'] . ' ' . $date_info['from'];
-		$to_date = $date_info['to_date'] . ' ' . $date_info['to'];
-		if($searching_date < $to_date && $from_date < $searching_date){
-			$qualified = true;
-		}else{
-			$qualified = false;
+
+		$url = get_site_url() . '/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
+
+		/* curl function not working on local, that needs to crawl staging/live site product data. Comment the above line and uncomment the below line to fetch from staging site */
+		// $url = 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
+
+		$curl = curl_init($url);
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+		// //for debug only!
+		// curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+		// curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+		$resp = curl_exec($curl);
+		$resources = json_decode($resp, true);
+		curl_close($curl);
+
+		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
+		$search_date_formatted = date("Y-m-d H:i", strtotime($searching_date));
+
+		$slots_info = $resources['records'];
+
+		foreach($slots_info as $slot_info) {
+			if ($slot_info['available'] == 1) {
+
+				$start_time = str_replace("T"," ",$slot_info['date']);
+				$end_time = date('Y-m-d H:i', strtotime($start_time) + 3600);
+
+				if($search_date_formatted < $end_time && $start_time <= $search_date_formatted){
+					$qualified = true;
+					break;
+				}
+
+			}
 		}
+
 	}
 	
 	
