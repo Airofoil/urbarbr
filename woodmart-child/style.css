@@ -820,3 +820,7 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
     background-color: rgb(16, 44, 69, 0.3) !important;
   }
 }
+
+.home .searchform .searchsubmit:before {
+	display: none;
+}
