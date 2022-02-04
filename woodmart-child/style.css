@@ -692,7 +692,7 @@ div.wd-wishlist-btn a {
 }
 .booking-date-search{
 	border: 1px solid #001F35 !important;
-    background-color: #fff !important;
+ 	background-color: #fff !important;
 	background: #fff !important;
     max-width: 250px !important;
     margin-right: 20px;
@@ -821,6 +821,60 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
   }
 }
 
+
 .home .searchform .searchsubmit:before {
 	display: none;
+}
+.wc-bookings-booking-form-button.single_add_to_cart_button.no-service-disable{
+	pointer-events: none;
+	 background: rgb(40,65,88,0.5);
+}
+@media (max-width: 1024px){
+	.whb-column.whb-mobile-center.whb-hidden-lg .site-logo img{
+		filter: invert(1);
+	}
+}
+body:not(.home) header.whb-sticked .container{
+		background:#fff;
+	}
+.related-products .jac-products-header-top-right,
+.related-products .jac-barber-description,
+.related-products .product-element-bottom{
+	display: none;
+}
+.related-products .jac-barber-details{
+	margin-left:0;
+}
+.related-products .product-image-link .size-woocommerce_thumbnail{
+	 width: 220px;
+     height: 325px;
+    object-fit: cover;
+}
+@media (max-width: 768px){
+	.related-products .product-image-link .size-woocommerce_thumbnail{
+		 height: 250px;
+	}
+	.searchform.woodmart-ajax-search.jac-test-class{
+		flex-direction:column;
+	}
+	.searchform.woodmart-ajax-search.jac-test-class input,
+	.searchform.woodmart-ajax-search.jac-test-class .booking-services-search{
+		height:42px;
+	}
+	.searchform.woodmart-ajax-search.jac-test-class input:not(.booking-date-search),
+	.searchform.woodmart-ajax-search.jac-test-class .booking-services-search{
+		margin-bottom:10px;
+	}
+	.searchform .searchsubmit{
+		position:absolute !important;
+		height:42px;
+		top:unset;
+	}
+}
+.related-products .jac-barber-name{
+	font-size: initial;
+    margin-bottom: 5px;
+}
+.related-and-upsells .related-products{
+	margin-bottom: 20px !important;
 }
