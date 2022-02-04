@@ -878,3 +878,7 @@ body:not(.home) header.whb-sticked .container{
 .related-and-upsells .related-products{
 	margin-bottom: 20px !important;
 }
+
+footer #nav_menu-16, footer #nav_menu-17 {
+	width: 100%;
+}
