@@ -824,3 +824,7 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
 .home .searchform .searchsubmit:before {
 	display: none;
 }
+
+.wc-bookings-booking-form-button.single_add_to_cart_button.disabled{
+	pointer-events: none;
+}
