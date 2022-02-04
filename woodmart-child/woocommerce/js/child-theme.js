@@ -3,11 +3,12 @@ jQuery(document).ready(function ($) {
    
     $('input.wc-pao-addon-checkbox').on('click',function(){
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
-            $('.single_add_to_cart_button').removeClass('disabled');
+            $('.single_add_to_cart_button').removeClass('no-service-disable');
         }else{
-            $('.single_add_to_cart_button').addClass('disabled');
+            $('.single_add_to_cart_button').addClass('no-service-disable');
         }
     })
+   
     $('.single_add_to_cart_button').click(function (event) {
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
 

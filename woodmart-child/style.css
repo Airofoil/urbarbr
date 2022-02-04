@@ -825,6 +825,7 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
 	display: none;
 }
 
-.wc-bookings-booking-form-button.single_add_to_cart_button.disabled{
+.wc-bookings-booking-form-button.single_add_to_cart_button.no-service-disable{
 	pointer-events: none;
+	background: rgb(40,65,88,0.5);
 }
