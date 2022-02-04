@@ -10,6 +10,36 @@
 
 
 /* start here */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+:root {
+	--urbarbr-fonts: Poppins, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	/*--urbarbr-fonts-2?: "Montserrat Alternate", Montserrat;*/
+	--urbarbr-blue: #001F35;
+	--urbarbr-shade: #365277;
+	--urbarbr-lightblue: #5982B7;
+	--urbarbr-darkgrey: #626262;
+	--urbarbr-grey: #A6A6A6;
+	--urbarbr-lightgrey: #E2E2E2;
+	--urbarbr-white: #FFFFFF;
+	--promo-green: #34A853;
+	--promo-red: #CE341E;
+	--promo-yellow: #FBBC05;
+	--promo-blue: #9290FE;
+}
+
+body * {
+    font-family: var(--urbarbr-fonts);
+}
+
+textarea {
+	resize: vertical;
+}
+
+i.fa:first-child {
+    margin-right: 8px;
+    font-size: 18px;
+}
 
 body .main-page-wrapper {
 	margin-top: 90px;
@@ -705,22 +735,50 @@ div.wd-wishlist-btn a {
 	padding: 0 20px 0;
 	border-radius: 4px;
 }
+.your-location-search > i { /* Make the pin marker icon an outline */
+    -webkit-text-stroke: 1.5px white;
+    -webkit-text-fill-color: #001f35;
+}
 .searchform.woodmart-ajax-search.jac-test-class{
 	display: flex;
     justify-content: flex-start;
 }
 .searchform .searchsubmit{
     position: unset !important;
-	color: #001F35 !important;
+	/*--color: #001F35 !important; */
 /* 	border: 1px solid #001F35 !important; */
-    background: #fff;
+    /*--background: #fff; */
+
+	/* Invert button to the blue colour theme */
+    color: #FFF;
+    background: #001F35;
+
+    display: inline-block;
+	width: unset;
+    padding: 0 15px;
+    font-size: 15px;
+    font-weight: 400;
+    text-transform: none;
+    box-shadow: 1px 1px 15px #FFF4;
+}
+.searchform .searchsubmit::after {
+    float: left;
+	margin-right: 8px;
+    font-size: 18px;
+    line-height: 22px;
+}
+.searchform .searchsubmit span { /* WIP */
+    max-width: 0;
+    overflow: hidden;
 }
 #post-8343 > .entry-content > .vc_row:first-child{
 	overflow:visible;
 }
 .booking-services-search button.dropdown-toggle{
+	height: 100%;
 	border: 1px solid #001F35;
-    height: 100%;
+    font-weight: 500;
+    color: #777;
 }
 
 body.page-id-9:not(.logged_in) .main-page-wrapper, body.page-id-8830 .main-page-wrapper {
@@ -821,7 +879,6 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
   }
 }
 
-
 .home .searchform .searchsubmit:before {
 	display: none;
 }
@@ -881,4 +938,7 @@ body:not(.home) header.whb-sticked .container{
 
 footer #nav_menu-16, footer #nav_menu-17 {
 	width: 100%;
+}
+.wd-search-form .btn.dropdown-toggle { /* Make the 'Select a service' dropdown lowercase */
+    text-transform: none;
 }
