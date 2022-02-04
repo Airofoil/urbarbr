@@ -8,6 +8,13 @@ jQuery(document).ready(function ($) {
             $('.single_add_to_cart_button').addClass('no-service-disable');
         }
     })
+    $(".single_add_to_cart_button").ready(function () {
+        if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
+            $('.single_add_to_cart_button').removeClass('no-service-disable');
+        } else {
+            $('.single_add_to_cart_button').addClass('no-service-disable');
+        }
+    });
    
     $('.single_add_to_cart_button').click(function (event) {
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
