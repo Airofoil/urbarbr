@@ -40,7 +40,7 @@ if ( ! function_exists( 'woodmart_generate_posts_slider' ) ) {
 			),
 			$atts
 		);
-
+		
 		extract( $parsed_atts );
 
 		if ( empty( $product_hover ) || $product_hover == 'inherit' ) {
@@ -79,7 +79,8 @@ if ( ! function_exists( 'woodmart_generate_posts_slider' ) ) {
 			woodmart_lazy_loading_init( true );
 			woodmart_enqueue_inline_style( 'lazy-loading' );
 		}
-
+	
+		
 		if ( isset( $query->query['post_type'] ) ) {
 			$post_type = $query->query['post_type'];
 		} elseif ( $products ) {
@@ -134,6 +135,11 @@ if ( ! function_exists( 'woodmart_generate_posts_slider' ) ) {
 			$carousel_classes .= ' title-line-' . woodmart_get_opt( 'product_title_lines_limit' );
 		}
 
+		if($atts && isset($atts['display_item'])){
+			$display_item = $atts['display_item'];
+			$carousel_classes .= ' display-type-' . $display_item;
+		}
+
 		if ( $el_class ) {
 			$classes .= ' ' . $el_class;
 		}
@@ -167,11 +173,11 @@ if ( ! function_exists( 'woodmart_generate_posts_slider' ) ) {
 					<?php
 					if ( $products ) {
 						foreach ( $products as $product ) {
-							woodmart_carousel_query_item( false, $product );
+							woodmart_carousel_query_item( false, $product, ($atts && isset($atts['display_item']) && $atts['display_item'] == 'addons') );
 						}
 					} else {
 						while ( $query->have_posts() ) {
-							woodmart_carousel_query_item( $query );
+							woodmart_carousel_query_item( $query, false, ($atts && isset($atts['display_item']) && $atts['display_item'] == 'addons') );
 						}
 					}
 
@@ -205,7 +211,7 @@ if ( ! function_exists( 'woodmart_generate_posts_slider' ) ) {
 }
 
 if ( ! function_exists( 'woodmart_carousel_query_item' ) ) {
-	function woodmart_carousel_query_item( $query = false, $product = false ) {
+	function woodmart_carousel_query_item( $query = false, $product = false, $display_addon = false ) {
 		global $post;
 		if ( $query ) {
 			$query->the_post(); // Get post from query
@@ -219,6 +225,10 @@ if ( ! function_exists( 'woodmart_carousel_query_item' ) ) {
 			
 			<?php if ( get_post_type() == 'product' || get_post_type() == 'product_variation' && woodmart_woocommerce_installed() ) : ?>
 				<?php woodmart_set_loop_prop( 'is_slider', true ); ?>
+				<?php 
+				if($display_addon){
+					woodmart_set_loop_prop( 'display_addon', true);
+				}?>
 				<?php wc_get_template_part( 'content-product' ); ?>
 			<?php elseif ( get_post_type() == 'portfolio' ) : ?>
 				<?php get_template_part( 'content', 'portfolio-slider' ); ?>
@@ -234,3 +244,4 @@ if ( ! function_exists( 'woodmart_carousel_query_item' ) ) {
 		<?php
 	}
 }
+
