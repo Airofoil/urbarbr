@@ -21,7 +21,27 @@ $text_align = is_rtl() ? 'right' : 'left';
 
 do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plain_text, $email ); ?>
 
-<h2>
+
+<table class="td" cellspacing="0" cellpadding="6" style="width: 100%;">
+	<thead>
+		<tr>
+			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Booking No.', 'woocommerce' ); ?></th>
+			<td class="td" scope="col" style="text-align:right;"><?php echo '0' . $order->get_order_number() ?></td>
+		</tr>
+		<tr>
+			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Booking Date', 'woocommerce' ); ?></th>
+			<td class="td" scope="col" style="text-align:right;"><?php echo wc_format_datetime( $order->get_date_created() ); ?></td>
+		</tr>
+		<tr>
+			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Booking Address', 'woocommerce' ); ?></th>
+			<td class="td" scope="col" style="text-align:right;"><?php echo $order->get_formatted_shipping_address() ?></td>
+		</tr>
+	</thead>
+</table>
+<?php /*echo wp_kses_post( $before . sprintf( __( '[Order #%s]', 'woocommerce' ) . $after . ' (<time datetime="%s">%s</time>)', $order->get_order_number(), $order->get_date_created()->format( 'c' ), wc_format_datetime( $order->get_date_created() ) ) );*/?>
+
+
+<?php /* <h2>
 	<?php
 	if ( $sent_to_admin ) {
 		$before = '<a class="link" href="' . esc_url( $order->get_edit_order_url() ) . '">';
@@ -30,18 +50,24 @@ do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plai
 		$before = '';
 		$after  = '';
 	}
-	/* translators: %s: Order ID. */
+	/* translators: %s: Order ID. * /
 	echo wp_kses_post( $before . sprintf( __( '[Order #%s]', 'woocommerce' ) . $after . ' (<time datetime="%s">%s</time>)', $order->get_order_number(), $order->get_date_created()->format( 'c' ), wc_format_datetime( $order->get_date_created() ) ) );
 	?>
-</h2>
+
+
+$booking = get_wc_booking( $booking_id );
+$start_date = $booking->get_start_date();
+</h2> */ ?>
+
+<p>Here's what you ordered:</p>
 
 <div style="margin-bottom: 40px;">
-	<table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
+	<table class="td" cellspacing="0" cellpadding="6" style="width: 100%;">
 		<thead>
 			<tr>
-				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Product', 'woocommerce' ); ?></th>
-				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Quantity', 'woocommerce' ); ?></th>
-				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Price', 'woocommerce' ); ?></th>
+				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Service', 'woocommerce' ); ?></th>
+				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Qty', 'woocommerce' ); ?></th>
+				<th class="td" scope="col" style="text-align:right;"><?php esc_html_e( 'Price', 'woocommerce' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -69,7 +95,7 @@ do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plai
 					?>
 					<tr>
 						<th class="td" scope="row" colspan="2" style="text-align:<?php echo esc_attr( $text_align ); ?>; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['label'] ); ?></th>
-						<td class="td" style="text-align:<?php echo esc_attr( $text_align ); ?>; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['value'] ); ?></td>
+						<td class="td total" style="text-align:<?php echo esc_attr( $text_align ); ?>; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['value'] ); ?></td>
 					</tr>
 					<?php
 				}
