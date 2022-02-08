@@ -28,7 +28,9 @@ jQuery(document).ready(function ($){
 //      maxDate: moment({h:16})
     });
 
-    
+    setTimeout(function() {
+        $("#billing_address_1").attr("placeholder", "Enter address and select from the dropdown")
+    }, 100);
 //  $.datetimepicker.setDateFormatter('moment');
     
 });

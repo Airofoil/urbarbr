@@ -317,7 +317,7 @@ div.wpcf7 .wpcf7-spinner {
 
 .woocommerce-billing-fields #billing_company, 
 .woocommerce-billing-fields #billing_country_field, 
-/*.woocommerce-billing-fields #billing_address_1_field, */
+.woocommerce-billing-fields #billing_company_field,
 .woocommerce-billing-fields #billing_address_2_field, 
 .woocommerce-billing-fields #billing_city_field, 
 .woocommerce-billing-fields #billing_state_field, 
