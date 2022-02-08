@@ -20,7 +20,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <?php if ( ! empty( $fields ) ) : ?>
-	<div style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;">
+	<div style=" margin-bottom: 40px;">
 		<h2><?php esc_html_e( 'Customer details', 'woocommerce' ); ?></h2>
 		<ul>
 			<?php foreach ( $fields as $field ) : ?>

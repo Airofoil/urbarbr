@@ -722,7 +722,6 @@ div.wd-wishlist-btn a {
 }
 .booking-date-search{
 	border: 1px solid #001F35 !important;
- 	background-color: #fff !important;
 	background: #fff !important;
     max-width: 250px !important;
     margin-right: 20px;
@@ -775,7 +774,7 @@ div.wd-wishlist-btn a {
 	overflow:visible;
 }
 .booking-services-search button.dropdown-toggle{
-	height: 100%;
+    height: 100%;
 	border: 1px solid #001F35;
     font-weight: 500;
     color: #777;
@@ -941,4 +940,24 @@ footer #nav_menu-16, footer #nav_menu-17 {
 }
 .wd-search-form .btn.dropdown-toggle { /* Make the 'Select a service' dropdown lowercase */
     text-transform: none;
+}
+
+.owl-carousel .promo-banner img {
+	transition: 1.2s cubic-bezier(0, 0.93, 0.37, 1.01);
+}
+.owl-carousel .promo-banner:hover img {
+	transform: scale(1.1);
+	filter: brightness(0.9);
+}
+
+body .caret { /* Style the dropdown arrow */
+	width: 9px;
+	height: 9px;
+	top: calc(50% - 4px) !important;
+	right: 15px !important;
+	border: 0;
+	border-right: 2px solid #8896A2;
+	border-bottom: 2px solid #8896A2;
+	border-radius: 1px;
+	transform: rotate(45deg);
 }

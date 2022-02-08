@@ -45,6 +45,7 @@ $text_lighter_40 = wc_hex_lighter( $text, 40 );
 ?>
 body {
 	padding: 0;
+	font-family: Poppins, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 }
 
 #wrapper {
@@ -63,20 +64,17 @@ body {
 }
 
 #template_header {
-	background-color: <?php echo esc_attr( $base ); ?>;
 	border-radius: 3px 3px 0 0 !important;
 	color: <?php echo esc_attr( $base_text ); ?>;
 	border-bottom: 0;
 	font-weight: bold;
 	line-height: 100%;
 	vertical-align: middle;
-	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 }
 
 #template_header h1,
 #template_header h1 a {
 	color: <?php echo esc_attr( $base_text ); ?>;
-	background-color: inherit;
 }
 
 #template_header_image img {
@@ -92,7 +90,6 @@ body {
 #template_footer #credit {
 	border: 0;
 	color: <?php echo esc_attr( $text_lighter_40 ); ?>;
-	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 	font-size: 12px;
 	line-height: 150%;
 	text-align: center;
@@ -105,6 +102,10 @@ body {
 
 #body_content {
 	background-color: <?php echo esc_attr( $body ); ?>;
+}
+
+#body_content table {
+	border-bottom: 3px solid <?php echo esc_attr( $body_darker_10 ); ?>;
 }
 
 #body_content table td {
@@ -141,27 +142,35 @@ body {
 
 #body_content_inner {
 	color: <?php echo esc_attr( $text_lighter_20 ); ?>;
-	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 150%;
 	text-align: <?php echo is_rtl() ? 'right' : 'left'; ?>;
 }
 
 .td {
-	color: <?php echo esc_attr( $text_lighter_20 ); ?>;
-	border: 1px solid <?php echo esc_attr( $body_darker_10 ); ?>;
-	vertical-align: middle;
+	color: <?php echo esc_attr( $text ); ?>;
+	border: 0;
+	vertical-align: top;
+}
+
+tbody th,
+tbody td {
+	border-bottom: 1px solid <?php echo esc_attr( $body_darker_10 ); ?>;
+}
+
+tfoot th,
+tfoot td {
+	font-weight: lighter;
+	color: <?php echo esc_attr( $text_lighter_40 ); ?>;
+	text-align: right;
 }
 
 .address {
-	padding: 12px;
-	color: <?php echo esc_attr( $text_lighter_20 ); ?>;
-	border: 1px solid <?php echo esc_attr( $body_darker_10 ); ?>;
+	color: <?php echo esc_attr( $text ); ?>;
 }
 
 .text {
 	color: <?php echo esc_attr( $text ); ?>;
-	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 }
 
 .link {
@@ -174,22 +183,19 @@ body {
 }
 
 h1 {
-	color: <?php echo esc_attr( $base ); ?>;
-	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+	color: <?php echo esc_attr( $text ); ?>;
 	font-size: 30px;
-	font-weight: 300;
+	font-weight: 600;
 	line-height: 150%;
 	margin: 0;
-	text-align: <?php echo is_rtl() ? 'right' : 'left'; ?>;
-	text-shadow: 0 1px 0 <?php echo esc_attr( $base_lighter_20 ); ?>;
+	text-align: center;
 }
 
 h2 {
-	color: <?php echo esc_attr( $base ); ?>;
+	color: <?php echo esc_attr( $text_lighter_40 ); ?>;
 	display: block;
-	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 	font-size: 18px;
-	font-weight: bold;
+	font-weight: lighter;
 	line-height: 130%;
 	margin: 0 0 18px;
 	text-align: <?php echo is_rtl() ? 'right' : 'left'; ?>;
@@ -198,7 +204,6 @@ h2 {
 h3 {
 	color: <?php echo esc_attr( $base ); ?>;
 	display: block;
-	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 	font-size: 16px;
 	font-weight: bold;
 	line-height: 130%;
@@ -208,8 +213,8 @@ h3 {
 
 a {
 	color: <?php echo esc_attr( $link_color ); ?>;
-	font-weight: normal;
-	text-decoration: underline;
+	font-weight: bold;
+	text-decoration: none;
 }
 
 img {

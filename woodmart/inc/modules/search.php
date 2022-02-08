@@ -170,7 +170,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 						$global_services = array_unique($global_services);
 						?>
 						<select class="form-select form-select-sm booking-services-search selectpicker" name="booking-services" aria-label=".form-select-sm">
-						 	<option value="default" hidden disabled>Select a service</option>
+						 	<option value="default" selected disabled>Select a service</option>
 							 	<?php foreach($global_services as $service){?>
 									<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
 								<?php } ?>
