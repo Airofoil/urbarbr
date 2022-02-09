@@ -544,3 +544,18 @@ function add_cors_http_header(){
     header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
 }
 add_action('init','add_cors_http_header');
+
+add_action( 'woocommerce_checkout_before_order_review_heading', 'bbloomer_checkout_step3' );
+function bbloomer_checkout_step3( $cart ) {
+
+   	global $woocommerce;
+    $items = $woocommerce->cart->get_cart();
+
+	foreach($items as $item => $values) { 
+
+		$p_booking_date = date('d F, Y', strtotime($values['booking']['_date']));
+		$p_booking_time = $values['booking']['time'];
+
+		echo '<div class="jac-booking-date-time"><div class="booking-date">' . $p_booking_date . '</div><div class="booking-time">' . $p_booking_time . '</div></div>';
+	} 
+}
