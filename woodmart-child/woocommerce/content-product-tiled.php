@@ -1,9 +1,77 @@
 <?php 
 	global $woocommerce, $product;
+	$product_id = $product->get_id();
+
+	$searching_location = $_GET['your-location'];
+	$searching_service = $_GET['booking-services'];
+	$searching_date = $_GET['booking-date'];
+	$filtering = false;
+	if($searching_location || $searching_service || $searching_date){
+		$filtering = true;
+		$qualified = false;
+	}else{
+		$qualified = true;
+	}
+	
+	if($searching_service && $searching_service != "default"){
+		foreach ($product->get_meta_data() as $index => $data) { 
+			if($data->key == '_product_addons'){
+				foreach($data->value[0]['options'] as $index=>$value){
+					if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$searching_service)))){
+						$qualified = true;
+					}
+				}
+			}
+		}
+	}elseif($searching_service== "default"){
+		$qualified = true;
+	}
+
+	if($searching_date){
+		global $wpdb;
+// 		$search_tmp = $wpdb->prepare(
+// 				"SELECT * FROM wp_wc_booking_relationships WHERE product_id = %d ORDER BY sort_order DESC",
+// 				$product_id 
+// 			);
+// 		$relationship = $wpdb->get_results($search_tmp);
+// 		$resource_id = $relationship[0]->resource_id;
+// 		// var_dump($resource_id);
+// 		$search_tmp = $wpdb->prepare(
+// 				"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
+// 				$resource_id 
+// 			);
+
+		$search_tmp = $wpdb->prepare(
+			"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
+			$product_id 
+		);
+		
+		$availability = $wpdb->get_results($search_tmp);
+		
+		// $dates_info = unserialize($availability[0]->meta_value);
+
+		// foreach($dates_info as $date_info) {
+		// 	echo '<pre>'; print_r($date_info);  echo '</pre>';
+		// }
+
+		// echo '<pre>'; print_r($availability);  echo '</pre>';
+		
+		$date_info = unserialize($availability[0]->meta_value)[0];
+		$from_date = $date_info['from_date'] . ' ' . $date_info['from'];
+		$to_date = $date_info['to_date'] . ' ' . $date_info['to'];
+		if($searching_date < $to_date && $from_date < $searching_date){
+			$qualified = true;
+		}else{
+			$qualified = false;
+		}
+	}
+	
+	
+	
+// 	echo $filtering?"true":"false";
 	$average = $product->get_average_rating();
 	$review_count = $product->get_review_count();
 	$product_title = $product->get_name();
-	$product_id = $product->get_id();
 
 	$product_details = $product->get_data();
 	$product_full_description = $product_details['description'];
@@ -35,7 +103,7 @@
 		}
 	}
 ?>
-
+<?php if($qualified){ ?>
 <div class="product-wrapper">
 	<div class="product-element-top">
 		<a href="<?php echo esc_url( get_permalink() ); ?>" class="product-image-link">
@@ -172,7 +240,7 @@
 			font-weight: bold;
 			font-size: 90%;
 		}
-		/* .jac-products-header-top-left .star-rating:before{
+/* 		.jac-products-header-top-left .star-rating:before{
 			content: "\f149" !important;
 			color:#FFC702 !important;
 		} */
@@ -207,7 +275,7 @@
 			float: right;
 			color:#000000;
 			font-weight: 500;
-			    max-width: 65px;
+			max-width: 65px;
 		}
 		.barber_service_price{
 			color:#000000;
@@ -259,3 +327,4 @@
 			<?php woodmart_product_sale_countdown(); ?>
 		<?php endif ?>
 </div>
+<?php } ?>

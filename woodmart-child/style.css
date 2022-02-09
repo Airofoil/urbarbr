@@ -231,13 +231,13 @@ div.wpcf7 .wpcf7-spinner {
 	}
 }
 
-@media only screen and (min-width: 1024px) and (max-width 1299px) {
+@media only screen and (min-width: 1024px) and (max-width: 1299px) {
 	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
 		min-height: 380px!important;
 	}
 }
 
-@media only screen and (min-width: 768px) and (max-width 1024px) {
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
 	.home-image-hover .vc-hoverbox .vc-hoverbox-inner {
 		min-height: 310px!important;
 	}
@@ -285,7 +285,13 @@ div.wpcf7 .wpcf7-spinner {
 	display: none;
 }
 
-.woocommerce-billing-fields #billing_company, .woocommerce-billing-fields #billing_country_field, .woocommerce-billing-fields #billing_address_1_field, .woocommerce-billing-fields #billing_address_2_field, .woocommerce-billing-fields #billing_city_field, .woocommerce-billing-fields #billing_state_field, .woocommerce-billing-fields #billing_postcode_field
+.woocommerce-billing-fields #billing_company, 
+.woocommerce-billing-fields #billing_country_field, 
+/*.woocommerce-billing-fields #billing_address_1_field, */
+.woocommerce-billing-fields #billing_address_2_field, 
+.woocommerce-billing-fields #billing_city_field, 
+.woocommerce-billing-fields #billing_state_field, 
+.woocommerce-billing-fields #billing_postcode_field
 {
 	display: none!important;
 }
@@ -678,7 +684,7 @@ div.wd-wishlist-btn a {
 }
 
 .booking-services-search{
-	border: 1px solid #001F35;
+/* 	border: 1px solid #001F35; */
     background: #fff;
     max-width: 300px;
     margin-right: 20px;
@@ -691,11 +697,13 @@ div.wd-wishlist-btn a {
     max-width: 250px !important;
     margin-right: 20px;
 	font-weight: 500;
+	border-radius: 4px !important;
 }
 .your-location-search{
 	max-width:200px;
 	margin-right: 20px;
 	padding: 0 20px 0;
+	border-radius: 4px;
 }
 .searchform.woodmart-ajax-search.jac-test-class{
 	display: flex;
@@ -704,11 +712,15 @@ div.wd-wishlist-btn a {
 .searchform .searchsubmit{
     position: unset !important;
 	color: #001F35 !important;
-	border: 1px solid #001F35 !important;
+/* 	border: 1px solid #001F35 !important; */
     background: #fff;
 }
 #post-8343 > .entry-content > .vc_row:first-child{
 	overflow:visible;
+}
+.booking-services-search button.dropdown-toggle{
+	border: 1px solid #001F35;
+    height: 100%;
 }
 
 body.page-id-9:not(.logged_in) .main-page-wrapper, body.page-id-8830 .main-page-wrapper {
@@ -728,4 +740,67 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
 
 .logged-in .main-page-wrapper {
 	background-image: none;
+}
+
+.footer-text .footer-text-column {
+	align-items: baseline!important;
+}
+
+.reviews-barber-pic img {
+	width: 55px;
+    border-radius: 50%;
+    height: 55px;
+    object-fit: cover;
+}
+
+.my-reviews-all {
+	display: flex;
+	margin: 20px 0;
+}
+
+.reviews-barber-pic {
+	min-width: 80px;
+}
+
+.reviews-sec-col {
+	width: -webkit-fill-available;
+}
+
+.reviews-first-row {
+	justify-content: space-between;
+    display: flex;
+}
+
+.reviews-in-first-col {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.reviews-in-first-col .star-rating {
+	margin-left: 20px;
+	font-weight: 600;
+    font-size: 16px;
+}
+
+.reviews-in-sec-col {
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 21px;
+	color: #284158;
+}
+
+.reviews-in-first-col .barber-title {
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 20px;
+	color: #284158;
+}
+
+.reviews-sec-row {
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 21px;
+	color: #777778;
 }
