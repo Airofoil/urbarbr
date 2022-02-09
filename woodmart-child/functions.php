@@ -534,6 +534,12 @@ function bbloomer_redirect_checkout_add_cart() {
    return wc_get_checkout_url();
 }
 
+add_filter( 'wc_add_to_cart_message', 'my_add_to_cart_function', 10, 2 ); 
+function my_add_to_cart_function( $message, $product_id ) { 
+    $message = sprintf(esc_html__('%s selected successfully.','woocommerce'), get_the_title( $product_id ) ); 
+    return $message; 
+}
+
 function add_cors_http_header(){
     header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
 }

@@ -961,3 +961,20 @@ body .caret { /* Style the dropdown arrow */
 	border-radius: 1px;
 	transform: rotate(45deg);
 }
+
+body .wd-nav.wd-style-underline .nav-link-text {
+	font-size: 20px;
+	color: var(--urbarbr-grey);
+	text-transform: none;
+}
+body .wd-nav.wd-style-underline .wd-active .nav-link-text {
+	font-weight: bold;
+	color: var(--urbarbr-blue);
+}
+.wd-nav.wd-style-underline .nav-link-count {
+	display: none;
+	/*--opacity: 0.5; */
+}
+a:focus, a:hover { /* Remove the hover underlines from links */
+	text-decoration: none;
+}
