@@ -67,9 +67,11 @@
 
 <div class="shop-loop-head">
 	<div class="wd-shop-tools<?php echo woodmart_get_old_classes( ' woodmart-woo-breadcrumbs' ); ?>">
-		<?php if ( woodmart_get_opt( 'shop_page_breadcrumbs', '1' ) ) : ?>
+		<?php /*----if ( woodmart_get_opt( 'shop_page_breadcrumbs', '1' ) ) : ?>
 			<?php woodmart_current_breadcrumbs( 'shop' ); ?>
-		<?php endif; ?>
+		<?php endif; */ ?>
+
+		<?php woodmart_product_categories_nav(); ?>
 
 		<?php woocommerce_result_count(); ?>
 	</div>

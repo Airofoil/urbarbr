@@ -533,3 +533,9 @@ add_filter( 'woocommerce_add_to_cart_redirect', 'bbloomer_redirect_checkout_add_
 function bbloomer_redirect_checkout_add_cart() {
    return wc_get_checkout_url();
 }
+
+add_filter( 'wc_add_to_cart_message', 'my_add_to_cart_function', 10, 2 ); 
+function my_add_to_cart_function( $message, $product_id ) { 
+    $message = sprintf(esc_html__('%s selected successfully.','woocommerce'), get_the_title( $product_id ) ); 
+    return $message; 
+}
