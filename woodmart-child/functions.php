@@ -534,3 +534,8 @@ add_filter( 'woocommerce_add_to_cart_redirect', 'bbloomer_redirect_checkout_add_
 function bbloomer_redirect_checkout_add_cart() {
    return wc_get_checkout_url();
 }
+
+function add_cors_http_header(){
+    header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
+}
+add_action('init','add_cors_http_header');
