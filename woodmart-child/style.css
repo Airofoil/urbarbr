@@ -1006,3 +1006,50 @@ a:focus, a:hover { /* Remove the hover underlines from links */
     font-weight: 400;
     line-height: 21px;
 }
+
+@media (max-width: 1024px) and (min-width: 476px) {
+	.searchform.woodmart-ajax-search.jac-test-class {
+		flex-wrap: wrap;
+	}
+
+	.searchform.woodmart-ajax-search.jac-test-class .your-location-search, 
+	.wd-search-form .searchform.woodmart-ajax-search.jac-test-class .booking-services-search {
+		height: 46px;
+		width: 45%;
+		max-width: 45%;
+	}
+
+	.searchform.woodmart-ajax-search.jac-test-class .booking-date-search {
+		margin-top: 20px;
+		width: 45%;
+		max-width: 45%!important;
+	}
+
+	.searchform.woodmart-ajax-search.jac-test-class .searchsubmit {
+		margin-top: 20px;
+	}
+}
+
+@media (max-width: 475px) {
+	.searchform.woodmart-ajax-search.jac-test-class {
+		flex-wrap: wrap;
+	}
+
+	.searchform.woodmart-ajax-search.jac-test-class .your-location-search, 
+	.wd-search-form .searchform.woodmart-ajax-search.jac-test-class .booking-services-search {
+		height: 46px;
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.searchform.woodmart-ajax-search.jac-test-class .booking-date-search {
+		margin-top: 20px;
+		width: 60%;
+		max-width: 60%!important;
+	}
+
+	.searchform.woodmart-ajax-search.jac-test-class .searchsubmit,
+	.wd-search-form .searchform.woodmart-ajax-search.jac-test-class .booking-services-search {
+		margin-top: 20px;
+	}
+}
