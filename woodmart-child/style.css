@@ -51,7 +51,7 @@ body .main-page-wrapper {
 
 /* Footer */
 .footer-column {
-	display: flex;
+/*--display: flex; */
 /* 	align-items: center;  */
 	justify-content: center;
 }
@@ -78,7 +78,7 @@ body.home .main-page-wrapper {
 	text-transform: capitalize;
 	color: #001F35;
 	opacity: 0.5;
-/*-margin-bottom: 15px; */
+/* 	margin-bottom: 15px; */
 	margin: 0 0 5px 0;
 }
 
@@ -87,6 +87,7 @@ body.home .main-page-wrapper {
 	font-size: 48px;
 	line-height: 58px;
 }
+
 @media (max-width: 767px) {
 	.home-banner-title {
         font-size: 24px;
@@ -200,20 +201,22 @@ body.home .main-page-wrapper {
 	letter-spacing: 0.03em;
 }
 
-
 .wpcf7-form input {
     font-weight: normal;
 }
+
 .wpcf7-submit {
 	background: #657F97;
-/*--width: 55%; */
+/*     width: 55%; */
 	width: 100%;
     color: #ffffff;
     text-transform: inherit;
 }
+
 .wpcf7-submit#barber {
 	margin-bottom: 20px;
 }
+	
 div.wpcf7 .wpcf7-spinner {
 	margin-left: 0;
 }
@@ -381,7 +384,7 @@ div.wpcf7 .wpcf7-spinner {
 
 
 .archive .product-grid-item .product-element-top {
-	display: flex;
+	/*---display: flex; */
 	padding: 20px;
 	background-color: #ffffff;
     margin-bottom: 20px;
@@ -392,8 +395,12 @@ div.wpcf7 .wpcf7-spinner {
 }
 
 .archive .product-grid-item .product-element-top .product-image-link {
-	max-width: 100px;
-	aspect-ratio: 1 / 1;
+	/*---max-width: 100px;
+	aspect-ratio: 1 / 1; */
+	width: 100%;
+	max-height: 250px;
+	overflow: hidden;
+	margin-bottom: 20px;
 }
 
 .archive .product-grid-item .product-element-top .product-image-link img {
@@ -408,11 +415,18 @@ div.wpcf7 .wpcf7-spinner {
 
 .jac-products-header-top {
 	display: flex;
+	flex-wrap: wrap;
 }
 
 .jac-products-header-top-left {
+	display: flex;
 	width: 100%;
 }
+/* For the carousel products */
+.owl-carousel .jac-products-header-top-left {
+  display: block;
+}
+
 
 #order_review .wd-table-wrapper {
 	border: 1px solid #8896A2;
@@ -663,7 +677,7 @@ body .main-page-wrapper {
 }
 
 body:not(.home) .whb-color-light:not(.whb-with-bg) {
-	background-color: transparent;
+	background-color: #FFFD;
 }
 
 .page-id-9 .page-id-8830 body div.main-page-wrapper {
@@ -746,13 +760,25 @@ div.wd-wishlist-btn a {
 
 .booking-services-search{
 /* 	border: 1px solid #001F35; */
-/*--background: #fff; */
+/*     background: #fff; */
     max-width: 300px;
     margin-right: 20px;
 	font-weight: 500;
 }
+body .caret { /* Style the dropdown arrow */
+	width: 9px;
+	height: 9px;
+	top: calc(50% - 4px) !important;
+	right: 15px !important;
+	border: 0;
+	border-right: 2px solid #8896A2;
+	border-bottom: 2px solid #8896A2;
+	border-radius: 1px;
+	transform: rotate(45deg);
+}
 .booking-date-search{
 	border: 1.5px solid #001F35 !important;
+	background-color: #fff !important;
 	background: #fff !important;
     max-width: 250px !important;
     margin-right: 20px;
@@ -770,7 +796,7 @@ header .booking-date-search { /* Hide the date from the header searchbar */
 	border-radius: 4px;
 }
 .your-location-search > i { /* Make the pin marker icon an outline */
-    -webkit-text-stroke: 1.5px white;
+    -webkit-text-stroke: 1px white;
     -webkit-text-fill-color: #001f35;
 }
 .searchform.woodmart-ajax-search.jac-test-class{
@@ -799,9 +825,9 @@ header .booking-date-search { /* Hide the date from the header searchbar */
     float: left;
 	margin: 0;
     font-size: 18px;
-	line-height: 46px;
+    line-height: 46px;
 }
-.searchform .searchsubmit span {
+.searchform .searchsubmit span { 
 	display: inline-flex;
     max-width: 0;
 	margin: 0;
@@ -814,7 +840,7 @@ header .booking-date-search { /* Hide the date from the header searchbar */
 	padding-left: 8px;
 }
 #post-8343 > .entry-content > .vc_row:first-child{
-	overflow: visible;
+	overflow:visible;
 }
 .booking-services-search button.dropdown-toggle{
     height: 100%;
@@ -845,6 +871,29 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
 .footer-text .footer-text-column {
 	align-items: baseline!important;
 }
+
+
+
+
+
+footer .wd-social-icons .wd-social-icon {
+	background: white;
+	color: var(--urbarbr-blue) !important;
+	line-height: 30px !important;
+}
+footer .wd-social-icons .wd-social-icon .wd-icon {
+	width: 30px;
+	height: 30px;
+	line-height: 30px !important;
+}
+footer .wd-social-icons .wd-social-icon:not(:first-child) {
+	margin-left: 10px !important;
+}
+footer .widget {
+	border-bottom: 0;
+}
+
+
 
 .reviews-barber-pic img {
 	width: 55px;
@@ -905,11 +954,11 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
 	color: #777778;
 }
 
-/*.cart-content-wrapper .woocommerce-error,
+/* .cart-content-wrapper .woocommerce-error,
 .woocommerce-MyAccount-content .woocommerce-error,
 .woocommerce-checkout .woocommerce-error {
   display: none;
-}*/
+} */
 
 .tinv-wishlist .woocommerce-error li {
   margin-left: 65px;
@@ -933,9 +982,9 @@ body.page-id-9:not(.logged-in) .main-page-wrapper ,body.page-id-8830 .main-page-
 		filter: invert(1);
 	}
 }
-body:not(.home) header.whb-sticked .container{
-	background:#fff;
-}
+/*--body:not(.home) header.whb-sticked .container{
+		background:#fff;
+	} */
 .related-products .jac-products-header-top-right,
 .related-products .jac-barber-description,
 .related-products .product-element-bottom{
@@ -951,7 +1000,7 @@ body:not(.home) header.whb-sticked .container{
 }
 @media (max-width: 768px){
 	.related-products .product-image-link .size-woocommerce_thumbnail{
-		height: 250px;
+		 height: 250px;
 	}
 	.searchform.woodmart-ajax-search.jac-test-class{
 		flex-direction:column;
@@ -965,7 +1014,7 @@ body:not(.home) header.whb-sticked .container{
 		margin-bottom:10px;
 	} */
 	.searchform .searchsubmit{
-	/*--position:absolute !important;
+/* 		position:absolute !important;
 		height:42px;
 		top:unset; */
 	}
@@ -994,6 +1043,10 @@ footer #nav_menu-16, footer #nav_menu-17 {
 }
 .wd-search-form .btn.dropdown-toggle { /* Make the 'Select a service' dropdown lowercase */
     text-transform: none;
+}
+
+.btn-link {
+	text-transform: none !important;
 }
 
 .owl-carousel .promo-banner img {
@@ -1093,10 +1146,10 @@ a:focus, a:hover { /* Remove the hover underlines from links */
 	.wd-search-form .searchform.woodmart-ajax-search.jac-test-class .booking-services-search {
 		height: 46px;
 		width: 100%;
-	/*--max-width: 100%; */
+/* 		max-width: 100%; */
 	}
 
-	/*-.searchform.woodmart-ajax-search.jac-test-class .booking-date-search {
+/* 	.searchform.woodmart-ajax-search.jac-test-class .booking-date-search {
 		margin-top: 20px;
 		width: 60%;
 		max-width: 60%!important;
@@ -1106,7 +1159,7 @@ a:focus, a:hover { /* Remove the hover underlines from links */
 	.wd-search-form .searchform.woodmart-ajax-search.jac-test-class .booking-services-search {
 		margin-top: 20px;
 	}
-
+	
 	/* Mobile additions 10/2/22 */
 	.your-location-search {
 		max-width: unset;
@@ -1126,15 +1179,13 @@ a:focus, a:hover { /* Remove the hover underlines from links */
 	body .wd-carousel-spacing-0 .owl-nav>div[class*="next"] {
 		right: -30px;
 	}
-	
 }
-
-
 
 /* Date Time Picker styling */
 .searchform .bootstrap-datetimepicker-widget.dropdown-menu {
     position: fixed;
-    width: unset;
+    width: calc(100% - 30px);
+	max-width: 380px;
     margin: 15px !important;
     border: 2px solid var(--urbarbr-blue);
     border-radius: 0;
@@ -1187,7 +1238,55 @@ body .bootstrap-datetimepicker-widget table td.old,
 body .bootstrap-datetimepicker-widget table td.new {
     color: #BBB;
 }
-.bootstrap-datetimepicker-widget::before,
-.bootstrap-datetimepicker-widget::after {
+body .bootstrap-datetimepicker-widget.dropdown-menu::before,
+body .bootstrap-datetimepicker-widget.dropdown-menu::after {
     display: none;
+}
+@media (min-width: 768px) {
+	.wpb_column.product-section {
+		max-width: 23%;
+		margin-right: 2%;
+	}
+
+	.accordion-slider p.as-layer {
+		left: 15px !important;
+		top: 100px !important;
+		width: 200px !important;
+	}
+	.accordion-slider p.as-layer.testimonials-double-quote {
+		top: 90px !important;
+		left: 0 !important;
+	}
+	.accordion-slider p.as-layer.as-always.as-padding.testimonials-double-quote:last-of-type {
+		bottom: 0 !important;
+	}
+	.accordion-slider .as-layer.testimonials-double-quote:nth-child(3) {
+		bottom: 0 !important;
+		top: unset !important;
+	}
+	.accordion-slider p.as-layer.testimonials-des:last-child {
+		top: unset !important;
+		bottom: 64px !important;
+	}
+}
+
+
+/* Stop the Categories dropdown label on mobile */
+@media (max-width: 1024px) {
+	.wd-shop-tools {
+		width: 100%;
+	}
+	body .wd-btn-show-cat {
+		/*----display: inline-block; */
+		display: none;
+	}
+	body .wd-nav-product-cat {
+		/*----display: none; */
+		display: block;
+		background: 0;
+	}
+	body .wd-nav-product-cat li {
+		display: inline-block;
+		flex: unset;
+	}
 }
