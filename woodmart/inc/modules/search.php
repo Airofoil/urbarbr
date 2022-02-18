@@ -152,7 +152,61 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<!-- 		TEST DATA			 -->
 					
 					<?php if($post_type == 'product'){ ?>
-						<button class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color:#001F35;color:#fff;font-weight:500"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button>
+						<button type="button" class="your-location-search btn btn-color-alt" data-toggle="dropdown" title="Set your location" name="your-location" aria-label=".form-select-sm" style="text-transform: none;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button>
+						<ul class="dropdown-menu" role="menu">
+							<li data-original-index="0">
+								<a tabindex="-1" data-tokens="null" href="javascript:getLocation();">
+									Detect my location
+								</a>
+							</li>
+							<li data-original-index="1">
+								<a tabindex="0" data-tokens="null" href="javascript:enterLocation();">
+									Enter a location
+								</a>
+							</li>
+							<!-- <li data-original-index="2">
+								<a tabindex="0" class="" style="" data-tokens="null">
+									<span class="text">Crew Cut</span>
+									<span class="glyphicon glyphicon-ok check-mark"></span>
+								</a>
+							</li> -->
+						</ul>
+						<input type="hidden" id="location_coords" name="location" value="">
+
+						<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
+						<script>
+							var locBox = document.getElementById('location_coords');
+							var locationBtn = document.querySelector('.your-location-search');
+
+							function getLocation() { /* Get the user's location */
+								if (navigator.geolocation) {
+									navigator.geolocation.getCurrentPosition(showLocation);
+								} else {
+									locBox.value = 0; //"Geolocation is not supported by this browser.";
+								}
+							}
+
+							function showLocation(position) { /* Set the value in the location box */
+								locBox.value = position.coords.latitude + ',' + position.coords.longitude;
+								locationBtn.classList.add('tick');
+							}
+
+							function enterLocation() {
+								var locationInput = document.createElement('input');
+								locationInput.type = 'text';
+								locationInput.placeholder = 'Enter an address or suburb...';
+								locationInput.classList.add('booking-date-search'); // Need to replace this class with a more general styling class - JDH
+								locationInput.style.paddingRight = '0';
+
+								locationBtn.parentNode.replaceChild(locationInput, locationBtn);
+								locationInput.focus();
+							}
+						</script>
+						<style>
+							.tick::after {
+								content: ' ✓';
+							}
+						</style>
 					<?php } ?>
 					
 					<!-- 		TEST DATA			 -->

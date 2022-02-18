@@ -257,7 +257,7 @@ div.wpcf7 .wpcf7-spinner {
 	background-color: unset;
 }
 
-.accordion-slider p.as-layer.testimonials-double-quote.testimonials-double-quote {
+.accordion-slider p.as-layer[class*=testimonials-double-quote] {
 	font-style: normal;
 	font-weight: normal;
 	font-size: 90px;
@@ -265,6 +265,9 @@ div.wpcf7 .wpcf7-spinner {
 	line-height: 26px;
 	letter-spacing: 0.05em;
 	color: #FFFFFF;
+}
+.accordion-slider .as-pagination-buttons {
+	display: none;
 }
 @media (max-width: 475px) {
 	#accordion-slider-1 {
@@ -277,6 +280,21 @@ div.wpcf7 .wpcf7-spinner {
 	#accordion-slider-1>.as-panel>p {
 		left: unset;
 		top: unset !important;
+	}
+	
+	.accordion-slider p.as-layer.testimonials-des {
+		left: 30px !important;
+		top: 100px !important;
+		width: 200px !important;
+	}
+	.accordion-slider p.as-layer.testimonials-double-quote {
+		top: 90px !important;
+		left: 15px !important;
+	}
+	.accordion-slider p.as-layer.testimonials-double-quote-2 {
+		top: unset !important;
+		bottom: 55px !important;
+		left: 15px !important;
 	}
 }
 
@@ -886,8 +904,9 @@ footer .wd-social-icons .wd-social-icon .wd-icon {
 	height: 30px;
 	line-height: 30px !important;
 }
-footer .wd-social-icons .wd-social-icon:not(:first-child) {
-	margin-left: 10px !important;
+footer .wd-social-icons .wd-social-icon {
+	margin-right: 10px !important;
+	margin-top: 10px !important;
 }
 footer .widget {
 	border-bottom: 0;
@@ -1247,29 +1266,7 @@ body .bootstrap-datetimepicker-widget.dropdown-menu::after {
 		max-width: 23%;
 		margin-right: 2%;
 	}
-
-	.accordion-slider p.as-layer {
-		left: 15px !important;
-		top: 100px !important;
-		width: 200px !important;
-	}
-	.accordion-slider p.as-layer.testimonials-double-quote {
-		top: 90px !important;
-		left: 0 !important;
-	}
-	.accordion-slider p.as-layer.as-always.as-padding.testimonials-double-quote:last-of-type {
-		bottom: 0 !important;
-	}
-	.accordion-slider .as-layer.testimonials-double-quote:nth-child(3) {
-		bottom: 0 !important;
-		top: unset !important;
-	}
-	.accordion-slider p.as-layer.testimonials-des:last-child {
-		top: unset !important;
-		bottom: 64px !important;
-	}
 }
-
 
 /* Stop the Categories dropdown label on mobile */
 @media (max-width: 1024px) {
@@ -1289,4 +1286,89 @@ body .bootstrap-datetimepicker-widget.dropdown-menu::after {
 		display: inline-block;
 		flex: unset;
 	}
+}
+
+footer .wpb_single_image {
+	margin-top: 10px;
+}
+footer .wpb_text_column.wpb_content_element {
+	margin-top: 10px;
+}
+footer .widget {
+	padding-bottom: 0;
+	margin-bottom: 20px;
+}
+
+
+
+#wc-bookings-booking-form {
+    max-width: 360px;
+}
+.wc-bookings-booking-form .block-picker {
+    display: flex;
+    flex-wrap: wrap;
+}
+body .wc-bookings-booking-form .block-picker li {
+    min-width: unset;
+    width: unset !important;
+    flex: 100px;
+    margin: 5px;
+    flex-grow: unset;
+}
+body .wc-bookings-date-picker {
+    padding: 5px;
+}
+.wc-bookings-date-picker .ui-datepicker td.bookable-range .ui-state-default,
+.wc-bookings-booking-form .block-picker li a.selected {
+    background: var(--urbarbr-shade) !important;
+}
+.wc-bookings-date-picker .ui-datepicker td.bookable a {
+    background-color: var(--urbarbr-lightblue) !important;
+}
+body .wc-bookings-date-picker .ui-datepicker .ui-datepicker-prev,
+body .wc-bookings-date-picker .ui-datepicker .ui-datepicker-next {
+    background: 0;
+}
+.ui-datepicker-header.ui-widget-header {
+    background: 0;
+    border: 0;
+    color: #555 !important;
+    text-transform: none;
+    font-family: inherit;
+}
+.wc-bookings-booking-form .block-picker li a {
+    background: 0 !important;
+    border: 1px solid #CFD5DA;
+    width: unset !important;
+}
+
+body .ui-widget {
+    font-family: unset;
+}
+
+
+
+body .payment_methods .payment_box {
+    padding: 15px 0;
+    box-shadow: none;
+}
+
+.main-page-wrapper h3 {
+	margin: 0px 0 20px 0;
+	padding: 0 !important;
+	border: 0 !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    text-transform: none !important;
+}
+#order_review_heading {
+    font-size: 20px;
+    font-weight: bold;
+    color: #292727;
+}
+
+@media (max-width: 575px) {
+    body .checkout-order-review {
+        padding: 0;
+    }
 }
