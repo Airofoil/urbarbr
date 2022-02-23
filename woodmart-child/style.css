@@ -1347,3 +1347,7 @@ body .bootstrap-datetimepicker-widget.dropdown-menu::after {
     flex: unset;
   }
 }
+
+.product-template-default .price {
+  display: none;
+}
