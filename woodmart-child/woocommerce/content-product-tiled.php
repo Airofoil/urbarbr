@@ -164,16 +164,17 @@
 						echo '<div class="barber_service_price"> From ' . $service_fee . '</div>';
 					}?>
 				</div>
-				<?php if(!$show_brife_product_tile){ ?>
-					<div class="jac-products-header-top-right">
-						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber">Visit Barber</a>
-					</div>
-				<?php } ?>
 			</div>
 			<?php if(!$show_brife_product_tile){ ?>
 				<div class="jac-barber-description">
 					<p><?php echo $product_short_description ?></p>
 				</div>
+			<?php } ?>
+			
+			<?php if(!$show_brife_product_tile){ ?>
+					<div class="jac-products-header-top-right">
+						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-alt btn-link">Visit Barber</a>
+					</div>
 			<?php } ?>
 		</div>
 		
@@ -219,21 +220,21 @@
 			margin-top: 25px;
 		}
 		.jac-barber-name{
-			margin-bottom: 0px;
+			margin: 0 20px 0 0;
 			color:#292727;
 			font-size:20px;
 		}
-		.jac-products-header-top-right a{
+		/*---.jac-products-header-top-right a{
 			color: #284158;
 			font-size: 16px;
 			font-weight: bold;
-			/* border-bottom: 2px solid #8896A2; */
+			/* border-bottom: 2px solid #8896A2; * /
     		padding: 0 0 3px;
 			position: absolute;
 			top: 0;
 			left: -5px;
 			width: 110px;
-		}
+		} */
 		.jac-products-header-top-left{
 			color: #102C45;
 			font-size: 14px;
@@ -245,6 +246,9 @@
 			border-bottom: 2px solid #8896A2;
 			width: 95px;
 		}
+		.jac-barber-details {
+			margin-left: 0;
+		}
 		.jac-barber-details .woocommerce-review-link{
 			color: #284158;
 			font-weight: bold;
@@ -254,8 +258,15 @@
 			content: "\f149" !important;
 			color:#FFC702 !important;
 		} */
+		.product-grid-item .jac-products-header-top-left > div {
+			margin: 2px 0 0 0;
+		}
 		.jac-products-header-top-left .product-grid-item .star-rating{
 			margin-bottom: 2px;
+		}
+		.archive .product-grid-item {
+			max-width: unset;
+			flex: 400px;
 		}
 		.archive .product-grid-item.product-type-booking .product-wrapper{
 			padding: 30px;
