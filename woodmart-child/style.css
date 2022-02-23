@@ -272,6 +272,7 @@ div.wpcf7 .wpcf7-spinner {
 @media (max-width: 475px) {
 	#accordion-slider-1 {
 		margin: -10px -15px -35px -15px;
+		min-width: calc(100% + 30px) !important;
 	}
 	#accordion-slider-1, #accordion-slider-1>.as-mask, #accordion-slider-1>.as-mask img {
 		height: 400px !important;
@@ -1371,4 +1372,98 @@ body .payment_methods .payment_box {
     body .checkout-order-review {
         padding: 0;
     }
+}
+
+.form-row.form-row-wide>label {
+    padding: 25px;
+    background: #FFF;
+    margin: 25px 0;
+}
+
+.wc-pao-addon-container.wc-pao-addon {
+    background: #F8F9F9;
+    padding: 25px;
+}
+
+.form-row.form-row-wide.wc-pao-addon-wrap input {
+    /*-display: none; */
+    width: 20px;
+    height: 20px;
+    margin-left: auto;
+    order: 1;
+}
+/*-.form-row.form-row-wide.wc-pao-addon-wrap label .amount::after {
+    content: '';
+    border: 3px solid #aaa;
+    border-radius: 3px;
+    width: 20px;
+    margin-left: auto;
+    float: right;
+    height: 20px;
+    order: 1;
+}
+.form-row.form-row-wide input:checked+.amount::after {
+    background: red;
+}*/
+
+.form-row.form-row-wide:last-child label {
+    margin: 0;
+}
+
+.wc-pao-addon .wc-pao-addon-name {
+    font-size: 28px;
+	font-weight: 700;
+}
+
+.timezone-details {
+    display: none;
+}
+
+.product_title {
+	margin-top: 0;
+    font-weight: 600;
+}
+.woocommerce-product-details__short-description::before {
+	content: 'About the Barber';
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--urbarbr-lightblue);
+	display: block;
+	margin: 15px 0 5px 0;
+}
+
+body.single-product .product-tabs-wrapper {
+	display: none;
+}
+
+.footer-widget-collapse > :last-child {
+	display: block !important;
+}
+@media (max-width: 468px) {
+	h5.widget-title::after {
+		display: none;
+	}
+	.footer-column {
+		max-width: 50%;
+	}
+	.footer-column {
+		order: 1;
+	}
+	.footer-column:last-child {
+		max-width: unset;
+		order: 2 !important;
+	}
+	.footer-column.col-sm-4 {
+		order: 3;
+	}
+}
+
+body .jac-visit-barber {
+	border-radius: 3px;
+}
+.archive .product-grid-item .product-element-bottom {
+	display: none;
+}
+.archive .product-grid-item .product-element-top {
+	min-height: 460px;
 }
