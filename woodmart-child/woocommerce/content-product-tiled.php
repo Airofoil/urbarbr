@@ -28,42 +28,52 @@
 	}
 
 	if($searching_date){
+
 		global $wpdb;
-// 		$search_tmp = $wpdb->prepare(
-// 				"SELECT * FROM wp_wc_booking_relationships WHERE product_id = %d ORDER BY sort_order DESC",
-// 				$product_id 
-// 			);
-// 		$relationship = $wpdb->get_results($search_tmp);
-// 		$resource_id = $relationship[0]->resource_id;
-// 		// var_dump($resource_id);
-// 		$search_tmp = $wpdb->prepare(
-// 				"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
-// 				$resource_id 
-// 			);
 
-		$search_tmp = $wpdb->prepare(
-			"SELECT * FROM $wpdb->postmeta WHERE meta_key = '_wc_booking_availability' AND post_id = %d ORDER BY meta_value DESC",
-			$product_id 
-		);
-		
-		$availability = $wpdb->get_results($search_tmp);
-		
-		// $dates_info = unserialize($availability[0]->meta_value);
+		$qualified = false;
 
-		// foreach($dates_info as $date_info) {
-		// 	echo '<pre>'; print_r($date_info);  echo '</pre>';
-		// }
+		$min_date = date('Y-m-d', strtotime(substr($searching_date,0,-3)));
 
-		// echo '<pre>'; print_r($availability);  echo '</pre>';
+		$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
 		
-		$date_info = unserialize($availability[0]->meta_value)[0];
-		$from_date = $date_info['from_date'] . ' ' . $date_info['from'];
-		$to_date = $date_info['to_date'] . ' ' . $date_info['to'];
-		if($searching_date < $to_date && $from_date < $searching_date){
-			$qualified = true;
-		}else{
-			$qualified = false;
+
+		$url = get_site_url() . '/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
+
+		/* curl function not working on local, that needs to crawl staging/live site product data. Comment the above line and uncomment the below line to fetch from staging site */
+		// $url = 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
+
+		$curl = curl_init($url);
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+		// //for debug only!
+		// curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+		// curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+		$resp = curl_exec($curl);
+		$resources = json_decode($resp, true);
+		curl_close($curl);
+
+		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
+		$search_date_formatted = date("Y-m-d H:i", strtotime($searching_date));
+
+		$slots_info = $resources['records'];
+
+		foreach($slots_info as $slot_info) {
+			if ($slot_info['available'] == 1) {
+
+				$start_time = str_replace("T"," ",$slot_info['date']);
+				$end_time = date('Y-m-d H:i', strtotime($start_time) + 3600);
+
+				if($search_date_formatted < $end_time && $start_time <= $search_date_formatted){
+					$qualified = true;
+					break;
+				}
+
+			}
 		}
+
 	}
 	
 	
@@ -154,16 +164,17 @@
 						echo '<div class="barber_service_price"> From ' . $service_fee . '</div>';
 					}?>
 				</div>
-				<?php if(!$show_brife_product_tile){ ?>
-					<div class="jac-products-header-top-right">
-						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber">Visit Barber</a>
-					</div>
-				<?php } ?>
 			</div>
 			<?php if(!$show_brife_product_tile){ ?>
 				<div class="jac-barber-description">
 					<p><?php echo $product_short_description ?></p>
 				</div>
+			<?php } ?>
+			
+			<?php if(!$show_brife_product_tile){ ?>
+					<div class="jac-products-header-top-right">
+						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-alt btn-link">Visit Barber</a>
+					</div>
 			<?php } ?>
 		</div>
 		
@@ -209,21 +220,21 @@
 			margin-top: 25px;
 		}
 		.jac-barber-name{
-			margin-bottom: 0px;
+			margin: 0 20px 0 0;
 			color:#292727;
 			font-size:20px;
 		}
-		.jac-products-header-top-right a{
+		/*---.jac-products-header-top-right a{
 			color: #284158;
 			font-size: 16px;
 			font-weight: bold;
-			/* border-bottom: 2px solid #8896A2; */
+			/* border-bottom: 2px solid #8896A2; * /
     		padding: 0 0 3px;
 			position: absolute;
 			top: 0;
 			left: -5px;
 			width: 110px;
-		}
+		} */
 		.jac-products-header-top-left{
 			color: #102C45;
 			font-size: 14px;
@@ -235,6 +246,9 @@
 			border-bottom: 2px solid #8896A2;
 			width: 95px;
 		}
+		.jac-barber-details {
+			margin-left: 0;
+		}
 		.jac-barber-details .woocommerce-review-link{
 			color: #284158;
 			font-weight: bold;
@@ -244,8 +258,15 @@
 			content: "\f149" !important;
 			color:#FFC702 !important;
 		} */
+		.product-grid-item .jac-products-header-top-left > div {
+			margin: 2px 0 0 0;
+		}
 		.jac-products-header-top-left .product-grid-item .star-rating{
 			margin-bottom: 2px;
+		}
+		.archive .product-grid-item {
+			max-width: unset;
+			flex: 400px;
 		}
 		.archive .product-grid-item.product-type-booking .product-wrapper{
 			padding: 30px;

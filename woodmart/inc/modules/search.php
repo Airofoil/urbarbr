@@ -152,7 +152,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<!-- 		TEST DATA			 -->
 					
 					<?php if($post_type == 'product'){ ?>
-						<input class="your-location-search" placeholder="Set your location" name="your-location" aria-label=".form-select-sm" style="background-color:#001F35;color:#fff;font-weight:500">
+						<button class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color:#001F35;color:#fff;font-weight:500"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button>
 					<?php } ?>
 					
 					<!-- 		TEST DATA			 -->
@@ -170,7 +170,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 						$global_services = array_unique($global_services);
 						?>
 						<select class="form-select form-select-sm booking-services-search selectpicker" name="booking-services" aria-label=".form-select-sm">
-						 	<option value="default" hidden >Select a service</option>
+						 	<option value="default" selected disabled>Select a service</option>
 							 	<?php foreach($global_services as $service){?>
 									<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
 								<?php } ?>
@@ -187,7 +187,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<!-- 		TEST DATA			 -->
 					
 					<?php if( $show_categories && $post_type == 'product' ) woodmart_show_categories_dropdown(); ?>
-					<button type="submit" class="searchsubmit<?php echo esc_attr( $btn_classes ); ?>">
+					<button type="submit" class="searchsubmit btn<?php echo esc_attr( $btn_classes ); ?>">
 						<span>
 							<?php echo esc_attr_x( 'Search', 'submit button', 'woodmart' ); ?>
 						</span>
