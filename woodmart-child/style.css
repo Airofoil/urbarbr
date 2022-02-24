@@ -1467,3 +1467,7 @@ body .jac-visit-barber {
 .archive .product-grid-item .product-element-top {
 	min-height: 460px;
 }
+
+.product-template-default .price {
+	display: none;
+}
