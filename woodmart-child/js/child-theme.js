@@ -1,13 +1,13 @@
 jQuery(document).ready(function ($){
-    $('input.wc-pao-addon-checkbox').on('click',function(){
+	$('input.wc-pao-addon-checkbox').on('click',function(){
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
             $('.single_add_to_cart_button').removeClass('no-service-disable');
         }else{
             $('.single_add_to_cart_button').addClass('no-service-disable');
         }
     })
-      $(".single_add_to_cart_button").ready(function () {
-          console.log($(".single_add_to_cart_button"));
+	  $(".single_add_to_cart_button").ready(function () {
+		  console.log($(".single_add_to_cart_button"));
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
             $('.single_add_to_cart_button').removeClass('no-service-disable');
         } else {
