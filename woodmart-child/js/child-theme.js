@@ -1,22 +1,19 @@
 jQuery(document).ready(function ($){
-<<<<<<< HEAD
     $('input.wc-pao-addon-checkbox').on('click',function(){
-=======
 	$('input.wc-pao-addon-checkbox').on('click',function(){
->>>>>>> df506173c7a594e81b1c74de25263592bafc4364
+	$('input.wc-pao-addon-checkbox').on('click',function(){
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
             $('.single_add_to_cart_button').removeClass('no-service-disable');
         }else{
             $('.single_add_to_cart_button').addClass('no-service-disable');
         }
     })
-<<<<<<< HEAD
       $(".single_add_to_cart_button").ready(function () {
           console.log($(".single_add_to_cart_button"));
-=======
 	  $(".single_add_to_cart_button").ready(function () {
 		  console.log($(".single_add_to_cart_button"));
->>>>>>> df506173c7a594e81b1c74de25263592bafc4364
+	  $(".single_add_to_cart_button").ready(function () {
+		  console.log($(".single_add_to_cart_button"));
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
             $('.single_add_to_cart_button').removeClass('no-service-disable');
         } else {

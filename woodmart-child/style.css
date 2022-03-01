@@ -1269,6 +1269,29 @@ body .bootstrap-datetimepicker-widget.dropdown-menu::after {
 	}
 }
 
+
+.accordion-slider p.as-layer {
+	left: 15px !important;
+	top: 100px !important;
+	width: 200px !important;
+}
+.accordion-slider p.as-layer.testimonials-double-quote {
+	top: 90px !important;
+	left: 0 !important;
+}
+.accordion-slider p.as-layer.as-always.as-padding.testimonials-double-quote:last-of-type {
+	bottom: 0 !important;
+}
+.accordion-slider .as-layer.testimonials-double-quote:nth-child(3) {
+	bottom: 0 !important;
+	top: unset !important;
+}
+.accordion-slider p.as-layer.testimonials-des:last-child {
+	top: unset !important;
+	bottom: 64px !important;
+}
+
+
 /* Stop the Categories dropdown label on mobile */
 @media (max-width: 1024px) {
 	.wd-shop-tools {
@@ -1466,4 +1489,8 @@ body .jac-visit-barber {
 }
 .archive .product-grid-item .product-element-top {
 	min-height: 460px;
+}
+
+.product-template-default .price {
+	display: none;
 }
