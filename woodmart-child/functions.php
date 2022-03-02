@@ -586,45 +586,53 @@ function cw_function() {
 	$long = strtotime($date);
 
 	$start = $jsonBooking[0]['start'];
-	for ($i=0; $i < count($jsonBooking); $i++) { //1hr = 3600
-		if (($jsonBooking[$i]['start'] < $long && $jsonBooking[$i]['end'] > $long) || $jsonBooking[$i]['status'] === 'cancelled' || $jsonBooking[$i]['status'] === 'unpaid') {
-			array_splice($jsonBooking, $i, 1);
-			$i = 0;
-		}
-	}
-
-	$customers = array();
-	for ($i=0; $i < count($jsonBooking); $i++) { 
-		$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
-		$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
-		for ($j=0; $j < count($jsonOrder); $j++) { 
-			if ($jsonBooking[$i]['order_id'] === $jsonOrder[$j]['id']) {
-				array_push($customers, $jsonOrder[$j]);
+	if (is_countable($jsonBooking)) {
+		for ($i=0; $i < count($jsonBooking); $i++) { //1hr = 3600
+			if (($jsonBooking[$i]['start'] < $long && $jsonBooking[$i]['end'] < $long) || $jsonBooking[$i]['status'] === 'cancelled' || $jsonBooking[$i]['status'] === 'unpaid') {
+				array_splice($jsonBooking, $i, 1);
+				$i = 0;
 			}
 		}
 	}
 
-	for ($i=0; $i < count($customers); $i++) { 
-		$customers[$i]['billing']['phone'] = str_replace(' ', '', $customers[$i]['billing']['phone']);
-		if ($customers[$i]['billing']['phone'][0] === '0') {
-			$customers[$i]['billing']['phone'] = '+61' . substr($customers[$i]['billing']['phone'], 1);
-		}
-		if ($customers[$i]['billing']['phone'][0] !== '+') {
-			$customers[$i]['billing']['phone'] = '+' . strval($customers[$i]['billing']['phone']);
-		}
-	}
-
-	for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
-		if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
-			//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
-			sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
+	$customers = array();
+	if (is_countable($jsonBooking)) {
+		for ($i=0; $i < count($jsonBooking); $i++) {
+			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
+			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
+			for ($j=0; $j < count($jsonOrder); $j++) { 
+				if ($jsonBooking[$i]['order_id'] === $jsonOrder[$j]['id']) {
+					array_push($customers, $jsonOrder[$j]);
+				}
+			}
 		}
 	}
 
-	for ($i=0; $i < count($jsonBooking); $i++) {  //Complete the appointment
-		if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
-			//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
-			complete_appointment($customers[$i]['billing']['phone']);
+	if (is_countable($customers)) {
+		for ($i=0; $i < count($customers); $i++) { 
+			$customers[$i]['billing']['phone'] = str_replace(' ', '', $customers[$i]['billing']['phone']);
+			if ($customers[$i]['billing']['phone'][0] === '0') {
+				$customers[$i]['billing']['phone'] = '+61' . substr($customers[$i]['billing']['phone'], 1);
+			}
+			if ($customers[$i]['billing']['phone'][0] !== '+') {
+				$customers[$i]['billing']['phone'] = '+' . strval($customers[$i]['billing']['phone']);
+			}
+		}
+	}
+
+	if (is_countable($jsonBooking)) {
+		for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
+			if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
+				//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
+				sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
+			}
+		}
+
+		for ($i=0; $i < count($jsonBooking); $i++) {  //Complete the appointment
+			if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
+				//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
+				complete_appointment($customers[$i]['billing']['phone']);
+			}
 		}
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );

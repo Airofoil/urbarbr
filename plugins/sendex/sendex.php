@@ -1,7 +1,6 @@
 <?php
 /*
 Plugin Name: Sendex
-Plugin URI: https://urbarbr-1.local/
 Description: A wordpress plugin for sending bulk SMS using Twilio
 Version:  1.0.0
 Author: Jae Choi
@@ -12,6 +11,7 @@ defined('ABSPATH') or die('Unauthorized Access');
 
 // Required if your environment does not handle autoloading
 require __DIR__ . '/vendor/autoload.php';
+use Twilio\TwiML\MessagingResponse;
 
 // Use the REST API Client to make requests to the Twilio REST API
 use Twilio\Rest\Client;
@@ -33,7 +33,7 @@ function sendex_publish_post($mobile, $name, $time) {
             // A Twilio phone number you purchased at twilio.com/console
             'from' => '+19105699851',
             // the body of the text message you'd like to send
-            'body' => 'Hi, '. $name .', ypu have an appointment tomorrow at '.$time.'.
+            'body' => 'Hi, '. $name .', you have an appointment tomorrow at '.$time.'.
              If you need to reach your Barber you can reply directly to this SMS and we will make sure they get it!
              Your Barber can also reach out to you in the same way. - Urbarbr Team'
         ]
