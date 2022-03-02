@@ -511,7 +511,6 @@ function custom_cart_items_prices( $cart ) {
     }
 }
 
-
 function my_custom_js_css() {
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -560,4 +559,75 @@ function bbloomer_checkout_step3( $cart ) {
 
 		echo '<div class="jac-booking-date-time"><div class="booking-date">' . $p_booking_date . '</div><div class="booking-time">' . $p_booking_time . '</div></div>';
 	} 
+}
+
+add_action( 'check_booking_time', 'cw_function' );
+function cw_function() {
+	$chBooking = curl_init();
+    $headers = array(
+		'Accept: application/json',
+		'Content-Type: application/json',
+    );
+	$urlBooking= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/bookings?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	curl_setopt($chBooking, CURLOPT_URL, $urlBooking);
+	curl_setopt($chBooking, CURLOPT_RETURNTRANSFER, 1);
+	$outputBooking = curl_exec($chBooking);
+	$jsonBooking = json_decode($outputBooking, true);
+	curl_close($chBooking);
+	
+	$chOrder = curl_init();
+	$urlOrder= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/orders?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	curl_setopt($chOrder, CURLOPT_URL, $urlOrder);
+	curl_setopt($chOrder, CURLOPT_RETURNTRANSFER, 1);
+	$outputOrder = curl_exec($chOrder);
+	$jsonOrder = json_decode($outputOrder, true);
+	curl_close($chOrder);
+
+	date_default_timezone_set('Australia/Adelaide');
+	$date = date('Y-m-d H:i:s');
+	$long = strtotime($date);
+
+	$start = $jsonBooking[0]['start'];
+	for ($i=0; $i < count($jsonBooking); $i++) { //1hr = 3600
+		if (($jsonBooking[$i]['start'] < $long && $jsonBooking[$i]['end'] > $long) || $jsonBooking[$i]['status'] === 'cancelled' || $jsonBooking[$i]['status'] === 'unpaid') {
+			array_splice($jsonBooking, $i, 1);
+			$i = 0;
+		}
+	}
+
+	$customers = array();
+	for ($i=0; $i < count($jsonBooking); $i++) { 
+		$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
+		$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
+		for ($j=0; $j < count($jsonOrder); $j++) { 
+			if ($jsonBooking[$i]['order_id'] === $jsonOrder[$j]['id']) {
+				array_push($customers, $jsonOrder[$j]);
+			}
+		}
+	}
+
+	for ($i=0; $i < count($customers); $i++) { 
+		$customers[$i]['billing']['phone'] = str_replace(' ', '', $customers[$i]['billing']['phone']);
+		if ($customers[$i]['billing']['phone'][0] === '0') {
+			$customers[$i]['billing']['phone'] = '+61' . substr($customers[$i]['billing']['phone'], 1);
+		}
+		if ($customers[$i]['billing']['phone'][0] !== '+') {
+			$customers[$i]['billing']['phone'] = '+' . strval($customers[$i]['billing']['phone']);
+		}
+	}
+
+	for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
+		if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
+			//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
+			sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
+		}
+	}
+
+	for ($i=0; $i < count($jsonBooking); $i++) {  //Complete the appointment
+		if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
+			//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
+			complete_appointment($customers[$i]['billing']['phone']);
+		}
+	}
+	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
