@@ -150,8 +150,8 @@
 							echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
 						}?>
 						<div>
-							<span> <?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>
-							<?php if ( comments_open() && !$show_brife_product_tile ){ echo "Reviews"; } ?> </span>
+							<span> <?php printf( _n( '%s',$review_count,'woocommerce' ), ' <span class="count">' . esc_html( $review_count ) . '</span>' ); ?>
+							<?php if (!$show_brife_product_tile){ echo ' Review' . (esc_html( $review_count ) == 1 ? '' : 's'); } ?> </span>
 							<?php if($show_brife_product_tile){
 								echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
 							}?>
@@ -173,7 +173,7 @@
 			
 			<?php if(!$show_brife_product_tile){ ?>
 					<div class="jac-products-header-top-right">
-						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-alt btn-link">Visit Barber</a>
+						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-alt">Visit Barber</a>
 					</div>
 			<?php } ?>
 		</div>
@@ -293,10 +293,14 @@
     		font-size: 14px;
 		}
 		.jac-products-header-top-left > div > span.barber_location{
-			float: right;
+			/*--float: right;
 			color:#000000;
 			font-weight: 500;
-			max-width: 65px;
+			max-width: 65px; */
+			float: none;
+			font-weight: 400;
+			max-width: unset;
+			display: block;
 		}
 		.barber_service_price{
 			color:#000000;

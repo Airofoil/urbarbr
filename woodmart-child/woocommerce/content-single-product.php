@@ -109,8 +109,8 @@ if ( $full_height_sidebar && $page_layout != 'full-width' ) {
 		?>
 
 		<div class="row product-image-summary-wrap">
-			<div class="product-image-summary <?php echo esc_attr( $product_image_summary_class ); ?>">
-				<div class="row product-image-summary-inner">
+			<div class="zzproduct-image-summary <?php echo esc_attr( $product_image_summary_class ); ?>">
+				<div class="row zzproduct-image-summary-inner">
 					<div class="<?php echo esc_attr( $product_images_class ); ?> product-images" <?php echo !empty( $product_images_attr ) ? $product_images_attr: ''; ?>>
 						<div class="product-images-inner">
 							<?php
@@ -150,23 +150,51 @@ if ( $full_height_sidebar && $page_layout != 'full-width' ) {
 								</div>
 							<?php endif ?>
 
-							<?php
-								/**
-								 * woocommerce_single_product_summary hook
-								 *
-								 * @hooked woocommerce_template_single_title - 5
-								 * @hooked woocommerce_template_single_rating - 10
-								 * @hooked woocommerce_template_single_price - 10
-								 * @hooked woocommerce_template_single_excerpt - 20
-								 * @hooked woocommerce_template_single_add_to_cart - 30
-								 * @hooked woocommerce_template_single_meta - 40
-								 * @hooked woocommerce_template_single_sharing - 50
-								 */
-								do_action( 'woocommerce_single_product_summary' );
-							?>
+                            <?php woocommerce_template_single_title();
+
+							$rating_count = $product->get_rating_count();
+							$review_count = $product->get_review_count(); ?>
+
+                            <?php woocommerce_template_single_rating(); //--Disabled in WooCommerce > Settings > Products ?>
+							<a href="<?php echo get_permalink() ?>#reviews" class="woocommerce-review-link" rel="nofollow">(<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>)</a>
+
+                            <?php //--woocommerce_template_single_price();--Not showing prices on barbers ?>
+
+                            <h4 class="subtitle" style="color:var(--urbarbr-shade);">About the Barber</h4>
+                            <?php woocommerce_template_single_excerpt(); ?>
+
+                            <?php //--woocommerce_template_single_meta(); ?>
+                            
+                            <?php woocommerce_template_single_sharing(); //--Disabled in Woodmart settings ?>
 						</div>
 					</div>
 				</div><!-- .summary -->
+                <div id="jac-booking-container">
+
+                    <?php woocommerce_template_single_add_to_cart(); ?>
+
+                    <?php
+                        /**
+                         * woocommerce_single_product_summary hook
+                         *
+                         * @hooked woocommerce_template_single_title - 5
+                         * @hooked woocommerce_template_single_rating - 10
+                         * @hooked woocommerce_template_single_price - 10
+                         * @hooked woocommerce_template_single_excerpt - 20
+                         * @hooked woocommerce_template_single_add_to_cart - 30
+                         * @hooked woocommerce_template_single_meta - 40
+                         * @hooked woocommerce_template_single_sharing - 50
+                         */
+                        //----do_action( 'woocommerce_single_product_summary' );----Replaced by the functions e.g. woocommerce_template_single_title(); - JDH
+                    ?>
+
+                    <script>
+                        /* Move the selected service summary into the sidebar above the date selection */
+                        document.addEventListener('DOMContentLoaded', function() {
+                            jQuery('#product-addons-total').prependTo('#jac-items-selected');
+                        });
+                    </script>
+                </div>
 			</div>
 
 			<?php 

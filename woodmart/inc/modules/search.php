@@ -58,6 +58,9 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 		$wrapper_classes = '';
 		$dropdowns_classes = '';
 
+		/*++ Added false override to hide the category search selection */
+		$show_categories = false;
+
 		if ( $show_categories && $post_type == 'product' ) {
 			$class .= ' wd-with-cat';
 			$class .= woodmart_get_old_classes( ' has-categories-dropdown' );
@@ -150,19 +153,51 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 				<?php endif ?>
 				<form role="search" method="get" class="searchform <?php echo esc_attr( $class ); ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>" <?php echo ! empty( $data ) ? $data : ''; ?>>
 					<!-- 		TEST DATA			 -->
+					<?php if ($post_type == 'product') { 
+						global $wpdb;	
+						$global_services = array();
+
+						$search = $wpdb->prepare(" SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_product_addons' ");
+						$search_results = $wpdb->get_results($search);
+						foreach($search_results as $service){
+							if (unserialize($service->meta_value) && unserialize($service->meta_value)[0])
+								foreach(unserialize($service->meta_value)[0]['options'] as $option){
+									$global_services[] = $option['label'];
+								}
+						}
+						$global_services = array_unique($global_services);
+					?>
+					<select class="form-select form-select-sm booking-services-search selectpicker" name="booking-services" aria-label=".form-select-sm">
+						<option value="default" selected disabled>Select a service</option>
+
+						<?php foreach($global_services as $service){?>
+						<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
+						<?php } ?>
+					</select>
+					<?php } else { ?>
+					<input type="text" class="s" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo get_search_query(); ?>" name="s" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>" title="<?php echo esc_attr( $placeholder ); ?>">
+					<?php } ?>
+					<input type="hidden" name="post_type" value="<?php echo esc_attr( $post_type ); ?>">
 					
-					<?php if($post_type == 'product'){ ?>
-						<button type="button" class="your-location-search btn btn-color-alt" data-toggle="dropdown" title="Set your location" name="your-location" aria-label=".form-select-sm" style="text-transform: none;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button>
+					<!-- 		TEST DATA			 -->
+					<?php if ($post_type == 'product') { ?>
+					<!-- <input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time"> -->
+					<div class="booking-date-search" class="input-group date">
+					   <input type="text" id="booking-date-search" class="form-control" name="booking-date" placeholder="Select Date and Time">
+					</div>
+					<?php } ?>
+					
+					
+					
+					<?php if ($post_type == 'product') { ?>
+					<div class="your-location-search" class="input-group">
+						<input type="text" id="your-location-search" class="form-control" name="your-location" placeholder="Set your location" title="Set your location" data-toggle="dropdown" aria-label=".form-select-sm">
 						<ul class="dropdown-menu" role="menu">
 							<li data-original-index="0">
-								<a tabindex="-1" data-tokens="null" href="javascript:getLocation();">
-									Detect my location
-								</a>
+								<a tabindex="-1" data-tokens="null" href="javascript:getLocation();">Detect my location</a>
 							</li>
 							<li data-original-index="1">
-								<a tabindex="0" data-tokens="null" href="javascript:enterLocation();">
-									Enter a location
-								</a>
+								<a tabindex="0" data-tokens="null" href="javascript:enterLocation();">Enter a location</a>
 							</li>
 							<!-- <li data-original-index="2">
 								<a tabindex="0" class="" style="" data-tokens="null">
@@ -171,85 +206,54 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 								</a>
 							</li> -->
 						</ul>
-						<input type="hidden" id="location_coords" name="location" value="">
+						<input type="hidden" id="location_coords" value=""><!--  name="location" -->
+					</div>
+					<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
+					<script>
+						var locBox = document.getElementById('location_coords');
+						var locationBtn = document.querySelector('.your-location-search');
 
-						<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
-						<script>
-							var locBox = document.getElementById('location_coords');
-							var locationBtn = document.querySelector('.your-location-search');
-
-							function getLocation() { /* Get the user's location */
-								if (navigator.geolocation) {
-									navigator.geolocation.getCurrentPosition(showLocation);
-								} else {
-									locBox.value = 0; //"Geolocation is not supported by this browser.";
-								}
-							}
-
-							function showLocation(position) { /* Set the value in the location box */
-								locBox.value = position.coords.latitude + ',' + position.coords.longitude;
-								locationBtn.classList.add('tick');
-							}
-
-							function enterLocation() {
-								var locationInput = document.createElement('input');
-								locationInput.type = 'text';
-								locationInput.placeholder = 'Enter an address or suburb...';
-								locationInput.classList.add('booking-date-search'); // Need to replace this class with a more general styling class - JDH
-								locationInput.style.paddingRight = '0';
-
-								locationBtn.parentNode.replaceChild(locationInput, locationBtn);
-								locationInput.focus();
-							}
-						</script>
-						<style>
-							.tick::after {
-								content: ' ✓';
-							}
-						</style>
-					<?php } ?>
-					
-					<!-- 		TEST DATA			 -->
-					<?php if($post_type == 'product'){ 
-						global $wpdb;	
-						$global_services = array();
-
-						$search = $wpdb->prepare(" SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_product_addons' ");
-						$search_results = $wpdb->get_results($search);
-						foreach($search_results as $service){
-							foreach(unserialize($service->meta_value)[0]['options'] as $option){
-								$global_services[] = $option['label'];
+						function getLocation() { /* Get the user's location */
+							if (navigator.geolocation) {
+								navigator.geolocation.getCurrentPosition(showLocation);
+							} else {
+								locBox.value = 0; //"Geolocation is not supported by this browser.";
 							}
 						}
-						$global_services = array_unique($global_services);
-						?>
-						<select class="form-select form-select-sm booking-services-search selectpicker" name="booking-services" aria-label=".form-select-sm">
-						 	<option value="default" selected disabled>Select a service</option>
-							 	<?php foreach($global_services as $service){?>
-									<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
-								<?php } ?>
-						</select>
-					<?php }else{?>
-						<input type="text" class="s" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo get_search_query(); ?>" name="s" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>" title="<?php echo esc_attr( $placeholder ); ?>" />
+
+						function showLocation(position) { /* Set the value in the location box */
+							locBox.value = position.coords.latitude + ',' + position.coords.longitude;
+							//--locationBtn.classList.add('tick');
+						}
+
+						function enterLocation() {
+							document.getElementById('your-location-search').focus();
+							/*--var locationInput = document.createElement('input');
+							locationInput.type = 'text';
+							locationInput.placeholder = 'Enter an address or suburb...';
+							locationInput.classList.add('booking-date-search'); // Need to replace this class with a more general styling class - JDH
+							locationInput.style.paddingRight = '0';
+
+							locationBtn.parentNode.replaceChild(locationInput, locationBtn);
+							locationInput.focus();*/
+						}
+					</script>
+					<style>
+						.tick::after {
+							content: ' ✓';
+						}
+					</style>
 					<?php } ?>
-					<input type="hidden" name="post_type" value="<?php echo esc_attr( $post_type ); ?>">
-					
-					<!-- 		TEST DATA			 -->
-					<?php if($post_type == 'product'){ ?>
-						<input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time">
-					<?php } ?>
 					<!-- 		TEST DATA			 -->
 					
-					<?php if( $show_categories && $post_type == 'product' ) woodmart_show_categories_dropdown(); ?>
+					<?php if ($show_categories && $post_type == 'product') woodmart_show_categories_dropdown(); ?>
+					
 					<button type="submit" class="searchsubmit btn<?php echo esc_attr( $btn_classes ); ?>">
-						<span>
-							<?php echo esc_attr_x( 'Search', 'submit button', 'woodmart' ); ?>
+						<span>Find a barber</span>
+						<!-- <span>
+					< ?php echo esc_attr_x( 'Search', 'submit button', 'woodmart' ); ?>
 						</span>
-						<?php 
-							if ( $icon_type == 'custom' ) {
-								echo whb_get_custom_icon( $custom_icon );
-							}
-						?>
+					< ?php if ( $icon_type == 'custom' ) echo whb_get_custom_icon( $custom_icon ); ?> -->
 					</button>
 				</form>
 				<?php if ( $type == 'full-screen' ): ?>
