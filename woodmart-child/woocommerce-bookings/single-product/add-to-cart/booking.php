@@ -38,7 +38,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
 	</div>
 
-	<div id="wc-bookings-booking-form" class="wc-bookings-booking-form col-md-8 col-sm-12" style="display:none">
+	<div id="wc-bookings-booking-form" class="wc-bookings-booking-form col-md-4 col-sm-12" style="display:none">
 		<h4 class="subtitle">Booking Details</h4>
 		<div id="jac-items-selected"></div>
 		
