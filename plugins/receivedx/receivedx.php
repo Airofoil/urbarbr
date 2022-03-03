@@ -26,6 +26,7 @@ function register_receive_message_route() {
 }
 
 function trigger_receive_sms() {
+
   $chBooking = curl_init();
   $headers = array(
 		'Accept: application/json',
@@ -35,7 +36,11 @@ function trigger_receive_sms() {
   curl_setopt($chBooking, CURLOPT_URL, $urlBooking);
   curl_setopt($chBooking, CURLOPT_RETURNTRANSFER, 1);
   $outputBooking = curl_exec($chBooking);
-	$jsonBooking = json_decode($outputBooking, true);
+	try {
+		$jsonBooking = json_decode($outputBooking, true, JSON_THROW_ON_ERROR);
+	} catch (JsonException $e) {
+		throw new EncryptException('Could not encrypt the data.', 0, $e);
+	}
   curl_close($chBooking);
 
   $chOrder = curl_init();
@@ -43,7 +48,11 @@ function trigger_receive_sms() {
   curl_setopt($chOrder, CURLOPT_URL, $urlOrder);
 	curl_setopt($chOrder, CURLOPT_RETURNTRANSFER, 1);
 	$outputOrder = curl_exec($chOrder);
-	$jsonOrder = json_decode($outputOrder, true);
+	try {
+		$jsonOrder = json_decode($outputOrder, true, JSON_THROW_ON_ERROR);
+	} catch (JsonException $e) {
+		throw new EncryptException('Could not encrypt the data.', 0, $e);
+	}
 	curl_close($chOrder);
 
 	$chProduct = curl_init();
@@ -51,8 +60,18 @@ function trigger_receive_sms() {
 	curl_setopt($chProduct, CURLOPT_URL, $urlProduct);
 	curl_setopt($chProduct, CURLOPT_RETURNTRANSFER, 1);
 	$outputProduct = curl_exec($chProduct);
-	$jsonProduct = json_decode($outputProduct, true);
+	try {
+		$jsonProduct = json_decode($outputProduct, true, JSON_THROW_ON_ERROR);
+	} catch (JsonException $e) {
+		throw new EncryptException('Could not encrypt the data.', 0, $e);
+	}
 	curl_close($chProduct);
+
+  $barberList = array(
+		"+61420603110" => "Barber-test", //barber names need to be replaced with store name later
+		"+61416711229" => "Barber Abbey",
+		"+61424713392" => "Barber Fritz"
+	);
 
   date_default_timezone_set('Australia/Adelaide');
 	$date = date('Y-m-d H:i:s');
@@ -94,10 +113,12 @@ function trigger_receive_sms() {
 	}
 
   $customerInfo;
+  $fromCustomer = false;
   if (is_countable($customers)) {
     for ($i=0; $i < count($customers); $i++) {
       if (($customers[$i]['billing']['phone'] === $_REQUEST['From']) && (($jsonBooking[$i]['start'] - $long) < 86430 && ($jsonBooking[$i]['start'] - $long) > -3630)) {
         $customerInfo = $customers[$i];
+        $fromCustomer = true;
       }
     }
   }
@@ -114,34 +135,43 @@ function trigger_receive_sms() {
   $barber;
   if (is_countable($jsonProduct)) {
     for ($i=0; $i < count($jsonProduct); $i++) {
-      if ($productId === $jsonProduct['id']) {
-        $barber = $jsonProduct['name'];
+      if ($productId === $jsonProduct[$i]['id']) {
+        $barber = $jsonProduct[$i]['name'];
       }
     }
   }
-
+  
   echo header('content-type: text/xml');
   $to = '+61420603110';
   $from = $_REQUEST['From'];
   $body = $_REQUEST['Body'];
-  $customer = $customerInfo['billing']['first_name'];
-
+  $customerName = $customerInfo['billing']['first_name'];
   
-  echo 
+  if ($fromCustomer) {
+    echo 
     "<Response>
       <Message to='".$to."'>
-      Hi " .$barber.", " .$customer. " has sent you the following message: "
-      .$body. " - " .$customer.
-      " To reploy to " .$customer. ", reply directly to this message
+      Hi " .$barber.", " .$customerName. " has sent you the following message: 
+      
+      ".$body. " - " .$customerName."
+       
+      To reploy to " .$customerName. ", reply directly to this message
       - UrBabr Team
       </Message>
     </Response>";
-  /*  echo 
+  }
+
+  if ($fromCustomer === false) {
+    echo 
     "<Response>
-      <Message to='".$to."'>Hi there, "
-      .$customerInfo['id'].
-      "</Message>
-    </Response>";*/
+      <Message to='".$to."'>: 
+      
+      ".$body. " - " .$from."
+       
+      - UrBabr Team
+      </Message>
+    </Response>";
+  }
   die();
 }
 ?>
