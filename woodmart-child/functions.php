@@ -559,6 +559,13 @@ function bbloomer_checkout_step3( $cart ) {
 	} 
 }
 
+add_action( 'rest_api_init', 'json_data_route');
+function json_data_route() {
+	register_rest_route( 'json_data/v1', '/customer_info', array(
+		'methods' => WP_REST_SERVER::READABLE,
+		'callback' => 'cw_function',
+	) );
+}
 add_action( 'check_booking_time', 'cw_function' );
 function cw_function() {
 	$chBooking = curl_init();
@@ -570,7 +577,11 @@ function cw_function() {
 	curl_setopt($chBooking, CURLOPT_URL, $urlBooking);
 	curl_setopt($chBooking, CURLOPT_RETURNTRANSFER, 1);
 	$outputBooking = curl_exec($chBooking);
-	$jsonBooking = json_decode($outputBooking, true);
+	try {
+		$jsonBooking = json_decode($outputBooking, true, JSON_THROW_ON_ERROR);
+	} catch (JsonException $e) {
+		throw new EncryptException('Could not encrypt the data.', 0, $e);
+	}
 	curl_close($chBooking);
 	
 	$chOrder = curl_init();
@@ -578,7 +589,11 @@ function cw_function() {
 	curl_setopt($chOrder, CURLOPT_URL, $urlOrder);
 	curl_setopt($chOrder, CURLOPT_RETURNTRANSFER, 1);
 	$outputOrder = curl_exec($chOrder);
-	$jsonOrder = json_decode($outputOrder, true);
+	try {
+		$jsonOrder = json_decode($outputOrder, true, JSON_THROW_ON_ERROR);
+	} catch (JsonException $e) {
+		throw new EncryptException('Could not encrypt the data.', 0, $e);
+	}
 	curl_close($chOrder);
 
 	date_default_timezone_set('Australia/Adelaide');
@@ -620,6 +635,19 @@ function cw_function() {
 		}
 	}
 
+	$customerData = array();
+	if (is_countable($jsonBooking)) {
+		for ($i=0; $i < count($jsonBooking); $i++) { 
+			array_push($customerData, array(
+				'first_name' => $customers[$i]['billing']['first_name'],
+				'last_name' => $customers[$i]['billing']['last_name'],
+				'phone' => $customers[$i]['billing']['phone'],
+				'booking_id' => $jsonBooking[$i]['id'],
+				'order_id' => $jsonBooking[$i]['order_id']
+			));
+		}
+	}
+
 	if (is_countable($jsonBooking)) {
 		for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
 			if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
@@ -636,4 +664,5 @@ function cw_function() {
 		}
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
+	return $customerData;
 }
