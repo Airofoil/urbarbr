@@ -667,8 +667,6 @@ function customerData() {
 		}
 	}
 
-	echo json_encode($customerData[0]);
-
 	return $customerData;
 }
 
@@ -752,25 +750,6 @@ function cw_function() {
 			}
 		}
 	}
-/*
-	$customerData = array();
-	if (is_countable($jsonBooking) && is_countable($jsonProduct)) {
-		for ($i=0; $i < count($jsonBooking); $i++) { 
-			for ($j=0; $j < count($jsonProduct); $j++) { 
-				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-					array_push($customerData, array(
-						'first_name' => $customers[$i]['billing']['first_name'],
-						'last_name' => $customers[$i]['billing']['last_name'],
-						'phone' => $customers[$i]['billing']['phone'],
-						'booking_id' => $jsonBooking[$i]['id'],
-						'order_id' => $jsonBooking[$i]['order_id'],
-						'product_id' => $jsonBooking[$i]['product_id'],
-						'product_name' => $jsonProduct[$j]['name']
-					));
-				}
-			}
-		}
-	}*/
 
 	if (is_countable($jsonBooking)) {
 		for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
@@ -788,5 +767,4 @@ function cw_function() {
 		}
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
-	//return $customerData;
 }
