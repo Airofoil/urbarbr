@@ -56,4 +56,16 @@ jQuery(document).ready(function ($){
 
 //  $.datetimepicker.setDateFormatter('moment');
 
+    $('h5.widget-title').unbind().click(e => $(e.target).toggleClass('open')); /* ++ For the footer toggleable menus */
+
+    $('.searchform input').on('change, blur', function(e) {
+        if (e.target.value !== '') $(e.target).toggleClass('valid');
+    })
+
+    setTimeout(() => {
+        if ($('.tinvwl_add_to_wishlist-text').length) {
+            $('.tinvwl_add_to_wishlist-text').text('Add to Favourites');
+        }
+    }, 20);
+
 });

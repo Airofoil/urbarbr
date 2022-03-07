@@ -155,12 +155,16 @@ if ( $full_height_sidebar && $page_layout != 'full-width' ) {
 							$rating_count = $product->get_rating_count();
 							$review_count = $product->get_review_count(); ?>
 
-                            <?php woocommerce_template_single_rating(); //--Disabled in WooCommerce > Settings > Products ?>
-							<a href="<?php echo get_permalink() ?>#reviews" class="woocommerce-review-link" rel="nofollow">(<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>)</a>
+                            <?php /*-woocommerce_template_single_rating(); * ///--Disabled in WooCommerce > Settings > Products ?>
+							<a href="<?php echo get_permalink() ?>#reviews" class="star" rel="nofollow"><span></span><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</a> */?>
+
+							<div class="product-reviews">
+								<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</p>
+							</div>
 
                             <?php //--woocommerce_template_single_price();--Not showing prices on barbers ?>
 
-                            <h4 class="subtitle" style="color:var(--urbarbr-shade);">About the Barber</h4>
+                            <h4 class="subtitle">About the Barber</h4>
                             <?php woocommerce_template_single_excerpt(); ?>
 
                             <?php //--woocommerce_template_single_meta(); ?>

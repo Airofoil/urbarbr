@@ -39,8 +39,10 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 	</div>
 
 	<div id="wc-bookings-booking-form" class="wc-bookings-booking-form col-md-4 col-sm-12" style="display:none">
-		<h4 class="subtitle">Booking Details</h4>
-		<div id="jac-items-selected"></div>
+		<h4>Booking Details</h4>
+		<div id="jac-items-selected">
+			<!-- --<p style="text-align: center;">No service is selected</p> -->
+		</div>
 		
 		<?php do_action( 'woocommerce_before_booking_form' ); ?>
 
