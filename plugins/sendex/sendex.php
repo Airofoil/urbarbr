@@ -39,7 +39,7 @@ Your Barber can also reach out to you in the same way.
     );
 }
 
-function reminder_barber($mobile, $barberName, $time, $customerName) { 
+function reminder_barber($mobile, $barberName, $time, $customerName, $orderId) { 
     
     // Your Account SID and Auth Token from twilio.com/console
     $sid = 'AC3f5220abb2abadc0508c963f478d1c1e';
@@ -54,9 +54,9 @@ function reminder_barber($mobile, $barberName, $time, $customerName) {
             // A Twilio phone number you purchased at twilio.com/console
             'from' => '+17622139735',
             // the body of the text message you'd like to send
-            'body' => 'Hi, '. $barberName .', you have an appointment tomorrow at '.$time.' with '.$customerName.'.
+            'body' => 'Hi, '. $barberName .', you have an appointment tomorrow at '.$time.' with '.$customerName. '(#'.$orderId.').
 If you need to reach your Customer you can reply directly to this SMS and we will make sure they get it!
-Your Barber can also reach out to you in the same way. 
+Your Barber can also reach out to you in the same way. You need to specify a customer\'s full name and a ":" before the message.
             - Urbarbr Team'
         ]
     );

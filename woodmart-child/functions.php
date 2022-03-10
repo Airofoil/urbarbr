@@ -599,7 +599,28 @@ function cw_function() {
 	} catch (JsonException $e) {
 		throw new EncryptException('Could not encrypt the data.', 0, $e);
 	}
+	if (!$jsonBooking) return;//++
 	curl_close($chProduct);
+
+	$barberList = array(
+		"test07" => "+61420603110",
+		"test06" => "+61420603110",
+		"Hoochie" => "+61420603110",
+		"test05" => "+61420603110",
+		"test04" => "+61420603110",
+		"Test02" => "+61420603110",
+		"test01" => "+61420603110",
+		"test00" => "+61420603110",
+		"Test 100" => "+61420603110",
+		"test66" => "+61420603110",
+		"Ben's Server Barber" => "+61420603110",
+		"Ben's locals" => "+61420603110",
+		"Ben's Local barbershop" => "+61420603110",
+		"Barber Jo" => "+61420603110",
+		"New-test" => "+61420603110",
+		"Barber-test" => "+61420603110",
+		"JAC Product" => "+61420603110",
+	);
 
 	date_default_timezone_set('Australia/Adelaide');
 	$date = date('Y-m-d H:i:s');
@@ -645,10 +666,10 @@ function cw_function() {
 			for ($j=0; $j < count($jsonProduct); $j++) { 
 				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
 					if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
-						$tmpCustomerFullName = $customers[$i]['billing']['first_name']." ".$customers[$i]['billing']['last_name'];
+						//$tmpCustomerFullName = $customers[$i]['billing']['first_name']." ".$customers[$i]['billing']['last_name'];
 						//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
-						//reminder_barber('+61420603110', $jsonProduct[$j]['name'], date('H:i', $jsonBooking[$i]['start']), $tmpCustomerFullName);
+						//reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('H:i', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					}
 				}
 			}
@@ -660,7 +681,7 @@ function cw_function() {
 					if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
 						//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
 						complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name']);
-						//complete_appointment_barber('+61420603110', $jsonProduct[$j]['name']);
+						//complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name']);
 					}
 				}
 			}
