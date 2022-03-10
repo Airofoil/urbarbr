@@ -64,6 +64,10 @@ label {
     font-weight: 600;
 }
 
+input, select, textarea {
+	border-radius: 4px;
+}
+
 input[type="checkbox"]:first-child {
 	position: relative;
 	top: -1px;
@@ -92,11 +96,16 @@ body .btn, button, .button {
 	white-space: nowrap;
     text-transform: none;
 }
-
-.btn.btn-default {
-	background: #28415899;
-	color: var(--urbarbr-white) !important;
+body .btn:hover,
+body .button:hover,
+body button:hover,
+body [type="submit"]:hover,
+body [type="button"]:hover {
+	color: initial;
+	box-shadow: none;
+	text-decoration: none;
 }
+
 .btn.btn-default:hover {
 	background: var(--urbarbr-midblue);
 }
@@ -117,6 +126,10 @@ body .btn, button, .button {
 	color: white; */
 	background: var(--urbarbr-midblue);
 	color: white;
+}
+.btn.btn-default {
+	background: #28415899;
+	color: var(--urbarbr-white) !important;
 }
 @media (min-width: 476px) {
 	input:not([class*="wpcf7"]), select, .btn-group .btn {
@@ -362,8 +375,10 @@ div.wpcf7 .wpcf7-spinner {
 
 .product-reviews {
 	display: block;
-	margin-bottom: 25px;
 	color: var(--urbarbr-midblue);
+}
+body.single-product .product-reviews {
+	margin-bottom: 25px;
 }
 
 .btn.m-production-section-button {
@@ -996,7 +1011,7 @@ body .wd-header-wishlist .wd-tools-icon:before {
 	margin-bottom: 0;
 }
 
-.website-wrapper .wd-prefooter {
+body.home .website-wrapper .wd-prefooter {
 	padding-bottom: 0;
 }
 
@@ -1063,13 +1078,24 @@ header .booking-date-search { /* Hide the date from the header searchbar */
 
 #booking-date-search {
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuODA2MDMgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTE1LjYxMjEgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTYuODMwMjggMTEuNDQyOEgxNi41ODc5SDYuODMwMjhaTTQuODc4NzYgMjEuMjAwNEgxOC41Mzk0QzE5LjA1NjkgMjEuMjAwNCAxOS41NTMzIDIwLjk5NDcgMTkuOTE5MyAyMC42Mjg4QzIwLjI4NTMgMjAuMjYyOCAyMC40OTA5IDE5Ljc2NjQgMjAuNDkwOSAxOS4yNDg4VjcuNTM5NzVDMjAuNDkwOSA3LjAyMjE3IDIwLjI4NTMgNi41MjU4IDE5LjkxOTMgNi4xNTk4MkMxOS41NTMzIDUuNzkzODQgMTkuMDU2OSA1LjU4ODIzIDE4LjUzOTQgNS41ODgyM0g0Ljg3ODc2QzQuMzYxMTkgNS41ODgyMyAzLjg2NDgxIDUuNzkzODQgMy40OTg4MyA2LjE1OTgyQzMuMTMyODUgNi41MjU4IDIuOTI3MjUgNy4wMjIxNyAyLjkyNzI1IDcuNTM5NzVWMTkuMjQ4OEMyLjkyNzI1IDE5Ljc2NjQgMy4xMzI4NSAyMC4yNjI4IDMuNDk4ODMgMjAuNjI4OEMzLjg2NDgxIDIwLjk5NDcgNC4zNjExOSAyMS4yMDA0IDQuODc4NzYgMjEuMjAwNFoiIHN0cm9rZT0iIzg4OTZBMiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==");
+	/*-background-image: url('./svgs/calendar-outline.svg'); */
 	background-repeat: no-repeat;
 	background-position: 12px;
 }
+#booking-date-search.entered {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuODA2MDMgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTE1LjYxMjEgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTYuODMwMjggMTEuNDQyOEgxNi41ODc5SDYuODMwMjhaTTQuODc4NzYgMjEuMjAwNEgxOC41Mzk0QzE5LjA1NjkgMjEuMjAwNCAxOS41NTMzIDIwLjk5NDcgMTkuOTE5MyAyMC42Mjg4QzIwLjI4NTMgMjAuMjYyOCAyMC40OTA5IDE5Ljc2NjQgMjAuNDkwOSAxOS4yNDg4VjcuNTM5NzVDMjAuNDkwOSA3LjAyMjE3IDIwLjI4NTMgNi41MjU4IDE5LjkxOTMgNi4xNTk4MkMxOS41NTMzIDUuNzkzODQgMTkuMDU2OSA1LjU4ODIzIDE4LjUzOTQgNS41ODgyM0g0Ljg3ODc2QzQuMzYxMTkgNS41ODgyMyAzLjg2NDgxIDUuNzkzODQgMy40OTg4MyA2LjE1OTgyQzMuMTMyODUgNi41MjU4IDIuOTI3MjUgNy4wMjIxNyAyLjkyNzI1IDcuNTM5NzVWMTkuMjQ4OEMyLjkyNzI1IDE5Ljc2NjQgMy4xMzI4NSAyMC4yNjI4IDMuNDk4ODMgMjAuNjI4OEMzLjg2NDgxIDIwLjk5NDcgNC4zNjExOSAyMS4yMDA0IDQuODc4NzYgMjEuMjAwNFoiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==")
+	/*-background-image: url('./svgs/calendar-outline-white.svg'); */
+}
+
 #your-location-search {
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNy42IDIgNCA1LjYgNCAxMEM0IDE1LjQgMTEgMjEuNSAxMS4zIDIxLjhDMTEuNSAyMS45IDExLjggMjIgMTIgMjJDMTIuMiAyMiAxMi41IDIxLjkgMTIuNyAyMS44QzEzIDIxLjUgMjAgMTUuNCAyMCAxMEMyMCA1LjYgMTYuNCAyIDEyIDJaTTEyIDE5LjdDOS45IDE3LjcgNiAxMy40IDYgMTBDNiA2LjcgOC43IDQgMTIgNEMxNS4zIDQgMTggNi43IDE4IDEwQzE4IDEzLjMgMTQuMSAxNy43IDEyIDE5LjdaTTEyIDZDOS44IDYgOCA3LjggOCAxMEM4IDEyLjIgOS44IDE0IDEyIDE0QzE0LjIgMTQgMTYgMTIuMiAxNiAxMEMxNiA3LjggMTQuMiA2IDEyIDZaTTEyIDEyQzEwLjkgMTIgMTAgMTEuMSAxMCAxMEMxMCA4LjkgMTAuOSA4IDEyIDhDMTMuMSA4IDE0IDguOSAxNCAxMEMxNCAxMS4xIDEzLjEgMTIgMTIgMTJaIiBmaWxsPSIjODg5NkEyIi8+Cjwvc3ZnPgo=");
+	/*-background-image: url('./svgs/location.svg'); */
 	background-repeat: no-repeat;
 	background-position: 12px;
+}
+#your-location-search.entered {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNy42IDIgNCA1LjYgNCAxMEM0IDE1LjQgMTEgMjEuNSAxMS4zIDIxLjhDMTEuNSAyMS45IDExLjggMjIgMTIgMjJDMTIuMiAyMiAxMi41IDIxLjkgMTIuNyAyMS44QzEzIDIxLjUgMjAgMTUuNCAyMCAxMEMyMCA1LjYgMTYuNCAyIDEyIDJaTTEyIDE5LjdDOS45IDE3LjcgNiAxMy40IDYgMTBDNiA2LjcgOC43IDQgMTIgNEMxNS4zIDQgMTggNi43IDE4IDEwQzE4IDEzLjMgMTQuMSAxNy43IDEyIDE5LjdaTTEyIDZDOS44IDYgOCA3LjggOCAxMEM4IDEyLjIgOS44IDE0IDEyIDE0QzE0LjIgMTQgMTYgMTIuMiAxNiAxMEMxNiA3LjggMTQuMiA2IDEyIDZaTTEyIDEyQzEwLjkgMTIgMTAgMTEuMSAxMCAxMEMxMCA4LjkgMTAuOSA4IDEyIDhDMTMuMSA4IDE0IDguOSAxNCAxMEMxNCAxMS4xIDEzLjEgMTIgMTIgMTJaIiBmaWxsPSIjRkZGRkZGIi8+Cjwvc3ZnPgo=");
+	/*-background-image: url('./svgs/location-white.svg'); */
 }
 
 .searchform input[type="text"] {
@@ -1089,6 +1115,15 @@ header .booking-date-search { /* Hide the date from the header searchbar */
 	text-align: center;
 }
 
+.searchform input.entered {
+    background-color: var(--urbarbr-midgrey);
+    border: .5px solid var(--urbarbr-blue) !important;
+    color: white !important;
+}
+
+.entered::placeholder {
+    color: white !important;
+}
 
 
 
@@ -1170,15 +1205,19 @@ body.home .vc_column-inner {
 	margin-right: 0 !important;
 	padding: 0 15px 0 30px;
 	/*--color: #001F35 !important; */
-/* 	border: 1px solid #001F35 !important; */
+	border: 1px solid #8896A2;
     /*--background: #fff; */
-    color: #FFF;
-    background: #001F35;
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDggMTQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wLjI5Mjg5MyAxMy43MDcxQy0wLjA5NzYzMTEgMTMuMzE2NiAtMC4wOTc2MzEyIDEyLjY4MzQgMC4yOTI4OTMgMTIuMjkyOUw1LjU4NTc5IDdMMC4yOTI4OTMgMS43MDcxMUMtMC4wOTc2MzE3IDEuMzE2NTggLTAuMDk3NjMxNyAwLjY4MzQxNyAwLjI5Mjg5MyAwLjI5Mjg5M0MwLjY4MzQxNyAtMC4wOTc2MzE1IDEuMzE2NTggLTAuMDk3NjMxNSAxLjcwNzExIDAuMjkyODkzTDcuNzA3MTEgNi4yOTI4OUM4LjA5NzYzIDYuNjgzNDIgOC4wOTc2MyA3LjMxNjU4IDcuNzA3MTEgNy43MDcxMUwxLjcwNzExIDEzLjcwNzFDMS4zMTY1OCAxNC4wOTc2IDAuNjgzNDE4IDE0LjA5NzYgMC4yOTI4OTMgMTMuNzA3MVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=");
+    /* background: #001F35; */
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkuMjkyODkgMTguNzA3MUM4LjkwMjM3IDE4LjMxNjYgOC45MDIzNyAxNy42ODM0IDkuMjkyODkgMTcuMjkyOUwxNC41ODU4IDEyTDkuMjkyODkgNi43MDcxMUM4LjkwMjM3IDYuMzE2NTggOC45MDIzNyA1LjY4MzQyIDkuMjkyODkgNS4yOTI4OUM5LjY4MzQyIDQuOTAyMzcgMTAuMzE2NiA0LjkwMjM3IDEwLjcwNzEgNS4yOTI4OUwxNi43MDcxIDExLjI5MjlDMTcuMDk3NiAxMS42ODM0IDE3LjA5NzYgMTIuMzE2NiAxNi43MDcxIDEyLjcwNzFMMTAuNzA3MSAxOC43MDcxQzEwLjMxNjYgMTkuMDk3NiA5LjY4MzQyIDE5LjA5NzYgOS4yOTI4OSAxOC43MDcxWiIgZmlsbD0iIzg4OTZBMiIvPgo8L3N2Zz4K");
+    /*-background-image: url('./svgs/chevron-right.svg'); */
     background-repeat: no-repeat;
-    background-position: 20px center;
+    background-position: 12px center;
 }
-
+.searchform .searchsubmit.entered{
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkuMjkyODkgMTguNzA3MUM4LjkwMjM3IDE4LjMxNjYgOC45MDIzNyAxNy42ODM0IDkuMjkyODkgMTcuMjkyOUwxNC41ODU4IDEyTDkuMjkyODkgNi43MDcxMUM4LjkwMjM3IDYuMzE2NTggOC45MDIzNyA1LjY4MzQyIDkuMjkyODkgNS4yOTI4OUM5LjY4MzQyIDQuOTAyMzcgMTAuMzE2NiA0LjkwMjM3IDEwLjcwNzEgNS4yOTI4OUwxNi43MDcxIDExLjI5MjlDMTcuMDk3NiAxMS42ODM0IDE3LjA5NzYgMTIuMzE2NiAxNi43MDcxIDEyLjcwNzFMMTAuNzA3MSAxOC43MDcxQzEwLjMxNjYgMTkuMDk3NiA5LjY4MzQyIDE5LjA5NzYgOS4yOTI4OSAxOC43MDcxWiIgZmlsbD0iI0ZGRkZGRiIvPgo8L3N2Zz4K") !important;
+	background: var(--urbarbr-blue);
+	border-color: var(--urbarbr-blue) !important;
+}
 
 
 .woocommerce-cart .woocommerce-cart-form__cart-item .product-name .variation-BookingType {
@@ -1219,7 +1258,7 @@ header .booking-date-search { /* Hide the booking date selection from the header
 	margin: 0;
 	overflow: hidden;
 	line-height: 35px;
-	transition: 0.4s cubic-bezier(0.15, 0.98, 0.15, 0.98);
+	transition: 0.3s cubic-bezier(.17,.93,.33,.99);
 	transition-delay: .7s;
 	font-size: 14px;
 }
@@ -1258,10 +1297,6 @@ body.page-id-8830 .main-page-wrapper {
   align-items: baseline !important;
 }
 
-footer .footer-sidebar.widget-area {
-	/*-padding: 30px 20px 0; */
-	padding: 25px;
-}
 footer .wd-social-icons .wd-social-icon {
 	margin: 0 !important;
 	padding: 4px !important;
@@ -1275,9 +1310,10 @@ footer .wd-social-icons .wd-social-icon {
 	line-height: 20px !important;
 }
 footer .wd-social-icons .wd-social-icon .wd-icon {
-	width: 20px;
-	height: 20px;
-	line-height: 20px !important;
+	width: 18px;
+	height: 18px;
+	font-size: 16px;
+	line-height: 18px !important;
 }
 @media (min-width: 768px) {
 	/*--footer .wd-social-icons .wd-social-icon:nth-child(2n+1) {
@@ -1836,11 +1872,11 @@ a.tinvwl_add_to_wishlist_button.tinvwl-icon-heart {
     margin: 0;
 }
 .wc-pao-addons-container .form-row.form-row-wide input {
-    /*-display: none; */
-    width: 20px;
+    display: none;
+    /*-width: 20px;
     height: 20px;
     margin-left: 25px;
-    order: 1;
+    order: 1; */
 }
 .wc-pao-addons-container .woocommerce-Price-amount.amount {
 	margin-left: auto;
@@ -1948,10 +1984,14 @@ h5.widget-title + [class*="menu"] {
 		max-height: 200px;
 	}
 
+	footer .footer-sidebar.widget-area {
+		/*-padding: 30px 20px 0; */
+		padding: 25px;
+	}
 	.footer-column {
 		max-width: 33%;
 		/*-margin: 0 !important; */
-		padding: 0 5px !important;
+		padding: 0 2px !important;
 		order: 1;
 	}
 	.footer-column:last-child {
@@ -1972,12 +2012,12 @@ h5.widget-title + [class*="menu"] {
 	}
 
 	.widget_nav_menu ul li {
-		min-height: 28px;
+		/*-min-height: 28px; */
 		margin-bottom: 12px;
 		line-height: 12px;
 	}
 	.widget_nav_menu ul li a {
-		font-size: 12px;
+		font-size: 11px;
 		line-height: 14px;
 	}
 }
@@ -1987,8 +2027,9 @@ footer .footer-sidebar.widget-area::after {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
-	transform: translateX(-50%);
 	padding: 10px 0;
+	font-size: 12px;
+	transform: translateX(-50%);
 }
 
 
@@ -2168,7 +2209,7 @@ body .wd-header-mobile-nav .wd-tools-icon::before {
 }
 
 footer img[src*="logo"], header img[src*="logo"] {
-	max-width: 75px;
+	max-width: 75px !important;
 }
 
 /* Wishlist page */
@@ -2181,7 +2222,12 @@ footer img[src*="logo"], header img[src*="logo"] {
 	margin-top: 20px;
 	font-size: 12px;
 }
-
+p.form-row.last {
+	margin-top: 30px;
+}
+div.form-row.last > :last-child {
+	margin-top: 30px;
+}
 
 
 
@@ -2301,7 +2347,13 @@ footer img[src*="logo"], header img[src*="logo"] {
 	font-weight: 500;
 }
 .short_description{
-	margin-bottom: 6px;
+	margin-bottom: 10px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.quick-shop-wrapper {
+	display: none;
 }
 
 .star::before {
@@ -2321,4 +2373,62 @@ body.single-product .product-addon-totals > ul > :first-child {
 
 .searchform input.valid {
 	background-color: #28415899 !important;
+}
+body.single-product .wc-bookings-booking-cost {
+	display: none !important;
+}
+
+/* The checkboxes for Service selection */
+.wc-pao-addons-container .form-row > label {
+    cursor: pointer;
+}
+.wc-pao-addon-checkbox + span.cb {
+    position: relative;
+    margin-left: 25px;
+    color: transparent;
+    order: 2;
+}
+.wc-pao-addon-checkbox + span.cb::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 11px;
+    top: 3px;
+    left: 7px;
+    border-bottom: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: rotate(40deg);
+}
+.wc-pao-addon-checkbox + span.cb::after {
+    content: '';
+    display: block;
+    height: 20px;
+    width: 20px;
+    border: 3px solid currentColor;
+    border-radius: 3px;
+    font-weight: bold;
+    text-align: center;
+    color: #8896A2;
+    line-height: 14px;
+    order: 2;
+    transition: .3s;
+}
+.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox + span.cb {
+    color: #FFFA;
+}
+.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox + span.cb::after {
+    box-shadow: inset 0 0 0 10px #8896A2;
+    /*-color: #8896A2; */
+    opacity: .8;
+}
+.wc-pao-addon-checkbox:checked + span.cb {
+    color: #FFF;
+}
+.wc-pao-addon-checkbox:checked + span.cb::after {
+    color: var(--urbarbr-midblue);
+    box-shadow: inset 0 0 0 10px var(--urbarbr-midblue);
+}
+
+.wd-dropdown.wd-dropdown-menu {
+	border-radius: 4px;
 }

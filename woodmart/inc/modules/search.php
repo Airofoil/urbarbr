@@ -206,7 +206,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 								</a>
 							</li> -->
 						</ul>
-						<input type="hidden" id="location_coords" value=""><!--  name="location" -->
+						<input type="hidden" id="location_coords" value="" name="location"><!-- -->
 					</div>
 					<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
 					<script>

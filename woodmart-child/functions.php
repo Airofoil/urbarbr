@@ -2,6 +2,13 @@
 /**
  * Enqueue script and styles for child theme
  */
+
+/* ++Must be at the top of this file: */
+function add_cors_http_header(){
+    header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
+}
+add_action('init','add_cors_http_header');
+
 function woodmart_child_enqueue_styles() {
 	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css') );
 }
@@ -510,12 +517,36 @@ function custom_cart_items_prices( $cart ) {
 }
 
 function my_custom_js_css() {
-    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+    echo '<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.css">
+	<script>
+		$(document).ready(function() {
+			$("#booking-date-search").datetimepicker();
+		});
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+	
+	<!-- --<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">-->
+ 	<!-- --<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>-->
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
 ';
 }
+/*
+echo '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.css">
+	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
+	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>';
+*/
 add_action( 'wp_head', 'my_custom_js_css' );
 
 /**
@@ -538,11 +569,6 @@ function my_add_to_cart_function( $message, $product_id ) {
     return $message; 
 }
 
-function add_cors_http_header(){
-    header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
-}
-add_action('init','add_cors_http_header');
-
 add_action( 'woocommerce_checkout_before_order_review_heading', 'bbloomer_checkout_step3' );
 function bbloomer_checkout_step3( $cart ) {
 
@@ -556,117 +582,6 @@ function bbloomer_checkout_step3( $cart ) {
 
 		echo '<div class="jac-booking-date-time"><div class="booking-date">' . $p_booking_date . '</div><div class="booking-time">' . $p_booking_time . '</div></div>';
 	} 
-}
-
-add_action( 'rest_api_init', 'json_data_route');
-function json_data_route() {
-	register_rest_route( 'json_data/v1', '/customer_info', array(
-		'methods' => WP_REST_SERVER::READABLE,
-		'callback' => 'customerData',
-	) );
-}
-
-function customerData() {
-	$chBooking = curl_init();
-    $headers = array(
-		'Accept: application/json',
-		'Content-Type: application/json',
-    );
-	
-	$urlBooking= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/bookings?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
-	curl_setopt($chBooking, CURLOPT_URL, $urlBooking);
-	curl_setopt($chBooking, CURLOPT_RETURNTRANSFER, 1);
-	$outputBooking = curl_exec($chBooking);
-	try {
-		$jsonBooking = json_decode($outputBooking, true, JSON_THROW_ON_ERROR);
-	} catch (JsonException $e) {
-		throw new EncryptException('Could not encrypt the data.', 0, $e);
-	}
-	curl_close($chBooking);
-	
-	$chOrder = curl_init();
-	$urlOrder= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/orders?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
-	curl_setopt($chOrder, CURLOPT_URL, $urlOrder);
-	curl_setopt($chOrder, CURLOPT_RETURNTRANSFER, 1);
-	$outputOrder = curl_exec($chOrder);
-	try {
-		$jsonOrder = json_decode($outputOrder, true, JSON_THROW_ON_ERROR);
-	} catch (JsonException $e) {
-		throw new EncryptException('Could not encrypt the data.', 0, $e);
-	}
-	curl_close($chOrder);
-
-	$chProduct = curl_init();
-	$urlProduct= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/products/?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
-	curl_setopt($chProduct, CURLOPT_URL, $urlProduct);
-	curl_setopt($chProduct, CURLOPT_RETURNTRANSFER, 1);
-	$outputProduct = curl_exec($chProduct);
-	try {
-		$jsonProduct = json_decode($outputProduct, true, JSON_THROW_ON_ERROR);
-	} catch (JsonException $e) {
-		throw new EncryptException('Could not encrypt the data.', 0, $e);
-	}
-	curl_close($chProduct);
-
-	date_default_timezone_set('Australia/Adelaide');
-	$date = date('Y-m-d H:i:s');
-	$long = strtotime($date);
-
-	$start = $jsonBooking[0]['start'];
-	if (is_countable($jsonBooking)) {
-		for ($i=0; $i < count($jsonBooking); $i++) { //1hr = 3600
-			if (($jsonBooking[$i]['start'] < $long && $jsonBooking[$i]['end'] < $long) || $jsonBooking[$i]['status'] === 'cancelled' || $jsonBooking[$i]['status'] === 'unpaid') {
-				array_splice($jsonBooking, $i, 1);
-				$i = 0;
-			}
-		}
-	}
-
-	$customers = array();
-	if (is_countable($jsonBooking) && is_countable($jsonOrder)) {
-		for ($i=0; $i < count($jsonBooking); $i++) {
-			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
-			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
-			for ($j=0; $j < count($jsonOrder); $j++) { 
-				if ($jsonBooking[$i]['order_id'] === $jsonOrder[$j]['id']) {
-					array_push($customers, $jsonOrder[$j]);
-				}
-			}
-		}
-	}
-
-	if (is_countable($customers)) {
-		for ($i=0; $i < count($customers); $i++) { 
-			$customers[$i]['billing']['phone'] = str_replace(' ', '', $customers[$i]['billing']['phone']);
-			if ($customers[$i]['billing']['phone'][0] === '0') {
-				$customers[$i]['billing']['phone'] = '+61' . substr($customers[$i]['billing']['phone'], 1);
-			}
-			if ($customers[$i]['billing']['phone'][0] !== '+') {
-				$customers[$i]['billing']['phone'] = '+' . strval($customers[$i]['billing']['phone']);
-			}
-		}
-	}
-
-	$customerData = array();
-	if (is_countable($jsonBooking) && is_countable($jsonProduct)) {
-		for ($i=0; $i < count($jsonBooking); $i++) { 
-			for ($j=0; $j < count($jsonProduct); $j++) { 
-				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-					array_push($customerData, array(
-						'first_name' => $customers[$i]['billing']['first_name'],
-						'last_name' => $customers[$i]['billing']['last_name'],
-						'phone' => $customers[$i]['billing']['phone'],
-						'booking_id' => $jsonBooking[$i]['id'],
-						'order_id' => $jsonBooking[$i]['order_id'],
-						'product_id' => $jsonBooking[$i]['product_id'],
-						'product_name' => $jsonProduct[$j]['name']
-					));
-				}
-			}
-		}
-	}
-
-	return $customerData;
 }
 
 add_action( 'check_booking_time', 'cw_function' );
@@ -685,6 +600,7 @@ function cw_function() {
 	} catch (JsonException $e) {
 		throw new EncryptException('Could not encrypt the data.', 0, $e);
 	}
+	if (!$jsonBooking) return;//++
 	curl_close($chBooking);
 	
 	$chOrder = curl_init();
@@ -709,7 +625,28 @@ function cw_function() {
 	} catch (JsonException $e) {
 		throw new EncryptException('Could not encrypt the data.', 0, $e);
 	}
+	if (!$jsonBooking) return;//++
 	curl_close($chProduct);
+
+	$barberList = array(
+		"test07" => "+61420603110",
+		"test06" => "+61420603110",
+		"Hoochie" => "+61420603110",
+		"test05" => "+61420603110",
+		"test04" => "+61420603110",
+		"Test02" => "+61420603110",
+		"test01" => "+61420603110",
+		"test00" => "+61420603110",
+		"Test 100" => "+61420603110",
+		"test66" => "+61420603110",
+		"Ben's Server Barber" => "+61420603110",
+		"Ben's locals" => "+61420603110",
+		"Ben's Local barbershop" => "+61420603110",
+		"Barber Jo" => "+61420603110",
+		"New-test" => "+61420603110",
+		"Barber-test" => "+61420603110",
+		"JAC Product" => "+61420603110",
+	);
 
 	date_default_timezone_set('Australia/Adelaide');
 	$date = date('Y-m-d H:i:s');
@@ -752,18 +689,167 @@ function cw_function() {
 
 	if (is_countable($jsonBooking)) {
 		for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
-			if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
-				//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
-				sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
+			for ($j=0; $j < count($jsonProduct); $j++) { 
+				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
+					if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
+						//$tmpCustomerFullName = $customers[$i]['billing']['first_name']." ".$customers[$i]['billing']['last_name'];
+						//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
+						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
+						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('H:i', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+					}
+				}
 			}
 		}
 
 		for ($i=0; $i < count($jsonBooking); $i++) {  //Complete the appointment
-			if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
-				//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
-				complete_appointment($customers[$i]['billing']['phone']);
+			for ($j=0; $j < count($jsonProduct); $j++) { 
+				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
+					if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
+						//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
+						complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name']);
+						complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name']);
+					}
+				}
 			}
 		}
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
+
+function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
+	$theta = $longitude1 - $longitude2; 
+	$distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))); 
+	$distance = acos($distance); 
+	$distance = rad2deg($distance); 
+	$distance = $distance * 60 * 1.1515; 
+	switch($unit) { 
+		case 'miles': 
+		break; 
+		case 'kilometers' : 
+		$distance = $distance * 1.609344; 
+	} 
+	return (round($distance,2)); 
+	}
+
+function edit_availability_slots_by_location( $available_blocks, $blocks ) {
+	
+	// Split html into array blocks
+	$available_arr= explode("</li>",$available_blocks);
+	$location = $_GET['your-location'];
+	
+	// get current user coordiantes
+	$user_ip = getenv('REMOTE_ADDR');
+	$geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+
+	// might be able to use the rest api to get the bookings for today -> location can defineitley get the address -> just need access to the product id - maybe can user url to get id of product
+	$latitude_current_user = $geo['geoplugin_latitude'];
+	$longitude_current_user = $geo['geoplugin_longitude'];
+	$latitude_previous_booking = -34.925621825287166;
+	$longitude_previous_booking =  138.60092004661487;
+	$slug = basename(get_permalink());
+	
+	// set previous block time to a time string so no errors occur
+	$previous_block_time = '12:01:02';
+	$time_blocks_to_hide = 0;
+	$previous_block_manually_hidden = false;
+
+	foreach ($available_arr as $key=>$block) {
+		// TODO get location of the barber during previous 
+
+		// Check if there need to be more time blocks hidden decided by distance previously, otherwise continue 
+		if ($time_blocks_to_hide > 0) {
+			$data_block_val = explode("data-block=",$block)[1];
+			?>
+				<script>
+					console.log("time hidden because of time blocks to hide is more than 0: " +<?php echo json_encode($data_block_val) ?>);
+				</script> 
+			<?php 
+			unset($available_arr[$key]);
+			$time_blocks_to_hide--;
+			$previous_block_manually_hidden = true;
+		}
+		else {
+			// get time of html values
+			$data_block_val = explode("data-block=",$block)[1];
+			$data_block_val_new = explode(">",$data_block_val)[0];
+
+			$data_value =   explode("data-value=",$block)[1];
+			$data_value = explode("T",$data_value)[1];
+			$old_time = explode("+",$data_value)[0];
+
+			// check if previous block is booked
+			$previous_check_time = date('H:i:s', strtotime("-15 minutes", strtotime($old_time)));
+			
+			// prevent the first block from starting late 
+			if ($key == 0) {
+				$previous_block_time = $previous_check_time;
+			}
+			?>
+				<script>
+					console.log("key: " + <?php echo json_encode($key) ?>);
+				</script> 
+			<?php 
+			//calculate distance to travel
+			$distance = calculate_distance($latitude_current_user, $longitude_current_user, $latitude_previous_booking, $longitude_previous_booking);
+
+			// Calculate whether it is peak hour or not
+			$morning_start = "7:30:00";
+			$morning_end = "9:30:00";
+			$night_start = "16:00:00";
+			$night_end = "18:30:00";
+
+			$time_formatted = DateTime::createFromFormat('H:i:s', $old_time);
+			$morning_peak_start = DateTime::createFromFormat('H:i:s', $morning_start);
+			$morning_peak_end = DateTime::createFromFormat('H:i:s', $morning_end);
+			$nightpeak_start = DateTime::createFromFormat('H:i:s', $night_start);
+			$nightpeak_end = DateTime::createFromFormat('H:i:s', $night_end);
+			if (($morning_peak_start < $time_formatted && $time_formatted < $morning_peak_end) || ($nightpeak_start < $time_formatted && $time_formatted < $nightpeak_end)) {
+				$time_drive_int = round(((5 * $distance)/5), 0) * 5;
+			} else {
+				$time_drive_int = round(((3 * $distance)/5), 0) * 5;
+			}
+
+			$time_drive = strval($time_drive_int);
+		
+			// if previous block has a booking add a buffer time based on above calculations
+			if ($previous_block_time != $previous_check_time && $previous_block_manually_hidden == false) {
+				?>
+				<script>
+					console.log("time hidden because previous block was booked: " +<?php echo json_encode($data_block_val) ?>);
+					console.log("previus bkock time: " +<?php echo json_encode($previous_block_time) ?>);
+					console.log("previus check time: " +<?php echo json_encode($previous_check_time) ?>);
+				</script> 
+			<?php 
+				if ($time_drive > 19 && $time_drive < 34) {
+					$time_blocks_to_hide++;
+				}
+				else if ($time_drive > 34 && $time_drive < 49)
+				{
+					$time_blocks_to_hide+=2;
+				}
+				else {
+					$previous_block_manually_hidden = false;
+				}
+				// // This code increased the next available time slot by x minutes // // 
+				// $display_time =  date('h:i a', strtotime("+".$time_drive." minutes", strtotime($old_time)));
+				// $new_time = date('h:i:s', strtotime("+".$time_drive." minutes", strtotime($old_time)));
+
+				// $available_arr[$key] = '<li class="block" data-block='. $data_block_val_new. '>
+				// <a href="#" data-value="2022-03-23T'.$new_time.'+1030">'.$display_time.'</a>
+				// </li>';
+
+				// instead, auto hide this next one, if drive time is less than 15, hide this one only, if more than 15 less than 30 hide next 2, if more than 30 hide next 3
+				unset($available_arr[$key]);
+			}
+			else {
+				$previous_block_manually_hidden = false;
+			}
+			$previous_block_time = $old_time;
+		}	
+	}
+	// join the string back back_together to be returned 
+	$back_together = implode("</li>", $available_arr);
+
+	return $back_together;
+}
+add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_location', 10, 2);

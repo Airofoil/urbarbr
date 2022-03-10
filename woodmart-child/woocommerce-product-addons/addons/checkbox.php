@@ -64,7 +64,7 @@ foreach ( $addon['options'] as $i => $option ) {
 				data-price-type="<?php echo esc_attr( $price_type ); ?>"
 				value="<?php echo esc_attr( sanitize_title( $option_label ) ); ?>"
 				data-label="<?php echo esc_attr( wptexturize( $option_label ) ); ?>"
-			/> <?php echo wp_kses_post( wptexturize( $option_label . ' ' . $price_for_display ) ); ?>
+			/><span class="cb"></span> <?php echo wp_kses_post( wptexturize( $option_label . ' ' . $price_for_display ) ); ?>
 		</label>
 	</p>
 
