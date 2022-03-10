@@ -669,7 +669,7 @@ function cw_function() {
 						//$tmpCustomerFullName = $customers[$i]['billing']['first_name']." ".$customers[$i]['billing']['last_name'];
 						//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
-						//reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('H:i', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('H:i', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					}
 				}
 			}
@@ -681,7 +681,7 @@ function cw_function() {
 					if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
 						//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
 						complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name']);
-						//complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name']);
+						complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name']);
 					}
 				}
 			}
