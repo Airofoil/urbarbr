@@ -2,6 +2,13 @@
 /**
  * Enqueue script and styles for child theme
  */
+
+/* ++Must be at the top of this file: */
+function add_cors_http_header(){
+    header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
+}
+add_action('init','add_cors_http_header');
+
 function woodmart_child_enqueue_styles() {
 	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css') );
 }
@@ -209,7 +216,7 @@ function wc_registration_form_function() {
 	?>
 	<div class="registration-wrapper">
 		<h2 style="text-align: center;">Become a Member</h2>
-		<p style="text-align: center;">Become a member - don't miss out on deals, offers, discounts and bonus vouchers</p>
+		<!-- ----<p style="text-align: center;">Become a member - don't miss out on deals, offers, discounts and bonus vouchers</p> -->
 		<form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?> >
 	
 			<?php do_action( 'woocommerce_register_form_start' ); ?>
@@ -217,7 +224,7 @@ function wc_registration_form_function() {
 			<?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
 	
 				<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-					<label for="reg_username"><?php esc_html_e( 'Username', 'woocommerce' ); ?>&nbsp;<span class="required"></span></label>
+					<label for="reg_username">Name&nbsp;<span class="required"></span></label>
 					<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="reg_username" autocomplete="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
 				</p>
 	
@@ -241,10 +248,9 @@ function wc_registration_form_function() {
 	
 			<?php endif; ?>
 	
-	
-			<p class="woocommerce-form-row form-row">
+			<p class="woocommerce-form-row form-row last">
 				<?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
-				<button type="submit" style="width: 30%; border-radius: 3px" class="form-item-right woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'Sign up', 'woocommerce' ); ?></button>
+				<button type="submit" style="max-width: 110px;" class="form-item-right woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'Sign up', 'woocommerce' ); ?></button>
 				<a class="form-item-left" style="text-decoration: underline;" href="/my-account">Login here</a>
 			</p>
 	
@@ -511,12 +517,36 @@ function custom_cart_items_prices( $cart ) {
 }
 
 function my_custom_js_css() {
-    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+    echo '<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.css">
+	<script>
+		$(document).ready(function() {
+			$("#booking-date-search").datetimepicker();
+		});
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+	
+	<!-- --<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">-->
+ 	<!-- --<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>-->
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
 ';
 }
+/*
+echo '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.css">
+	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
+	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>';
+*/
 add_action( 'wp_head', 'my_custom_js_css' );
 
 /**
@@ -538,11 +568,6 @@ function my_add_to_cart_function( $message, $product_id ) {
     $message = sprintf(esc_html__('%s selected successfully.','woocommerce'), get_the_title( $product_id ) ); 
     return $message; 
 }
-
-function add_cors_http_header(){
-    header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
-}
-add_action('init','add_cors_http_header');
 
 add_action( 'woocommerce_checkout_before_order_review_heading', 'bbloomer_checkout_step3' );
 function bbloomer_checkout_step3( $cart ) {
@@ -575,6 +600,7 @@ function cw_function() {
 	} catch (JsonException $e) {
 		throw new EncryptException('Could not encrypt the data.', 0, $e);
 	}
+	if (!$jsonBooking) return;//++
 	curl_close($chBooking);
 	
 	$chOrder = curl_init();
@@ -689,3 +715,141 @@ function cw_function() {
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
+
+function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
+	$theta = $longitude1 - $longitude2; 
+	$distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))); 
+	$distance = acos($distance); 
+	$distance = rad2deg($distance); 
+	$distance = $distance * 60 * 1.1515; 
+	switch($unit) { 
+		case 'miles': 
+		break; 
+		case 'kilometers' : 
+		$distance = $distance * 1.609344; 
+	} 
+	return (round($distance,2)); 
+	}
+
+function edit_availability_slots_by_location( $available_blocks, $blocks ) {
+	
+	// Split html into array blocks
+	$available_arr= explode("</li>",$available_blocks);
+	$location = $_GET['your-location'];
+	
+	// get current user coordiantes
+	$user_ip = getenv('REMOTE_ADDR');
+	$geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+
+	// might be able to use the rest api to get the bookings for today -> location can defineitley get the address -> just need access to the product id - maybe can user url to get id of product
+	$latitude_current_user = $geo['geoplugin_latitude'];
+	$longitude_current_user = $geo['geoplugin_longitude'];
+	$latitude_previous_booking = -34.925621825287166;
+	$longitude_previous_booking =  138.60092004661487;
+	$slug = basename(get_permalink());
+	
+	// set previous block time to a time string so no errors occur
+	$previous_block_time = '12:01:02';
+	$time_blocks_to_hide = 0;
+	$previous_block_manually_hidden = false;
+
+	foreach ($available_arr as $key=>$block) {
+		// TODO get location of the barber during previous 
+
+		// Check if there need to be more time blocks hidden decided by distance previously, otherwise continue 
+		if ($time_blocks_to_hide > 0) {
+			$data_block_val = explode("data-block=",$block)[1];
+			?>
+				<script>
+					console.log("time hidden because of time blocks to hide is more than 0: " +<?php echo json_encode($data_block_val) ?>);
+				</script> 
+			<?php 
+			unset($available_arr[$key]);
+			$time_blocks_to_hide--;
+			$previous_block_manually_hidden = true;
+		}
+		else {
+			// get time of html values
+			$data_block_val = explode("data-block=",$block)[1];
+			$data_block_val_new = explode(">",$data_block_val)[0];
+
+			$data_value =   explode("data-value=",$block)[1];
+			$data_value = explode("T",$data_value)[1];
+			$old_time = explode("+",$data_value)[0];
+
+			// check if previous block is booked
+			$previous_check_time = date('H:i:s', strtotime("-15 minutes", strtotime($old_time)));
+			
+			// prevent the first block from starting late 
+			if ($key == 0) {
+				$previous_block_time = $previous_check_time;
+			}
+			?>
+				<script>
+					console.log("key: " + <?php echo json_encode($key) ?>);
+				</script> 
+			<?php 
+			//calculate distance to travel
+			$distance = calculate_distance($latitude_current_user, $longitude_current_user, $latitude_previous_booking, $longitude_previous_booking);
+
+			// Calculate whether it is peak hour or not
+			$morning_start = "7:30:00";
+			$morning_end = "9:30:00";
+			$night_start = "16:00:00";
+			$night_end = "18:30:00";
+
+			$time_formatted = DateTime::createFromFormat('H:i:s', $old_time);
+			$morning_peak_start = DateTime::createFromFormat('H:i:s', $morning_start);
+			$morning_peak_end = DateTime::createFromFormat('H:i:s', $morning_end);
+			$nightpeak_start = DateTime::createFromFormat('H:i:s', $night_start);
+			$nightpeak_end = DateTime::createFromFormat('H:i:s', $night_end);
+			if (($morning_peak_start < $time_formatted && $time_formatted < $morning_peak_end) || ($nightpeak_start < $time_formatted && $time_formatted < $nightpeak_end)) {
+				$time_drive_int = round(((5 * $distance)/5), 0) * 5;
+			} else {
+				$time_drive_int = round(((3 * $distance)/5), 0) * 5;
+			}
+
+			$time_drive = strval($time_drive_int);
+		
+			// if previous block has a booking add a buffer time based on above calculations
+			if ($previous_block_time != $previous_check_time && $previous_block_manually_hidden == false) {
+				?>
+				<script>
+					console.log("time hidden because previous block was booked: " +<?php echo json_encode($data_block_val) ?>);
+					console.log("previus bkock time: " +<?php echo json_encode($previous_block_time) ?>);
+					console.log("previus check time: " +<?php echo json_encode($previous_check_time) ?>);
+				</script> 
+			<?php 
+				if ($time_drive > 19 && $time_drive < 34) {
+					$time_blocks_to_hide++;
+				}
+				else if ($time_drive > 34 && $time_drive < 49)
+				{
+					$time_blocks_to_hide+=2;
+				}
+				else {
+					$previous_block_manually_hidden = false;
+				}
+				// // This code increased the next available time slot by x minutes // // 
+				// $display_time =  date('h:i a', strtotime("+".$time_drive." minutes", strtotime($old_time)));
+				// $new_time = date('h:i:s', strtotime("+".$time_drive." minutes", strtotime($old_time)));
+
+				// $available_arr[$key] = '<li class="block" data-block='. $data_block_val_new. '>
+				// <a href="#" data-value="2022-03-23T'.$new_time.'+1030">'.$display_time.'</a>
+				// </li>';
+
+				// instead, auto hide this next one, if drive time is less than 15, hide this one only, if more than 15 less than 30 hide next 2, if more than 30 hide next 3
+				unset($available_arr[$key]);
+			}
+			else {
+				$previous_block_manually_hidden = false;
+			}
+			$previous_block_time = $old_time;
+		}	
+	}
+	// join the string back back_together to be returned 
+	$back_together = implode("</li>", $available_arr);
+
+	return $back_together;
+}
+add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_location', 10, 2);

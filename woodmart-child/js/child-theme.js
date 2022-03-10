@@ -1,4 +1,6 @@
 jQuery(document).ready(function ($){
+    $('input.wc-pao-addon-checkbox').on('click',function(){
+	$('input.wc-pao-addon-checkbox').on('click',function(){
 	$('input.wc-pao-addon-checkbox').on('click',function(){
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
             $('.single_add_to_cart_button').removeClass('no-service-disable');
@@ -6,6 +8,10 @@ jQuery(document).ready(function ($){
             $('.single_add_to_cart_button').addClass('no-service-disable');
         }
     })
+      $(".single_add_to_cart_button").ready(function () {
+          console.log($(".single_add_to_cart_button"));
+	  $(".single_add_to_cart_button").ready(function () {
+		  console.log($(".single_add_to_cart_button"));
 	  $(".single_add_to_cart_button").ready(function () {
 		  console.log($(".single_add_to_cart_button"));
         if ($('input.wc-pao-addon-checkbox:checked').length > 0) {
@@ -49,5 +55,17 @@ jQuery(document).ready(function ($){
     }, 100);
 
 //  $.datetimepicker.setDateFormatter('moment');
+
+    $('h5.widget-title').unbind().click(e => $(e.target).toggleClass('open')); /* ++ For the footer toggleable menus */
+
+    $('.searchform input').on('change, blur', function(e) {
+        if (e.target.value !== '') $(e.target).toggleClass('valid');
+    })
+
+    setTimeout(() => {
+        if ($('.tinvwl_add_to_wishlist-text').length) {
+            $('.tinvwl_add_to_wishlist-text').text('Add to Favourites');
+        }
+    }, 20);
 
 });
