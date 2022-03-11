@@ -872,3 +872,56 @@ function edit_end_time_of_booking() {
   <?php  
 }
 
+function brrad_geocode($street_address,$city,$state,$country){
+        
+	$street_address = str_replace(" ", "+", $street_address); //google doesn't like spaces in urls, but who does?
+	$city = str_replace(" ", "+", $city);
+	$state = str_replace(" ", "+", $state);
+	$country = str_replace(" ", "+", $country);
+
+	$url = "https://maps.googleapis.com/maps/api/geocode/json?address=$street_address,+$city,+$state,+$country&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false"; 
+	$google_api_response = wp_remote_get( $url );    
+
+	$results = json_decode( $google_api_response['body'] ); //grab our results from Google
+	$results = (array) $results; //cast them to an array
+	$status = $results["status"]; //easily use our status
+	$location_all_fields = (array) $results["results"][0];
+	$location_geometry = (array) $location_all_fields["geometry"];
+	$location_lat_long = (array) $location_geometry["location"];
+
+	echo "<!-- GEOCODE RESPONSE " ;
+	var_dump( $location_lat_long );
+	echo " -->";
+
+	if( $status == 'OK'){
+		$latitude = $location_lat_long["lat"];
+		$longitude = $location_lat_long["lng"];
+	}else{
+		$latitude = '';
+		$longitude = '';
+	}
+
+	$return = array(
+				'latitude'  => $latitude,
+				'longitude' => $longitude
+				);
+	return $return;
+}
+
+function distance($lat1, $lon1, $lat2, $lon2, $unit) {
+
+	$theta = $lon1 - $lon2;
+	$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+	$dist = acos($dist);
+	$dist = rad2deg($dist);
+	$miles = $dist * 60 * 1.1515;
+	$unit = strtoupper($unit);
+
+	if ($unit == "K") {
+		return ($miles * 1.609344);
+	} else if ($unit == "N") {
+		return ($miles * 0.8684);
+	} else {
+		return $miles;
+	}
+}
