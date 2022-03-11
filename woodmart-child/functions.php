@@ -716,20 +716,20 @@ function cw_function() {
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
 
-function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
-	$theta = $longitude1 - $longitude2; 
-	$distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))); 
-	$distance = acos($distance); 
-	$distance = rad2deg($distance); 
-	$distance = $distance * 60 * 1.1515; 
-	switch($unit) { 
-		case 'miles': 
-		break; 
-		case 'kilometers' : 
-		$distance = $distance * 1.609344; 
-	} 
-	return (round($distance,2)); 
-	}
+	function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
+		$theta = $longitude1 - $longitude2; 
+		$distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))); 
+		$distance = acos($distance); 
+		$distance = rad2deg($distance); 
+		$distance = $distance * 60 * 1.1515; 
+		switch($unit) { 
+		  case 'miles': 
+			break; 
+		  case 'kilometers' : 
+			$distance = $distance * 1.609344; 
+		} 
+		return (round($distance,2)); 
+	  }
 
 function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 	
@@ -737,16 +737,26 @@ function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 	$available_arr= explode("</li>",$available_blocks);
 	$location = $_GET['your-location'];
 	
-	// get current user coordiantes
-	$user_ip = getenv('REMOTE_ADDR');
-	$geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+	$split_lat_long = explode(" ",get_current_user_location_coords());
+	// get current user lat and lng
 
-	// might be able to use the rest api to get the bookings for today -> location can defineitley get the address -> just need access to the product id - maybe can user url to get id of product
-	$latitude_current_user = $geo['geoplugin_latitude'];
-	$longitude_current_user = $geo['geoplugin_longitude'];
-	$latitude_previous_booking = -34.925621825287166;
-	$longitude_previous_booking =  138.60092004661487;
-	$slug = basename(get_permalink());
+
+	// get current user coordiantes
+$user_ip = getenv('REMOTE_ADDR');
+$geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+$latitude_current_user = $geo['geoplugin_latitude'];
+$longitude_current_user = $geo['geoplugin_longitude'];
+
+
+if ($latitude_current_user == null || $longitude_current_user == null) {
+	$latitude_current_user = -34.925621825287166;
+	$longitude_current_user = 138.60092004661487;
+}
+
+// might be able to use the rest api to get the bookings for today -> location can defineitley get the address -> just need access to the product id - maybe can user url to get id of product
+$latitude_previous_booking = -34.925621825287166;
+$longitude_previous_booking =  138.60092004661487;
+
 	
 	// set previous block time to a time string so no errors occur
 	$previous_block_time = '12:01:02';
@@ -759,11 +769,6 @@ function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 		// Check if there need to be more time blocks hidden decided by distance previously, otherwise continue 
 		if ($time_blocks_to_hide > 0) {
 			$data_block_val = explode("data-block=",$block)[1];
-			?>
-				<script>
-					console.log("time hidden because of time blocks to hide is more than 0: " +<?php echo json_encode($data_block_val) ?>);
-				</script> 
-			<?php 
 			unset($available_arr[$key]);
 			$time_blocks_to_hide--;
 			$previous_block_manually_hidden = true;
@@ -784,11 +789,7 @@ function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 			if ($key == 0) {
 				$previous_block_time = $previous_check_time;
 			}
-			?>
-				<script>
-					console.log("key: " + <?php echo json_encode($key) ?>);
-				</script> 
-			<?php 
+
 			//calculate distance to travel
 			$distance = calculate_distance($latitude_current_user, $longitude_current_user, $latitude_previous_booking, $longitude_previous_booking);
 
@@ -813,13 +814,6 @@ function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 		
 			// if previous block has a booking add a buffer time based on above calculations
 			if ($previous_block_time != $previous_check_time && $previous_block_manually_hidden == false) {
-				?>
-				<script>
-					console.log("time hidden because previous block was booked: " +<?php echo json_encode($data_block_val) ?>);
-					console.log("previus bkock time: " +<?php echo json_encode($previous_block_time) ?>);
-					console.log("previus check time: " +<?php echo json_encode($previous_check_time) ?>);
-				</script> 
-			<?php 
 				if ($time_drive > 19 && $time_drive < 34) {
 					$time_blocks_to_hide++;
 				}
@@ -831,12 +825,12 @@ function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 					$previous_block_manually_hidden = false;
 				}
 				// // This code increased the next available time slot by x minutes // // 
-				// $display_time =  date('h:i a', strtotime("+".$time_drive." minutes", strtotime($old_time)));
-				// $new_time = date('h:i:s', strtotime("+".$time_drive." minutes", strtotime($old_time)));
+			// $display_time =  date('h:i a', strtotime("+".$time_drive." minutes", strtotime($old_time)));
+			// $new_time = date('h:i:s', strtotime("+".$time_drive." minutes", strtotime($old_time)));
 
-				// $available_arr[$key] = '<li class="block" data-block='. $data_block_val_new. '>
-				// <a href="#" data-value="2022-03-23T'.$new_time.'+1030">'.$display_time.'</a>
-				// </li>';
+			// $available_arr[$key] = '<li class="block" data-block='. $data_block_val_new. '>
+			// <a href="#" data-value="2022-03-23T'.$new_time.'+1030">'.$display_time.'</a>
+			// </li>';
 
 				// instead, auto hide this next one, if drive time is less than 15, hide this one only, if more than 15 less than 30 hide next 2, if more than 30 hide next 3
 				unset($available_arr[$key]);
@@ -853,3 +847,4 @@ function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 	return $back_together;
 }
 add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_location', 10, 2);
+
