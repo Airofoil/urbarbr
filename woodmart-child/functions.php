@@ -715,8 +715,6 @@ function cw_function() {
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
-
-
 function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
 	$theta = $longitude1 - $longitude2; 
 	$distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))); 
