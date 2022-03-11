@@ -1,0 +1,566 @@
+.xdsoft_datetimepicker {
+	background: #fff;
+	position: absolute;
+	z-index: 9999;
+	display: none;
+}
+
+.xdsoft_time_variant {
+    margin-top: unset !important;
+}
+/* .xdsoft_datetimepicker iframe {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 75px;
+	height: 210px;
+	background: transparent;
+	border: none;
+} */
+
+/*For IE8 or lower*/
+/* .xdsoft_datetimepicker button {
+	border: none !important;
+} */
+
+.xdsoft_noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.xdsoft_noselect::selection { background: transparent }
+.xdsoft_noselect::-moz-selection { background: transparent }
+
+.xdsoft_datetimepicker.xdsoft_inline {
+	display: inline-block;
+	position: static;
+	box-shadow: none;
+}
+
+.xdsoft_datetimepicker * {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+.xdsoft_datetimepicker .xdsoft_datepicker, .xdsoft_datetimepicker .xdsoft_timepicker {
+	display: none;
+}
+
+.xdsoft_datetimepicker .xdsoft_datepicker.active, .xdsoft_datetimepicker .xdsoft_timepicker.active {
+	display: block;
+	clear: both;
+}
+
+/* .xdsoft_datetimepicker .xdsoft_datepicker {
+	width: 224px;
+	float: left;
+	margin-left: 8px;
+}
+.xdsoft_datetimepicker.xdsoft_rtl .xdsoft_datepicker {
+	float: right;
+	margin-right: 8px;
+	margin-left: 0;
+} */
+/* 
+.xdsoft_datetimepicker.xdsoft_showweeks .xdsoft_datepicker {
+	width: 256px;
+} */
+
+.xdsoft_datetimepicker .xdsoft_timepicker {
+	/*! width: 58px; */
+	/*! float: left; */
+	text-align: center;
+	/*! margin-left: 8px; */
+	/*! margin-top: 0; */
+}
+/* .xdsoft_datetimepicker.xdsoft_rtl .xdsoft_timepicker {
+	float: right;
+	margin-right: 8px;
+	margin-left: 0;
+} */
+
+/* .xdsoft_datetimepicker .xdsoft_datepicker.active+.xdsoft_timepicker {
+	margin-top: 8px;
+	margin-bottom: 3px;
+} */
+
+/* .xdsoft_datetimepicker .xdsoft_monthpicker {
+	width: 58px;
+	float: left;
+	text-align: center;
+	margin-left: 0;
+	margin-top: 0;
+} */
+
+.xdsoft_datetimepicker .xdsoft_label i,
+.xdsoft_datetimepicker .xdsoft_prev,
+.xdsoft_datetimepicker .xdsoft_next,
+.xdsoft_datetimepicker .xdsoft_today_button {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAeCAYAAADaW7vzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Q0NBRjI1NjM0M0UwMTFFNDk4NkFGMzJFQkQzQjEwRUIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Q0NBRjI1NjQ0M0UwMTFFNDk4NkFGMzJFQkQzQjEwRUIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpDQ0FGMjU2MTQzRTAxMUU0OTg2QUYzMkVCRDNCMTBFQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpDQ0FGMjU2MjQzRTAxMUU0OTg2QUYzMkVCRDNCMTBFQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PoNEP54AAAIOSURBVHja7Jq9TsMwEMcxrZD4WpBYeKUCe+kTMCACHZh4BFfHO/AAIHZGFhYkBBsSEqxsLCAgXKhbXYOTxh9pfJVP+qutnZ5s/5Lz2Y5I03QhWji2GIcgAokWgfCxNvcOCCGKqiSqhUp0laHOne05vdEyGMfkdxJDVjgwDlEQgYQBgx+ULJaWSXXS6r/ER5FBVR8VfGftTKcITNs+a1XpcFoExREIDF14AVIFxgQUS+h520cdud6wNkC0UBw6BCO/HoCYwBhD8QCkQ/x1mwDyD4plh4D6DDV0TAGyo4HcawLIBBSLDkHeH0Mg2yVP3l4TQMZQDDsEOl/MgHQqhMNuE0D+oBh0CIr8MAKyazBH9WyBuKxDWgbXfjNf32TZ1KWm/Ap1oSk/R53UtQ5xTh3LUlMmT8gt6g51Q9p+SobxgJQ/qmsfZhWywGFSl0yBjCLJCMgXail3b7+rumdVJ2YRss4cN+r6qAHDkPWjPjdJCF4n9RmAD/V9A/Wp4NQassDjwlB6XBiCxcJQWmZZb8THFilfy/lfrTvLghq2TqTHrRMTKNJ0sIhdo15RT+RpyWwFdY96UZ/LdQKBGjcXpcc1AlSFEfLmouD+1knuxBDUVrvOBmoOC/rEcN7OQxKVeJTCiAdUzUJhA2Oez9QTkp72OTVcxDcXY8iKNkxGAJXmJCOQwOa6dhyXsOa6XwEGAKdeb5ET3rQdAAAAAElFTkSuQmCC);
+	display: none !important;
+}
+
+.xdsoft_datetimepicker .xdsoft_label i {
+	opacity: 0.5;
+	background-position: -92px -19px;
+	display: inline-block;
+	width: 9px;
+	height: 20px;
+	vertical-align: middle;
+}
+
+.xdsoft_datetimepicker .xdsoft_prev {
+	float: left;
+	background-position: -20px 0;
+}
+.xdsoft_datetimepicker .xdsoft_today_button {
+	float: left;
+	background-position: -70px 0;
+	margin-left: 5px;
+}
+
+.xdsoft_datetimepicker .xdsoft_next {
+	float: right;
+	background-position: 0 0;
+}
+
+.xdsoft_datetimepicker .xdsoft_next,
+.xdsoft_datetimepicker .xdsoft_prev ,
+.xdsoft_datetimepicker .xdsoft_today_button {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	border: 0 none;
+	cursor: pointer;
+	display: block;
+	height: 30px;
+	/*! opacity: 0.5; */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	outline: medium none;
+	/*----overflow: hidden; */
+	overflow: visible;
+	padding: 0;
+	position: relative;
+	text-indent: 100%;
+	white-space: nowrap;
+	width: 20px;
+	min-width: 0;
+}
+
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_prev,
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_next {
+	display: none !important;/*++*/
+	float: none;
+	/* background-position: -40px -15px; */
+	height: 15px;
+	width: 30px;
+	display: block;
+	/* margin-left: 14px;
+	margin-top: 7px; */
+}
+.xdsoft_datetimepicker.xdsoft_rtl .xdsoft_timepicker .xdsoft_prev,
+.xdsoft_datetimepicker.xdsoft_rtl .xdsoft_timepicker .xdsoft_next {
+	float: none;
+	margin-left: 0;
+	margin-right: 14px;
+}
+
+/*--.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_prev {
+	background-position: -40px 0;
+	margin-bottom: 7px;
+	margin-top: 0;
+} */
+
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box {
+	/*! height: 151px; */
+	overflow: hidden;
+	/*! border-bottom: 1px solid #ddd; */
+	/*! margin: -5px; */
+	background: white;
+	padding: 10px;
+	display: inline-block;
+}
+
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box >div >div {
+	/*! background: #f5f5f5; */
+	/*! border-top: 1px solid #ddd; */
+	/*! color: #666; */
+	font-size: 14px;
+	/*! text-align: center; */
+	border-collapse: collapse;
+	cursor: pointer;
+	/*! height: 25px; */
+	/*! line-height: 25px; */
+	width: calc(100% / 3 - 10px);
+	display: inline-block;
+	margin: 5px;
+	border: 1px solid var(--urbarbr-midblue);
+	padding: 10px;
+	border-radius: 4px;
+	color: var(--urbarbr-midblue);
+}
+
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box >div > div:first-child {
+	/*! border-top-width: 0; */
+}
+
+
+.xdsoft_datetimepicker .xdsoft_label {
+	display: inline;
+	position: relative;
+	z-index: 9999;
+	margin: 0;
+	padding: 5px 3px;
+	font-size: 14px;
+	line-height: 20px;
+	/*! font-weight: bold; */
+	/*! background-color: #fff; */
+	/*! float: left; */
+	/*! width: 182px; */
+	text-align: left;
+	cursor: pointer;
+}
+
+.xdsoft_datetimepicker .xdsoft_label:hover>span {
+	text-decoration: underline;
+}
+
+.xdsoft_datetimepicker .xdsoft_label:hover i {
+	opacity: 1.0;
+}
+
+.xdsoft_datetimepicker .xdsoft_label > .xdsoft_select {
+	border: 1px solid #E6E6E6;
+	background: white;
+	border-radius: 4px;
+	position: absolute;
+	right: 0;
+	top: 30px;
+	z-index: 101;
+	display: none;
+	max-height: 160px;
+	overflow-y: hidden;
+}
+
+.xdsoft_datetimepicker .xdsoft_label > .xdsoft_select.xdsoft_monthselect{ right: -7px }
+.xdsoft_datetimepicker .xdsoft_label > .xdsoft_select.xdsoft_yearselect{ right: 2px }
+.xdsoft_datetimepicker .xdsoft_label > .xdsoft_select > div > .xdsoft_option:hover {
+	color: #fff;
+	background: var(--urbarbr-shade);
+}
+
+.xdsoft_datetimepicker .xdsoft_label > .xdsoft_select > div > .xdsoft_option {
+	padding: 4px 10px;
+	text-decoration: none !important;
+}
+
+/*--.xdsoft_datetimepicker .xdsoft_label > .xdsoft_select > div > .xdsoft_option.xdsoft_current {
+	background: var(--urbarbr-midblue);
+	box-shadow: var(--urbarbr-blue) 0 1px 3px 0 inset;
+	color: #fff;
+	font-weight: 700;
+} */
+
+.xdsoft_datetimepicker .xdsoft_month {
+	/*! width: 100px; */
+	text-align: right;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar {
+	clear: both;
+}
+
+.xdsoft_datetimepicker .xdsoft_year{
+	/*! width: 48px; */
+	/*! margin-left: 5px; */
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar table {
+	border-collapse: collapse;
+	width: 100%;
+
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td > div {
+	/*! padding-right: 5px; */
+	display: block;
+	height: 100%;
+	line-height: 42px;
+	background: var(--urbarbr-softblue);
+	margin: 3px;
+	border-radius: 4px;
+	color: white;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar th {
+	height: 25px;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td,.xdsoft_datetimepicker .xdsoft_calendar th {
+	width: calc(100% / 7);
+	/* background: #fff; */
+	/*! color: #666; */
+	font-size: 14px;
+	text-align: center;
+	vertical-align: middle;
+	padding: 0;
+	border: 0;
+	border-collapse: collapse;
+	cursor: pointer;
+	height: 42px;
+	font-weight: inherit;
+	color: inherit;
+}
+.xdsoft_datetimepicker.xdsoft_showweeks .xdsoft_calendar td,.xdsoft_datetimepicker.xdsoft_showweeks .xdsoft_calendar th {
+	width: 12.5%;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar th {
+	/*! background: #f1f1f1; */
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_today {
+	color: var(--urbarbr-midblue);
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_highlighted_default {
+	background: #ffe9d2;
+	box-shadow: #ffb871 0 1px 4px 0 inset;
+	color: #000;
+}
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_highlighted_mint {
+	background: #c1ffc9;
+	box-shadow: #00dd1c 0 1px 4px 0 inset;
+	color: #000;
+}
+
+/*--.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_default,
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current,
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box >div >div.xdsoft_current {
+	background: var(--urbarbr-midblue);
+	color: #fff;
+} */
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_other_month,
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_disabled,
+.xdsoft_datetimepicker .xdsoft_time_box >div >div.xdsoft_disabled {
+	opacity: 0.7;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	cursor: default;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_other_month.xdsoft_disabled {
+	opacity: 0.2;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+}
+
+/*--.xdsoft_datetimepicker .xdsoft_calendar td:hover,
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box >div >div:hover {
+	color: #fff !important;
+	background: var(--urbarbr-shade) !important;
+	box-shadow: none !important;
+} */
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current.xdsoft_disabled:hover,
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box>div>div.xdsoft_current.xdsoft_disabled:hover {
+	background: var(--urbarbr-midblue) !important;
+	color: #fff !important;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_disabled:hover,
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box >div >div.xdsoft_disabled:hover {
+	color: inherit	!important;
+	background: inherit !important;
+	box-shadow: inherit !important;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar th {
+	/*! font-weight: 700; */
+	/*! text-align: center; */
+	/*! color: #999; */
+	cursor: default;
+}
+
+.xdsoft_datetimepicker .xdsoft_copyright {
+	color: #ccc !important;
+	font-size: 10px;
+	clear: both;
+	float: none;
+	margin-left: 8px;
+}
+
+.xdsoft_datetimepicker .xdsoft_copyright a { color: #eee !important }
+.xdsoft_datetimepicker .xdsoft_copyright a:hover { color: #aaa !important }
+
+.xdsoft_time_box {
+	position: relative;
+	/*! border: 1px solid #ccc; */
+}
+.xdsoft_scrollbar >.xdsoft_scroller {
+	background: #ccc !important;
+	height: 20px;
+	border-radius: 3px;
+}
+.xdsoft_scrollbar {
+	position: absolute;
+	width: 7px;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	cursor: pointer;
+}
+.xdsoft_datetimepicker.xdsoft_rtl .xdsoft_scrollbar {
+	left: 0;
+	right: auto;
+}
+.xdsoft_scroller_box {
+	position: relative;
+}
+
+.xdsoft_datetimepicker .xdsoft_save_selected {
+    display: block;
+    border: 1px solid #dddddd !important;
+    margin-top: 5px;
+    width: 100%;
+    color: #454551;
+    font-size: 13px;
+}
+.xdsoft_datetimepicker .blue-gradient-button {
+	font-family: "museo-sans", "Book Antiqua", sans-serif;
+	font-size: 12px;
+	font-weight: 300;
+	color: #82878c;
+	height: 28px;
+	position: relative;
+	padding: 4px 17px 4px 33px;
+	border: 1px solid #d7d8da;
+	background: -moz-linear-gradient(top, #fff 0%, #f4f8fa 73%);
+	/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(73%, #f4f8fa));
+	/* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fff 0%, #f4f8fa 73%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #fff 0%, #f4f8fa 73%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #fff 0%, #f4f8fa 73%);
+	/* IE10+ */
+	background: linear-gradient(to bottom, #fff 0%, #f4f8fa 73%);
+	/* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff', endColorstr='#f4f8fa',GradientType=0 );
+/* IE6-9 */
+}
+.xdsoft_datetimepicker .blue-gradient-button:hover, .xdsoft_datetimepicker .blue-gradient-button:focus, .xdsoft_datetimepicker .blue-gradient-button:hover span, .xdsoft_datetimepicker .blue-gradient-button:focus span {
+  color: #454551;
+  background: -moz-linear-gradient(top, #f4f8fa 0%, #FFF 73%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f4f8fa), color-stop(73%, #FFF));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #f4f8fa 0%, #FFF 73%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #f4f8fa 0%, #FFF 73%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #f4f8fa 0%, #FFF 73%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, #f4f8fa 0%, #FFF 73%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f8fa', endColorstr='#FFF',GradientType=0 );
+  /* IE6-9 */
+}
+
+
+
+.xdsoft_datetimepicker {
+	max-width: 360px;
+	border-radius: 4px;
+	box-shadow: 0 5px 10px #0003;
+	font-weight: normal;
+}
+.xdsoft_calendar, .xdsoft_monthpicker, .xd_time_box {
+  padding: 12px;
+}
+.xdsoft_time_variant {
+  margin: -2px !important;
+  display: inline-block;
+}
+.xdsoft_datetimepicker .xdsoft_prev, .xdsoft_datetimepicker .xdsoft_next {
+  display: inline-block !important;
+  background: 0;
+}
+.xdsoft_datetimepicker .xdsoft_prev::after, .xdsoft_datetimepicker .xdsoft_next::after {
+  content: '';
+  width: 9px;
+  height: 9px;
+  display: block;
+  border-bottom: 2px solid #03090E;
+  border-right: 2px solid #03090E;
+  transform: rotate(-45deg);
+}
+.xdsoft_datetimepicker .xdsoft_prev::after {
+  transform: rotate(-225deg);
+}
+.xdsoft_datetimepicker .xdsoft_next::after {
+	float: right;
+}
+.xdsoft_monthpicker {
+  display: flex;
+}
+.xdsoft_monthpicker > * {
+  flex: 1;
+}
+.xdsoft_next {
+  text-align: right;
+}
+.xdsoft_datetimepicker .xdsoft_next {
+  text-align: right;
+}
+
+.xdsoft_datetimepicker .xdsoft_calendar td.xdsoft_current > div,
+.xdsoft_timepicker td.xdsoft_current {
+	background: var(--urbarbr-midblue);
+	color: white;
+}
+.xdsoft_datetimepicker .xdsoft_calendar td:hover > div {
+	background: var(--urbarbr-shade);
+}
+.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box > div > div:hover {
+	background: var(--urbarbr-shade);
+	border-color: var(--urbarbr-shade);
+	color: white;
+}
+.xdsoft_calendar tr {
+	border-top: 1px solid #E6E6E6;
+}
+.xdsoft_datetimepicker .xdsoft_time, .xdsoft_datetimepicker td > div {
+	transition: .2s;
+}
+
+
+.xdsoft_datepicker::before {
+    content: 'Select Date';
+    padding: 15px;
+    display: block;
+    font-size: 16px;
+    padding-left: 48px;
+    background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1LjgzMzQgMy4zMzM2NkgxNC4xNjY3VjIuNTAwMzNDMTQuMTY2NyAyLjI3OTMxIDE0LjA3ODkgMi4wNjczNSAxMy45MjI2IDEuOTExMDdDMTMuNzY2MyAxLjc1NDc5IDEzLjU1NDQgMS42NjY5OSAxMy4zMzM0IDEuNjY2OTlDMTMuMTEyMyAxLjY2Njk5IDEyLjkwMDQgMS43NTQ3OSAxMi43NDQxIDEuOTExMDdDMTIuNTg3OCAyLjA2NzM1IDEyLjUgMi4yNzkzMSAxMi41IDIuNTAwMzNWMy4zMzM2Nkg3LjUwMDAyVjIuNTAwMzNDNy41MDAwMiAyLjI3OTMxIDcuNDEyMjIgMi4wNjczNSA3LjI1NTk0IDEuOTExMDdDNy4wOTk2NiAxLjc1NDc5IDYuODg3NyAxLjY2Njk5IDYuNjY2NjkgMS42NjY5OUM2LjQ0NTY3IDEuNjY2OTkgNi4yMzM3MSAxLjc1NDc5IDYuMDc3NDMgMS45MTEwN0M1LjkyMTE1IDIuMDY3MzUgNS44MzMzNSAyLjI3OTMxIDUuODMzMzUgMi41MDAzM1YzLjMzMzY2SDQuMTY2NjlDMy41MDM2NSAzLjMzMzY2IDIuODY3NzYgMy41OTcwNSAyLjM5ODkyIDQuMDY1ODlDMS45MzAwOCA0LjUzNDczIDEuNjY2NjkgNS4xNzA2MiAxLjY2NjY5IDUuODMzNjZWMTUuODMzN0MxLjY2NjY5IDE2LjQ5NjcgMS45MzAwOCAxNy4xMzI2IDIuMzk4OTIgMTcuNjAxNEMyLjg2Nzc2IDE4LjA3MDMgMy41MDM2NSAxOC4zMzM3IDQuMTY2NjkgMTguMzMzN0gxNS44MzM0QzE2LjQ5NjQgMTguMzMzNyAxNy4xMzIzIDE4LjA3MDMgMTcuNjAxMSAxNy42MDE0QzE4LjA3IDE3LjEzMjYgMTguMzMzNCAxNi40OTY3IDE4LjMzMzQgMTUuODMzN1Y1LjgzMzY2QzE4LjMzMzQgNS4xNzA2MiAxOC4wNyA0LjUzNDczIDE3LjYwMTEgNC4wNjU4OUMxNy4xMzIzIDMuNTk3MDUgMTYuNDk2NCAzLjMzMzY2IDE1LjgzMzQgMy4zMzM2NlpNMTYuNjY2NyAxNS44MzM3QzE2LjY2NjcgMTYuMDU0NyAxNi41Nzg5IDE2LjI2NjYgMTYuNDIyNiAxNi40MjI5QzE2LjI2NjMgMTYuNTc5MiAxNi4wNTQ0IDE2LjY2NyAxNS44MzM0IDE2LjY2N0g0LjE2NjY5QzMuOTQ1NjcgMTYuNjY3IDMuNzMzNzEgMTYuNTc5MiAzLjU3NzQzIDE2LjQyMjlDMy40MjExNSAxNi4yNjY2IDMuMzMzMzUgMTYuMDU0NyAzLjMzMzM1IDE1LjgzMzdWMTAuMDAwM0gxNi42NjY3VjE1LjgzMzdaTTE2LjY2NjcgOC4zMzM2NkgzLjMzMzM1VjUuODMzNjZDMy4zMzMzNSA1LjYxMjY1IDMuNDIxMTUgNS40MDA2OCAzLjU3NzQzIDUuMjQ0NEMzLjczMzcxIDUuMDg4MTIgMy45NDU2NyA1LjAwMDMzIDQuMTY2NjkgNS4wMDAzM0g1LjgzMzM1VjUuODMzNjZDNS44MzMzNSA2LjA1NDY3IDUuOTIxMTUgNi4yNjY2MyA2LjA3NzQzIDYuNDIyOTFDNi4yMzM3MSA2LjU3OTIgNi40NDU2NyA2LjY2Njk5IDYuNjY2NjkgNi42NjY5OUM2Ljg4NzcgNi42NjY5OSA3LjA5OTY2IDYuNTc5MiA3LjI1NTk0IDYuNDIyOTFDNy40MTIyMiA2LjI2NjYzIDcuNTAwMDIgNi4wNTQ2NyA3LjUwMDAyIDUuODMzNjZWNS4wMDAzM0gxMi41VjUuODMzNjZDMTIuNSA2LjA1NDY3IDEyLjU4NzggNi4yNjY2MyAxMi43NDQxIDYuNDIyOTFDMTIuOTAwNCA2LjU3OTIgMTMuMTEyMyA2LjY2Njk5IDEzLjMzMzQgNi42NjY5OUMxMy41NTQ0IDYuNjY2OTkgMTMuNzY2MyA2LjU3OTIgMTMuOTIyNiA2LjQyMjkxQzE0LjA3ODkgNi4yNjY2MyAxNC4xNjY3IDYuMDU0NjcgMTQuMTY2NyA1LjgzMzY2VjUuMDAwMzNIMTUuODMzNEMxNi4wNTQ0IDUuMDAwMzMgMTYuMjY2MyA1LjA4ODEyIDE2LjQyMjYgNS4yNDQ0QzE2LjU3ODkgNS40MDA2OCAxNi42NjY3IDUuNjEyNjUgMTYuNjY2NyA1LjgzMzY2VjguMzMzNjZaIiBmaWxsPSIjMDMwOTBFIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8L3N2Zz4K") no-repeat 15px/24px;
+    font-weight: 500;
+    color: var(--urbarbr-midblue);
+}
+.xdsoft_timepicker::before {
+    content: 'Select Time';
+    padding: 15px;
+    padding-left: 15px;
+    display: block;
+    font-size: 16px;
+    padding-left: 48px;
+    background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDEuNjY2OTlDNS40MDUwMiAxLjY2Njk5IDEuNjY2NjkgNS40MDUzMyAxLjY2NjY5IDEwLjAwMDNDMS42NjY2OSAxNC41OTUzIDUuNDA1MDIgMTguMzMzNyAxMCAxOC4zMzM3QzE0LjU5NSAxOC4zMzM3IDE4LjMzMzQgMTQuNTk1MyAxOC4zMzM0IDEwLjAwMDNDMTguMzMzNCA1LjQwNTMzIDE0LjU5NSAxLjY2Njk5IDEwIDEuNjY2OTlaTTEwIDE2LjY2N0M2LjMyNDE5IDE2LjY2NyAzLjMzMzM1IDEzLjY3NjIgMy4zMzMzNSAxMC4wMDAzQzMuMzMzMzUgNi4zMjQ0OSA2LjMyNDE5IDMuMzMzNjYgMTAgMy4zMzM2NkMxMy42NzU5IDMuMzMzNjYgMTYuNjY2NyA2LjMyNDQ5IDE2LjY2NjcgMTAuMDAwM0MxNi42NjY3IDEzLjY3NjIgMTMuNjc1OSAxNi42NjcgMTAgMTYuNjY3WiIgZmlsbD0iIzAzMDkwRSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPHBhdGggZD0iTTEwLjgzMzQgNS44MzMwMUg5LjE2NjY5VjEwLjgzM0gxNC4xNjY3VjkuMTY2MzRIMTAuODMzNFY1LjgzMzAxWiIgZmlsbD0iIzAzMDkwRSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPC9zdmc+Cg==") no-repeat 15px/24px;
+    font-weight: 500;
+    color: var(--urbarbr-midblue);
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDEuNjY2OTlDNS40MDUwMiAxLjY2Njk5IDEuNjY2NjkgNS40MDUzMyAxLjY2NjY5IDEwLjAwMDNDMS42NjY2OSAxNC41OTUzIDUuNDA1MDIgMTguMzMzNyAxMCAxOC4zMzM3QzE0LjU5NSAxOC4zMzM3IDE4LjMzMzQgMTQuNTk1MyAxOC4zMzM0IDEwLjAwMDNDMTguMzMzNCA1LjQwNTMzIDE0LjU5NSAxLjY2Njk5IDEwIDEuNjY2OTlaTTEwIDE2LjY2N0M2LjMyNDE5IDE2LjY2NyAzLjMzMzM1IDEzLjY3NjIgMy4zMzMzNSAxMC4wMDAzQzMuMzMzMzUgNi4zMjQ0OSA2LjMyNDE5IDMuMzMzNjYgMTAgMy4zMzM2NkMxMy42NzU5IDMuMzMzNjYgMTYuNjY2NyA2LjMyNDQ5IDE2LjY2NjcgMTAuMDAwM0MxNi42NjY3IDEzLjY3NjIgMTMuNjc1OSAxNi42NjcgMTAgMTYuNjY3WiIgZmlsbD0iIzAzMDkwRSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPHBhdGggZD0iTTEwLjgzMzQgNS44MzMwMUg5LjE2NjY5VjEwLjgzM0gxNC4xNjY3VjkuMTY2MzRIMTAuODMzNFY1LjgzMzAxWiIgZmlsbD0iIzAzMDkwRSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPC9zdmc+Cg==");
+    text-align: left;
+}
