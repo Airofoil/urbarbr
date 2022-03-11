@@ -53,6 +53,8 @@ jQuery(document).ready(function ($){
 		}
 	})
 	
+    // insert payment title
+    $('<h3 id="payment_method">Payment Method</h3>').insertBefore('#payment');
 	//setTimeout(() => {
 	// 		$.datetimepicker.setDateFormatter('moment');
 	// 		$('#booking-date-search').datetimepicker.setDateFormatter('moment');
