@@ -628,25 +628,15 @@ function cw_function() {
 	if (!$jsonBooking) return;//++
 	curl_close($chProduct);
 
-	$barberList = array(
-		"test07" => "+61420603110",
-		"test06" => "+61420603110",
-		"Hoochie" => "+61420603110",
-		"test05" => "+61420603110",
-		"test04" => "+61420603110",
-		"Test02" => "+61420603110",
-		"test01" => "+61420603110",
-		"test00" => "+61420603110",
-		"Test 100" => "+61420603110",
-		"test66" => "+61420603110",
-		"Ben's Server Barber" => "+61420603110",
-		"Ben's locals" => "+61420603110",
-		"Ben's Local barbershop" => "+61420603110",
-		"Barber Jo" => "+61420603110",
-		"New-test" => "+61420603110",
-		"Barber-test" => "+61420603110",
-		"JAC Product" => "+61420603110",
-	);
+	$barberList = array();
+
+	foreach ($jsonProduct as $productItem) {
+		foreach ($productItem['meta_data'] as $item) {
+			if ($item['key'] === 'barber_phone') {
+				$barberList[$productItem['name']] = $item['value'];
+			}
+		}
+	}
 
 	date_default_timezone_set('Australia/Adelaide');
 	$date = date('Y-m-d H:i:s');
