@@ -633,6 +633,13 @@ function cw_function() {
 	foreach ($jsonProduct as $productItem) {
 		foreach ($productItem['meta_data'] as $item) {
 			if ($item['key'] === 'barber_phone') {
+				$item['value'] = str_replace(' ', '', $item['value']);
+				if ($item['value'][0] === '0') {
+					$item['value'] = '+61' . substr($item['value'], 1);
+				}
+				if ($item['value'][0] !== '+') {
+					$item['value'] = '+' . strval($item['value']);
+				}
 				$barberList[$productItem['name']] = $item['value'];
 			}
 		}
