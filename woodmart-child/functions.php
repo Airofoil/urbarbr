@@ -600,7 +600,6 @@ function cw_function() {
 	} catch (JsonException $e) {
 		throw new EncryptException('Could not encrypt the data.', 0, $e);
 	}
-	if (!$jsonBooking) return;//++
 	curl_close($chBooking);
 	
 	$chOrder = curl_init();
@@ -625,7 +624,6 @@ function cw_function() {
 	} catch (JsonException $e) {
 		throw new EncryptException('Could not encrypt the data.', 0, $e);
 	}
-	if (!$jsonBooking) return;//++
 	curl_close($chProduct);
 
 	$barberList = array();
@@ -633,7 +631,6 @@ function cw_function() {
 	foreach ($jsonProduct as $productItem) {
 		foreach ($productItem['meta_data'] as $item) {
 			if ($item['key'] === 'barber_phone') {
-<<<<<<< HEAD
 				$item['value'] = str_replace(' ', '', $item['value']);
 				if ($item['value'][0] === '0') {
 					$item['value'] = '+61' . substr($item['value'], 1);
@@ -641,8 +638,6 @@ function cw_function() {
 				if ($item['value'][0] !== '+') {
 					$item['value'] = '+' . strval($item['value']);
 				}
-=======
->>>>>>> 89ce6a7d7f8b1eccf368ae45ac6d5cfde7ab494e
 				$barberList[$productItem['name']] = $item['value'];
 			}
 		}
@@ -667,6 +662,7 @@ function cw_function() {
 		for ($i=0; $i < count($jsonBooking); $i++) {
 			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
 			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
+			$jsonBooking[$i]['date_created'] = $jsonBooking[$i]['date_created'] - 37800;
 			for ($j=0; $j < count($jsonOrder); $j++) { 
 				if ($jsonBooking[$i]['order_id'] === $jsonOrder[$j]['id']) {
 					array_push($customers, $jsonOrder[$j]);
@@ -696,6 +692,10 @@ function cw_function() {
 						//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
 						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('H:i', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+					}
+					if (($long - $jsonBooking[$i]['date_created']) > 0 && ($long - $jsonBooking[$i]['date_created']) < 120) {
+						just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('H:i', $jsonBooking[$i]['start']));
+						just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('H:i', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					}
 				}
 			}
