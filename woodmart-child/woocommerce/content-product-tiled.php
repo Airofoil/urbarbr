@@ -2,52 +2,134 @@
 	global $woocommerce, $product;
 	$product_id = $product->get_id();
 
+	$street = get_field( "barber_address" );
+	$city = get_field( "barber_city" );
+	$state = get_field( "barber_state" );
+	$country = get_field( "barber_country" );
+	$prefer_distance = get_field( "prefer_serve_distance_km" );
+
+	if($street != "" && $city != "" && $state != "" && $country != "" && $prefer_distance != "") {
+		$geo_result = brrad_geocode($street, $city, $state, $country);
+		$bar_lat = floatval ($geo_result['latitude']);
+		$bar_long = floatval ($geo_result['longitude']);
+
+		// echo '<pre>barber latitude:'; print_r($bar_lat);  echo '</pre>';
+		// echo '<pre>barber longitude:'; print_r($bar_long);  echo '</pre>';
+	}
+
 	if ($_GET) {
-
-		//--$searching_location = $_GET['your-location'];
-		//--$searching_service = $_GET['booking-services'];
-		//--$searching_date = $_GET['booking-date'];
-
+		$searching_location = $_GET['your-location'];
+		$searching_service = $_GET['booking-services'];
+		$searching_date = $_GET['booking-date'];
 		$filtering = false;
+		$location_qualified = true;
 
-		if($_GET['your-location'] || $_GET['booking-services'] || $_GET['booking-date']){
+		$searching_lat_long = $_GET['your-lat-long'];
+
+		// echo '<pre>'; print_r($searching_location);  echo '</pre>';
+
+		if($searching_location || $searching_service || $searching_date || $searching_lat_long){
 			$filtering = true;
 			$qualified = false;
 		}else{
 			$qualified = true;
 		}
+
+		if($searching_location) {
+
+			$location_qualified = false;
+			// echo '<pre>'; print_r($searching_location);  echo '</pre>';
+
+			$goo_tem_address = str_replace(" ", "+", $searching_location);
+			$goo_address = str_replace(",", "", $goo_tem_address);
+			// echo '<pre>'; print_r($goo_address);  echo '</pre>';
+
+			$url = "https://maps.googleapis.com/maps/api/geocode/json?address=$goo_address&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false"; 
+			$google_api_response = wp_remote_get( $url );    
+
+			$results = json_decode( $google_api_response['body'] ); //grab our results from Google
+			$results = (array) $results; //cast them to an array
+			$status = $results["status"]; //easily use our status
+			$location_all_fields = (array) $results["results"][0];
+			$location_geometry = (array) $location_all_fields["geometry"];
+			$location_lat_long = (array) $location_geometry["location"];
+
+			if( $status == 'OK'){
+				$latitude = $location_lat_long["lat"];
+				$longitude = $location_lat_long["lng"];
+			}else{
+				$latitude = '';
+				$longitude = '';
+			}
+
+			$return = array(
+				'latitude'  => $latitude,
+				'longitude' => $longitude
+			);
+
+			// echo '<pre>'; print_r($return);  echo '</pre>';
+
+			$search_location_lat = floatval ($return['latitude']);
+			$search_location_long = floatval ($return['longitude']);
+
+			$search_distance_between = distance($search_location_lat, $search_location_long, $bar_lat, $bar_long, "K");
+
+			// echo '<pre>'; print_r($search_distance_between);  echo '</pre>';
+
+			if($search_distance_between < $prefer_distance) {
+				$location_qualified = true;
+				$qualified = true;
+			}
+		} elseif($searching_lat_long) { //use search input address instead of current location if there is an address in the search field
+
+			$location_qualified = false;
+
+			$lat_long_array = explode(',', $searching_lat_long);
+			$location_lat = floatval ($lat_long_array[0]);
+			$location_long = floatval ($lat_long_array[1]);
+			// echo '<pre>'; print_r($location_lat);  echo '</pre>';
+			// echo '<pre>'; print_r($location_long);  echo '</pre>';
+
+			$distance_between = distance($location_lat, $location_long, $bar_lat, $bar_long, "K");
+			// echo '<pre>'; print_r("Distance:" . $distance_between);  echo '</pre>';
+
+			if($distance_between < $prefer_distance) {
+				$location_qualified = true;
+				$qualified = true;
+			}
+		}
 		
-		if ($_GET['booking-services']) {
-			if($_GET['booking-services'] != "default"){
-				foreach ($product->get_meta_data() as $index => $data) { 
-					if($data->key == '_product_addons'){
-						if ($data->value && $data->value[0]) {
-							foreach($data->value[0]['options'] as $index=>$value){
-								if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$_GET['booking-services'])))){
-									$qualified = true;
-								}
-							}
+		if($searching_service && $searching_service != "default"){
+
+			$qualified = false;
+
+			foreach ($product->get_meta_data() as $index => $data) { 
+				if($data->key == '_product_addons'){
+					foreach($data->value[0]['options'] as $index=>$value){
+						if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$searching_service))) && $location_qualified){
+							$qualified = true;
 						}
 					}
 				}
 			}
-			elseif($_GET['booking-services'] == "default"){
-				$qualified = true;
-			}
+		}elseif($searching_service== "default" && $location_qualified){
+			$qualified = true;
 		}
 
-		if($_GET['booking-date']){
+		if($searching_date){
 
 			global $wpdb;
 
 			$qualified = false;
-			$min_date = date('Y-m-d', strtotime(substr($_GET['booking-date'], 0, -3)));
-			$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
 
-			$url = get_site_url() . '/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
+			$min_date = date('Y-m-d', strtotime(substr($searching_date,0,-3)));
+
+			$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
+			
+			// $url = get_site_url() . '/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
 
 			/* curl function not working on local, that needs to crawl staging/live site product data. Comment the above line and uncomment the below line to fetch from staging site */
-			// $url = 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
+			$url = 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
 
 			$curl = curl_init($url);
 			curl_setopt($curl, CURLOPT_URL, $url);
@@ -58,12 +140,11 @@
 			// curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 			$resp = curl_exec($curl);
-				$resources = json_decode($resp, true);
-			
+			$resources = json_decode($resp, true);
 			curl_close($curl);
 
 			/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
-			$search_date_formatted = date("Y-m-d H:i", strtotime($_GET['booking-date']));
+			$search_date_formatted = date("Y-m-d H:i", strtotime($searching_date));
 
 			$slots_info = $resources['records'];
 
@@ -73,13 +154,17 @@
 					$start_time = str_replace("T"," ",$slot_info['date']);
 					$end_time = date('Y-m-d H:i', strtotime($start_time) + 3600);
 
-					if($search_date_formatted < $end_time && $start_time <= $search_date_formatted){
+					if($search_date_formatted < $end_time && $start_time <= $search_date_formatted && $location_qualified){
 						$qualified = true;
 						break;
 					}
+
 				}
 			}
+
 		}
+
+		// echo '<pre>'; print_r($qualified);  echo '</pre>';
 	}
 	
 	
@@ -135,6 +220,11 @@
 		<?php woodmart_hover_image(); ?>
 		
 		<div class="jac-barber-details <?php echo $show_brife_product_tile?"brief-product-tile":""; ?>">
+			<!-- <div>
+				<?php 
+					// echo '<pre>'; print_r($geo_result);  echo '</pre>'; 
+				?>
+			</div> -->
 			<div class="jac-products-header-top">
 				<div class="jac-products-header-top-left">
 					<h5 class="jac-barber-name">
@@ -161,17 +251,6 @@
 								echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
 							}?>
 							
-							
-							<?php  /*if($show_brife_product_tile){
-								<span> <?php printf( _n( '%s',$review_count,'woocommerce' ), ' <span class="count">' . esc_html( $review_count ) . '</span>' ); ?>
-								<?php if (!$show_brife_product_tile){ echo ' Review' . (esc_html( $review_count ) == 1 ? '' : 's'); } ?> </span> 
-								//----echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
-							
-								<div class="product-reviews">
-									<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</p>
-								</div>
-							} */?>
-							
 							<?php if($show_brife_product_tile){
 								echo '<span class="barber_location">' . get_field( "barber_location",$product_id) . '</span>';
 							} ?>
@@ -189,7 +268,7 @@
 			
 			<?php if(!$show_brife_product_tile){ ?>
 					<div class="jac-products-header-top-right">
-						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-alt">Learn more</a>
+						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-alt">Visit Barber</a>
 					</div>
 			<?php } ?>
 		</div>
@@ -207,7 +286,7 @@
 	<?php
 		foreach ($product->get_meta_data() as $index => $data) {
 			if($data->key == '_product_addons' && !$show_brife_product_tile){
-				if ($data->value && $data->value[0]) {
+				if ($data->value[0]) {
 					foreach($data->value[0]['options'] as $index=>$value){
 						echo '<div class="product-element-bottom">';
 						// var_dump($value);
