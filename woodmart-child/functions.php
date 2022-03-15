@@ -837,6 +837,12 @@ return $back_together;
 add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_location', 10, 2);
 
 
+// gets inputs and checks which ones have been selected, adds to the amount of time in javascript 
+// It needs to convert the javascript increase_time varibale into a php varibale variable
+// You then need to divide by 15 to get the amount of blocks it will take. 
+// then times by 900. 900 is 15 minutes, so 2700 adds 45 minutes to the booking. you then add this to the...
+// $field_array['_end_date'] varibale, setting the end time to the right amount of time
+
 function edit_length_of_booking($field_array) {
 	$total_time = 0;
 ?><script src = "https://code.jquery.com/jquery-3.6.0.js">
@@ -911,6 +917,7 @@ function edit_length_of_booking($field_array) {
 				}
 			}
 		}
+		// this doesnt work yet, thought i could send the variable to the server and set it in php but it retrns null
 		$.ajax({
                 url: window.location, //window.location points to the current url. change is needed.
                 type: 'POST',
