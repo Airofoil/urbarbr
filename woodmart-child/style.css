@@ -2435,25 +2435,20 @@ body.single-product .wc-bookings-booking-cost {
 
 /**  on mobile version **/
 @media (max-width: 414px){
-
 	/** checkout page **/
 	.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-message{
 		background-color: #365277;
 	}
-
 	div.woocommerce-billing-fields h3, div.woocommerce-additional-fields h3 {
 		color: #000000;
 	}
-
 	.woocommerce-billing-fields p.form-row label, .woocommerce-additional-fields p.form-row label {
 		color: #000000;
 		font-weight: 600;
 	}
-
 	.woocommerce-additional-fields #order_comments::placeholder{
 		color: #D0D7DF;
 	}
-
 	.woocommerce-billing-fields input[type="email"],
 	.woocommerce-billing-fields input[type="text"],
 	.woocommerce-billing-fields input[type="tel"],
@@ -2463,23 +2458,18 @@ body.single-product .wc-bookings-booking-cost {
 		color: #D0D7DF !important;
 		-webkit-text-fill-color: #D0D7DF !important;
 	}
-
 	.jac-booking-date-time .booking-time{
 		text-align: right;
 		padding-right: 10px;
 	}
-
 	.woocommerce-form-coupon-toggle>.woocommerce-info .showcoupon, #payment_method{
 		color: #000000;
 	}
-
 	.payment_methods li>label, .payment_methods .payment_box p,
 	li.woocommerce-SavedPaymentMethods-token:nth-child(2),
 	li.woocommerce-SavedPaymentMethods-new {
 		display: none;
 	}
-
-
 	/** payment method **/
 	#wc-stripe-cc-form{
 		border: 1px solid #8B96A1;
@@ -2487,16 +2477,9 @@ body.single-product .wc-bookings-booking-cost {
 		margin-top: 20px;
 		padding: 10px;
 	}
-
 	/** about **/
 	.jac-about-us-sec-section-title p{
 		font-size: 22px;
 		font-weight: 700;
 	}
-
-
-
 }
-
-
-

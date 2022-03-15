@@ -61,9 +61,9 @@ $get_checkout_url = apply_filters( 'woocommerce_get_checkout_url', wc_get_checko
 
 	<div class="col-12 col-md-7 col-lg-6">
 		<div class="checkout-order-review">
-			<?php do_action( 'woocommerce_checkout_before_order_review_heading' ); ?>
-
+			
 			<h3 id="order_review_heading"><?php esc_html_e( 'Your order', 'woocommerce' ); ?></h3>
+			<?php do_action( 'woocommerce_checkout_before_order_review_heading' ); ?>
 
 			<?php do_action( 'woocommerce_checkout_before_order_review' ); ?>
 
