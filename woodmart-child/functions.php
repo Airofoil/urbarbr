@@ -628,25 +628,15 @@ function cw_function() {
 	if (!$jsonBooking) return;//++
 	curl_close($chProduct);
 
-	$barberList = array(
-		"test07" => "+61420603110",
-		"test06" => "+61420603110",
-		"Hoochie" => "+61420603110",
-		"test05" => "+61420603110",
-		"test04" => "+61420603110",
-		"Test02" => "+61420603110",
-		"test01" => "+61420603110",
-		"test00" => "+61420603110",
-		"Test 100" => "+61420603110",
-		"test66" => "+61420603110",
-		"Ben's Server Barber" => "+61420603110",
-		"Ben's locals" => "+61420603110",
-		"Ben's Local barbershop" => "+61420603110",
-		"Barber Jo" => "+61420603110",
-		"New-test" => "+61420603110",
-		"Barber-test" => "+61420603110",
-		"JAC Product" => "+61420603110",
-	);
+	$barberList = array();
+
+	foreach ($jsonProduct as $productItem) {
+		foreach ($productItem['meta_data'] as $item) {
+			if ($item['key'] === 'barber_phone') {
+				$barberList[$productItem['name']] = $item['value'];
+			}
+		}
+	}
 
 	date_default_timezone_set('Australia/Adelaide');
 	$date = date('Y-m-d H:i:s');
@@ -715,6 +705,7 @@ function cw_function() {
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
+
 function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
 	$theta = $longitude1 - $longitude2; 
 	$distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))); 
@@ -722,22 +713,22 @@ function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $u
 	$distance = rad2deg($distance); 
 	$distance = $distance * 60 * 1.1515; 
 	switch($unit) { 
-	  case 'miles': 
+		case 'miles': 
 		break; 
-	  case 'kilometers' : 
+		case 'kilometers' : 
 		$distance = $distance * 1.609344; 
 	} 
 	return (round($distance,2)); 
-  }
+	}
 
 function edit_availability_slots_by_location( $available_blocks, $blocks ) {
-// Split html into array blocks
-$available_arr= explode("</li>",$available_blocks);
+	
+	// Split html into array blocks
+	$available_arr= explode("</li>",$available_blocks);
 
-// get current user lat and lng
-
-
-// get current user coordiantes
+	// get current user lat and lng
+	
+	// get current user coordiantes
 $user_ip = getenv('REMOTE_ADDR');
 $geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
 $latitude_current_user = $geo['geoplugin_latitude'];
@@ -749,19 +740,17 @@ if ($latitude_current_user == null || $longitude_current_user == null) {
 	$longitude_current_user = 138.60092004661487;
 }
 
-// might be able to use the rest api to get the bookings for today -> location can defineitley get the address -> just need access to the product id - maybe can user url to get id of product
+	// might be able to use the rest api to get the bookings for today -> location can defineitley get the address -> just need access to the product id - maybe can user url to get id of product
+	$latitude_previous_booking = -34.925621825287166;
+	$longitude_previous_booking =  138.60092004661487;
+	$slug = basename(get_permalink());
+	
+	// set previous block time to a time string so no errors occur
+	$previous_block_time = '12:01:02';
+	$time_blocks_to_hide = 0;
+	$previous_block_manually_hidden = false;
 
-$latitude_previous_booking = -34.925621825287166;
-$longitude_previous_booking =  138.60092004661487;
-$slug = basename(get_permalink());
-
-
-// set previous block time to a time string so no errors occur
-$previous_block_time = '12:01:02';
-$time_blocks_to_hide = 0;
-$previous_block_manually_hidden = false;
-
-foreach ($available_arr as $key=>$block) {
+	foreach ($available_arr as $key=>$block) {
 	// TODO get location of the barber during previous 
 
 	// Check if there need to be more time blocks hidden decided by distance previously, otherwise continue 
@@ -848,38 +837,125 @@ return $back_together;
 add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_location', 10, 2);
 
 
-
-add_action( 'template_redirect', 'edit_end_time_of_booking' );
-function edit_end_time_of_booking() {
-  // Make sure the request is for a user-facing page
-  if ( 
-    ! is_product()
-  ) {
-    return false;
-  }
-
-  // Otherwise do your thing
-  ?><script>
+function edit_length_of_booking($field_array) {
+	$total_time = 0;
+?><script src = "https://code.jquery.com/jquery-3.6.0.js">
 	document.addEventListener("DOMContentLoaded", function(event) {
-		// get the value of the start time
-
-		function setEndTime() {
-			console.log("end time")
+	// get the value of the start time
+	let increase_time = 0 
+		const input_fields = document.getElementsByTagName("input")
+		for (key in input_fields) {
+			if (input_fields[key].value == 'burst-fade') {
+				if (input_fields[key].checked != true) {
+				increase_time += 30;
+				}
+			}
+			else if (input_fields[key].value == 'crew-cut') {
+				if (input_fields[key].checked) {
+					increase_time += 30;
+				}
+			}
+			else if (input_fields[key].value == 'buzzcut') {
+				if (input_fields[key].checked) {
+					increase_time += 15;
+				}
+			}
+			else if (input_fields[key].value == 'beard-trim') {
+				if (input_fields[key].checked) {
+					increase_time += 15;
+				}
+			}
+			else if (input_fields[key].value == 'event-styling') {
+				if (input_fields[key].checked) {
+					increase_time += 45;
+				}
+			}
+			else if (input_fields[key].value == 'headshave') {
+				if (input_fields[key].checked) {
+					increase_time += 15;
+				}
+			}
+			else if (input_fields[key].value == 'kids-haircut') {
+				if (input_fields[key].checked) {
+					increase_time += 30;
+				}
+			}
+			else if (input_fields[key].value == 'taper') {
+				if (input_fields[key].checked) {
+					increase_time += 30;
+				}
+			}
+			else if (input_fields[key].value == 'porpadour') {
+				if (input_fields[key].checked) {
+					increase_time += 45;
+				}
+			}
+			else if (input_fields[key].value == 'head-+-beard') {
+				if (input_fields[key].checked) {
+					increase_time += 60;
+				}
+			}
+			else if (input_fields[key].value == 'hair-colour') {
+				if (input_fields[key].checked) {
+					increase_time += 105;
+				}
+			}
+			else if (input_fields[key].value == 'perm') {
+				if (input_fields[key].checked) {
+					increase_time += 90;
+				}
+			}
+			else if (input_fields[key].value == 'toupée') {
+				if (input_fields[key].checked) {
+					increase_time += 90;
+				}
+			}
 		}
-
-		let start_time = document.querySelectorAll('[name="wc_bookings_field_start_date_time"]')
-		console.log(start_time);
-		//  any time a service changes
-		// I get the start time, and change the end time accordingly (use a function)
+		$.ajax({
+                url: window.location, //window.location points to the current url. change is needed.
+                type: 'POST',
+                data: {
+                  length: increase_time
+                },
+                success: function( response){
+                  console.log("Successful! My post data is: "+response);
+					console.log(<?php echo json_encode($_POST['length']) ?>);
+                },
+                error: function(error){
+                  console.log("error");
+                }
+          });
+		  
+      });
+		console.log(<?php echo json_encode($_POST['wc_bookings_field_start_month']) ?>);
+		console.log("Field here maybe");
+</script> 
+<?php 
 		
-		// on start time change
+	
+		// 15 mins is 900
+		// set booking length to not fixed
+		$field_array['wc_bookings_field_start_date']['duration_type'] = "variable";
+	
+		// calculate what services are selected and their length
+	
+	
+		$field_array['_end_date'] = $field_array['_end_date'] + 2700;
+		return $field_array;
+	}
+	add_filter('booking_form_fields', 'edit_length_of_booking', 10, 1);
 
-		// on services change
-		document.querySelectorAll(`input[type='checkbox'][value=crew-cut`)[0].addEventListener('change', setEndTime());
 
-
-	}); 
-	 </script> 
-  <?php  
+function edit_length_of_booking2($field_array) {
+	// $field_array['wc_bookings_field_duration']['max'] = 6;
+	?>
+		<script>
+			console.log("edit duration posted data");
+			console.log(<?php echo json_encode($field_array['_end_date']) ?>);
+		</script> 
+	<?php 
+// $field_array['_end_date']	=
+return $field_array;
 }
+add_filter('woocommerce_booking_form_get_posted_data', 'edit_length_of_booking', 10, 1);
 
