@@ -183,7 +183,9 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<?php if ($post_type == 'product') { ?>
 					<!-- <input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time"> -->
 					<div class="booking-date-search" class="input-group date">
-					   <input type="text" id="booking-date-search" class="form-control" name="booking-date" placeholder="Select Date and Time">
+					   <input type="text" id="booking-date-search" class="form-control" placeholder="Select Date and Time">
+					   <input type="hidden" id="booking-date" name="booking-date">
+					   <input type="hidden" id="booking-time" name="booking-time">
 					</div>
 					<?php } ?>
 					
@@ -206,7 +208,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 								</a>
 							</li> -->
 						</ul>
-						<input type="hidden" id="location_coords" value="" name="location"><!-- -->
+						<input type="hidden" id="location_coords" value=""><!-- name="location" -->
 					</div>
 					<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
 					<script>

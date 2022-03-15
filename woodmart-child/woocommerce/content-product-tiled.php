@@ -21,9 +21,11 @@
 			if($_GET['booking-services'] != "default"){
 				foreach ($product->get_meta_data() as $index => $data) { 
 					if($data->key == '_product_addons'){
-						foreach($data->value[0]['options'] as $index=>$value){
-							if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$_GET['booking-services'])))){
-								$qualified = true;
+						if ($data->value && $data->value[0]) {
+							foreach($data->value[0]['options'] as $index=>$value){
+								if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$_GET['booking-services'])))){
+									$qualified = true;
+								}
 							}
 						}
 					}
@@ -56,18 +58,13 @@
 			// curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 			$resp = curl_exec($curl);
-			try {
 				$resources = json_decode($resp, true);
-			} catch (JsonException $e) {
-				echo '[05] Error: ' . $e;
-				throw new EncryptException('Could not encrypt the data.', 0, $e);
-			}
+			
 			curl_close($curl);
 
 			/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
 			$search_date_formatted = date("Y-m-d H:i", strtotime($_GET['booking-date']));
 
-			if (!$resources) return;
 			$slots_info = $resources['records'];
 
 			foreach($slots_info as $slot_info) {
@@ -121,7 +118,7 @@
 		}
 	}
 ?>
-<?php /*--if($qualified){ */ ?>
+<?php if($qualified){ ?>
 <div class="product-wrapper">
 	<div class="product-element-top">
 		<a href="<?php echo esc_url( get_permalink() ); ?>" class="product-image-link">
@@ -270,4 +267,4 @@
 			<?php woodmart_product_sale_countdown(); ?>
 		<?php endif ?>
 </div>
-<?php /*--} */ ?>
+<?php } ?>
