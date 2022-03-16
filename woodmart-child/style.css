@@ -2485,7 +2485,26 @@ body.single-product .wc-bookings-booking-cost {
 		border: 1px solid #8B96A1;
 		border-radius: 4px;
 		margin-top: 20px;
-		padding: 10px;
+		padding: 20px 14px 20px 14px;
+	}
+	
+	fieldset#wc-stripe-cc-form .form-row{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		margin-bottom: 15px;
+	}
+
+	
+	.woocommerce-checkout #payment ul.payment_methods li .stripe-credit-card-brand{
+		top: 20%;
+	}
+	
+	div.wc-stripe-elements-field{
+		border: none;
+		border-bottom: 1px solid #172C42;
+		width: 200px;
+		margin-top: -10px;
 	}
 
 	/** about **/
