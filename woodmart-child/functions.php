@@ -2,7 +2,6 @@
 /**
  * Enqueue script and styles for child theme
  */
-
 /* ++Must be at the top of this file: */
 function add_cors_http_header(){
     header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
@@ -520,10 +519,30 @@ function my_custom_js_css() {
     echo '<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>
+	<script src="' . get_stylesheet_directory_uri() . '/periodpicker/jquery.mousewheel.min.js"></script>
+	<script src="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.css">
+	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.css">
 	<script>
 		$(document).ready(function() {
-			$("#booking-date-search").datetimepicker();
+			$("#booking-date-search").datetimepicker({
+				// timepicker: false,
+				format: "d M Y",
+				minDate: Date.now()
+			});
+			$("#booking-date-search").TimePickerAlone({
+				hours: true,
+				minutes: true,
+				seconds: false,
+				ampm: true,
+				steps: [1,5,30,1],
+				onHide: function ($input) { console.log($input.val())
+					return $input.val() === "12:34:00";
+				}
+			});
+			$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog") + `<button class="btn-link btn">Ok</button><button class="btn-link btn">Cancel</button>`);
+			//-$(".periodpicker_timepicker_dialog").appendTo(".xdsoft_datetimepicker");
+			//-$(".xdsoft_datetimepicker").append();
 		});
 	</script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

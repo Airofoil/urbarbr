@@ -17,6 +17,7 @@
 		// echo '<pre>barber longitude:'; print_r($bar_long);  echo '</pre>';
 	}
 
+	$qualified = true;
 	if ($_GET) {
 		$searching_location = $_GET['your-location'];
 		$searching_service = $_GET['booking-services'];
@@ -239,8 +240,19 @@
 					} ?>
 					<?php if($show_brife_product_tile && !$display_addon  && get_field( "short_description",$product_id) && get_field( "short_description",$product_id)!=""){
 						echo '<p class="short_description">' . get_field( "short_description",$product_id) . '</p>';
-					} ?>
-					<?php if(!$display_addon){ ?>
+					}
+
+					$rating_count = $product->get_rating_count();
+					$review_count = $product->get_review_count(); ?>
+
+					<?php /*-woocommerce_template_single_rating(); * ///--Disabled in WooCommerce > Settings > Products ?>
+					<a href="<?php echo get_permalink() ?>#reviews" class="star" rel="nofollow"><span></span><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</a> */?>
+
+					<div class="product-reviews">
+						<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</p>
+					</div>
+					
+					<?php /*--if(!$display_addon){ ?>
 						<?php if(!$show_brife_product_tile){
 							echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
 						}?>
@@ -257,7 +269,7 @@
 						</div>
 					<?php }else{
 						echo '<div class="barber_service_price"> From ' . $service_fee . '</div>';
-					}?>
+					} */ ?>
 				</div>
 			</div>
 			<?php if(!$show_brife_product_tile){ ?>
@@ -268,7 +280,7 @@
 			
 			<?php if(!$show_brife_product_tile){ ?>
 					<div class="jac-products-header-top-right">
-						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-alt">Visit Barber</a>
+						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-primary">Visit Barber</a>
 					</div>
 			<?php } ?>
 		</div>
@@ -286,7 +298,7 @@
 	<?php
 		foreach ($product->get_meta_data() as $index => $data) {
 			if($data->key == '_product_addons' && !$show_brife_product_tile){
-				if ($data->value[0]) {
+				if ($data->value && $data->value[0]) {
 					foreach($data->value[0]['options'] as $index=>$value){
 						echo '<div class="product-element-bottom">';
 						// var_dump($value);

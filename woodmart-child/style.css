@@ -376,8 +376,12 @@ background-color: rgba(101,101,101,1);
 .product-reviews {
 	display: block;
 	color: var(--urbarbr-midblue);
+	white-space: nowrap;
 }
-body.single-product .product-reviews {
+.product-reviews > p {
+	margin: 0;
+}
+.single-product .product-reviews {
 	margin-bottom: 25px;
 }
 
@@ -548,21 +552,10 @@ body.single-product .product-reviews {
 	background-color: unset;
 }
 
-.archive .product-grid-item {
-	width: 100%;
-	max-width: 100%;
-	flex: 0 0 100%;
-}
-
-.archive .product-grid-item .product-wrapper {
-	box-shadow: unset;
-}
-
 .archive .product-grid-item .product-element-top {
 	/*---display: flex; */
-	padding: 20px;
-	background-color: #ffffff;
-	margin-bottom: 20px;
+	/*--padding: 20px; */
+	/*--margin-bottom: 20px; */
 }
 
 .product-element-top .wd-buttons.wd-pos-r-t {
@@ -576,10 +569,19 @@ body.single-product .product-reviews {
 	max-height: 250px;
 	overflow: hidden;
 	margin-bottom: 20px;
+	border-radius: 4px;
+}
+
+.btn.wd-load-more.wd-load-more-loader {
+	display: none;
+}
+
+.archive .products.elements-grid {
+	margin: 0 -10px;
 }
 
 .archive .product-grid-item .product-element-top .product-image-link img {
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 1 / 1.5;
 	object-fit: cover;
 }
 
@@ -593,10 +595,9 @@ body.single-product .product-reviews {
 	flex-wrap: wrap;
 }
 
-.jac-products-header-top-left {
+/*--.jac-products-header-top-left {
 	display: flex;
-	width: 100%;
-}
+} */
 /* For the carousel products */
 .owl-carousel .jac-products-header-top-left {
 	display: block;
@@ -1476,6 +1477,7 @@ background:#fff;
 
 	body .vc_custom_1639719072359 {
 		height: 80vh;
+		padding-top: 24vw !important;
 		background-image: url(/wp-content/uploads/2022/02/barberChairCenteredBGSpecular_mobile.jpg) !important;
 		background-position: top !important;
 	}
@@ -1871,12 +1873,12 @@ a.tinvwl_add_to_wishlist_button.tinvwl-icon-heart {
 .wc-pao-addons-container .form-row.form-row-wide:last-child > label {
 	margin: 0;
 }
-.wc-pao-addons-container .form-row.form-row-wide input {
-	/*-display: none; */
-	width: 20px;
+.wc-pao-addons-container .form-row.form-row-wide input[type="checkbox"] {
+	display: none;
+	/*-width: 20px;
 	height: 20px;
 	margin-left: 25px;
-	order: 1;
+	order: 1; */
 }
 .wc-pao-addons-container .woocommerce-Price-amount.amount {
 	margin-left: auto;
@@ -2045,9 +2047,9 @@ body .jac-visit-barber {
 .archive .product-grid-item .product-element-bottom {
 	display: none;
 }
-.archive .product-grid-item .product-element-top {
+/*--.archive .product-grid-item .product-element-top {
 	min-height: 460px;
-}
+} */
 
 /*--.product-template-default .price { --Removed in php (content-single-product.php)
 display: none;
@@ -2145,6 +2147,11 @@ border-color: white !important;
 	.product-section-title {
 		font-size: 40px;
 	}
+	
+	.archive .jac-products-header-top-right,
+	.archive .jac-barber-description {
+		display: none !important;
+	}
 }
 @media (min-width: 476px) {
 	body .input-group-addon {
@@ -2175,8 +2182,13 @@ body .input-group-addon {
 	padding: 8px 0;
 }
 
-body .wd-header-mobile-nav .wd-tools-icon::before {
-	font-size: 30px;
+body .wd-header-mobile-nav .wd-tools-icon::before,
+body .wd-header-mobile-nav .wd-tools-icon::after {
+	content: '';
+	display: block;
+	width: 20px;
+	margin: 4px 0;
+	border-bottom: 3px solid var(--urbarbr-blue);
 }
 
 .mobile-nav .wd-nav > li > a {
@@ -2255,15 +2267,26 @@ div.form-row.last > :last-child {
 	font-family: var(--wd-title-font);
 	line-height: 1.4;
 }
-.jac-barber-description{
-	font-weight: bolder;
-	margin-top: 25px;
+.product-grid-item .jac-barber-description {
+	display: -webkit-box;
+	min-height: 80px;
+	max-height: 80px;
+	margin-bottom: 15px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
 }
 .jac-barber-name{
-	margin: 0 20px 0 0;
-	color:#292727;
-	font-size:20px;
+	width: max-content;
+	margin: 0 -10px 4px 0;
+	font-size: 20px;
+	color: #292727;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
+
 /*---.jac-products-header-top-right a{
 color: #284158;
 font-size: 16px;
@@ -2276,16 +2299,17 @@ left: -5px;
 width: 110px;
 } */
 .jac-products-header-top-left{
-	color: #102C45;
-	font-size: 14px;
+	width: 100%;
+	/*--font-size: 14px;
 	font-weight: 400;
+	color: #102C45; */
 }
-.jac-products-header-top-right {
+/*--.jac-products-header-top-right {
 	height: 30px;
 	position: relative;
 	border-bottom: 2px solid #8896A2;
 	width: 95px;
-}
+} */
 .jac-barber-details {
 	margin-left: 0;
 }
@@ -2299,19 +2323,27 @@ content: "\f149" !important;
 color:#FFC702 !important;
 } */
 .product-grid-item .jac-products-header-top-left > div {
-	margin: 2px 0 0 0;
+	margin: 4px 0 15px 0;
 }
+.product-grid-item .jac-products-header-top-left > div:last-child {
+	margin-bottom: 0;
+}
+
 .jac-products-header-top-left .product-grid-item .star-rating{
 	margin-bottom: 2px;
 }
 .archive .product-grid-item {
+	width: 50%;
 	max-width: unset;
-	flex: 400px;
+	/*--flex: 400px; */
 }
-.archive .product-grid-item.product-type-booking .product-wrapper{
-	padding: 30px;
+.archive .product-grid-item .product-wrapper{
+	padding: 25px;
 	background-color: #F8F9F9;
+	border-radius: 10px;
+	box-shadow: unset;
 }
+
 .wd-hover-tiled .product-element-bottom{
 	padding: 20px;
 }
@@ -2365,6 +2397,11 @@ color:#FFC702 !important;
 	font-size: 24px;
 	color: #333;
 	line-height: 0;
+}
+@media (min-width: 476px) {
+	.star::before {
+		font-size: 20px;
+	}
 }
 
 body.single-product .product-addon-totals > ul > :first-child {
