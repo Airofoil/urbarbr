@@ -748,7 +748,7 @@ function cw_function() {
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					
-					} else if (($long - $jsonBooking[$i]['date_created']) > 0 && ($long - $jsonBooking[$i]['date_created']) < 90) {
+					} else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
 						just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					}
