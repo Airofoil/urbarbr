@@ -532,7 +532,7 @@ function my_custom_js_css() {
 				minDate: Date.now()
 			});
 			$("#booking-time").TimePickerAlone({
-				inputFormat: "hh:mm:ss a",
+				inputFormat: "HH:mm:ss",
 				hours: true,
 				minutes: true,
 				seconds: false,
@@ -943,7 +943,7 @@ function edit_length_of_booking($field_array) {
 					increase_time += 90;
 				}
 			}
-			else if (input_fields[key].value == 'toupÃ©e') {
+			else if (input_fields[key].value == 'toupée') {
 				if (input_fields[key].checked) {
 					increase_time += 90;
 				}
