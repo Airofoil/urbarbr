@@ -1,5 +1,6 @@
 <?php 
 	global $woocommerce, $product;
+	$product_id = $product->get_id();
 	
 	$average = $product->get_average_rating();
 	$review_count = $product->get_review_count();
