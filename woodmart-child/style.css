@@ -381,6 +381,17 @@ background-color: rgba(101,101,101,1);
 .product-reviews > p {
 	margin: 0;
 }
+@media (max-width: 380px) {
+	body .jac-barber-name {
+		font-size: 16px;
+	}
+	.product-reviews {
+		font-size: 12px;
+	}
+	.product-reviews .count {
+		display: none;
+	}
+}
 .single-product .product-reviews {
 	margin-bottom: 25px;
 }
@@ -604,7 +615,7 @@ background-color: rgba(101,101,101,1);
 }
 
 .wd-table-wrapper {
-	padding: 5px 15px 0 0;
+	/*??padding: 5px 15px 0 0; */
 	border: 1px solid #8896A2;
 	border-radius: 10px;
 	box-sizing: border-box;
@@ -1556,8 +1567,9 @@ a:hover {
 .jac-booking-date-time .booking-time {
 	width: 40%;
 	font-family: Poppins;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 21px;
+	color: #03090e;
 }
 
 @media (max-width: 991px) and (min-width: 476px) {
@@ -1668,6 +1680,18 @@ display: none;
 .bootstrap-datetimepicker-widget .timepicker::before {
 	content: "Select Time";
 	margin-top: 15px;
+}
+
+.bootstrap-select .dropdown-menu {
+	background-color: unset;
+	background-image: linear-gradient(#fff 80px, #fff5 100%);
+}
+.bootstrap-select .dropdown-menu li {
+	margin: 0;
+}
+.bootstrap-select .dropdown-menu li > a {
+	padding: 10px 20px;
+	border-bottom: 1px solid #E6E6E6;
 }
 
 .searchform .bootstrap-datetimepicker-widget.dropdown-menu table {
@@ -2179,7 +2203,7 @@ body .input-group-addon {
 }
 .open > .dropdown-menu {
 	font-size: 14px !important;
-	padding: 8px 0;
+	padding: 4px 0;
 }
 
 body .wd-header-mobile-nav .wd-tools-icon::before,
@@ -2271,14 +2295,14 @@ div.form-row.last > :last-child {
 	display: -webkit-box;
 	min-height: 80px;
 	max-height: 80px;
-	margin-bottom: 15px;
+	margin: 15px 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	-webkit-line-clamp: 4;
 	-webkit-box-orient: vertical;
 }
 .jac-barber-name{
-	width: max-content;
+	width: 100%;
 	margin: 0 -10px 4px 0;
 	font-size: 20px;
 	color: #292727;
@@ -2510,7 +2534,7 @@ body.single-product .wc-bookings-booking-cost {
 	/** payment method **/
 	#wc-stripe-cc-form{
 		border: 1px solid #8B96A1;
-		border-radius: 4px;
+		border-radius: 10px;
 		margin-top: 20px;
 		padding: 20px 14px 20px 14px;
 	}
@@ -2521,7 +2545,9 @@ body.single-product .wc-bookings-booking-cost {
 		justify-content: space-between;
 		margin-bottom: 15px;
 	}
-
+	fieldset#wc-stripe-cc-form .form-row > label {
+		white-space: nowrap;
+	}
 	
 	.woocommerce-checkout #payment ul.payment_methods li .stripe-credit-card-brand{
 		top: 20%;
@@ -2543,4 +2569,16 @@ body.single-product .wc-bookings-booking-cost {
 /* Hide Google logo on search bar dropdown list */
 .pac-container::after {
 	display: none;
+}
+
+
+
+
+body .wc-bookings-date-picker .ui-datepicker td.fully_booked span,
+body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
+	border-radius: 6px;
+	background: var(--urbarbr-midgrey) !important;
+}
+.ui-datepicker-days-cell-over.ui-datepicker-unselectable.ui-state-disabled.fully_booked {
+	opacity: 1;
 }
