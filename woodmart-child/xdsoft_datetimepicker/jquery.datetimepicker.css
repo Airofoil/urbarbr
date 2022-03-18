@@ -613,6 +613,7 @@ body .periodpicker_timepicker {
 }
 body .periodpicker_timepicker_dialog {
 	position: relative;
+	display: block;
 	width: 100%;
 	max-width: 200px;
 	height: 125px;

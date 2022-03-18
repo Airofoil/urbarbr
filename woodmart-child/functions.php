@@ -525,12 +525,14 @@ function my_custom_js_css() {
 	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.css">
 	<script>
 		$(document).ready(function() {
+			$(".searchform input").unbind();
 			$("#booking-date-search").datetimepicker({
 				// timepicker: false,
-				format: "d M Y",
+				format: "Y-m-d",
 				minDate: Date.now()
 			});
-			$("#booking-date-search").TimePickerAlone({
+			$("#booking-time").TimePickerAlone({
+				inputFormat: "hh:mm:ss a",
 				hours: true,
 				minutes: true,
 				seconds: false,
@@ -540,7 +542,8 @@ function my_custom_js_css() {
 					return $input.val() === "12:34:00";
 				}
 			});
-			$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog") + `<button class="btn-link btn">Ok</button><button class="btn-link btn">Cancel</button>`);
+			$("#booking-time").trigger("click");
+			$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog")).append(`<button class="btn-link btn">Ok</button><button class="btn-link btn">Cancel</button>`);
 			//-$(".periodpicker_timepicker_dialog").appendTo(".xdsoft_datetimepicker");
 			//-$(".xdsoft_datetimepicker").append();
 		});

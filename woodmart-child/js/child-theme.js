@@ -52,6 +52,10 @@ jQuery(document).ready(function ($){
 			$('.searchform .searchsubmit').addClass('entered');
 		}
 	})
+
+    $('.wd-tools-element.wd-header-mobile-nav > a').click(a => {
+        $(a).toggleClass('open');
+    });
 	
     // insert payment title
     $('<h3 id="payment_method">Payment Method</h3>').insertBefore('#payment');
