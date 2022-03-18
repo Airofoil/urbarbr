@@ -6,7 +6,7 @@
 	$city = get_field( "barber_city" );
 	$state = get_field( "barber_state" );
 	$country = get_field( "barber_country" );
-	$prefer_distance = get_field( "prefer_serve_distance_km" );
+	$prefer_distance = get_field( "barber_distance" );
 
 	if($street != "" && $city != "" && $state != "" && $country != "" && $prefer_distance != "") {
 		$geo_result = brrad_geocode($street, $city, $state, $country);
