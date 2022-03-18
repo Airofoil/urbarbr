@@ -183,9 +183,9 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<?php if ($post_type == 'product') { ?>
 					<!-- <input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time"> -->
 					<div class="booking-date-search" class="input-group date">
-					   <input type="text" id="booking-date-search" class="form-control" placeholder="Select Date and Time">
-					   <input type="hidden" id="booking-date" name="booking-date">
-					   <input type="hidden" id="booking-time" name="booking-time">
+					   <input type="text" id="booking-date-search" name="booking-date" class="form-control" placeholder="Select Date and Time">
+					   <!-- <input type="hidden" id="booking-date" name="booking-date"> -->
+					   <input type="input" id="booking-time" name="booking-time" style="display:none;">
 					</div>
 					<?php } ?>
 					

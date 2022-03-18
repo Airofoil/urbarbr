@@ -2186,7 +2186,7 @@ body .wd-header-mobile-nav .wd-tools-icon::before,
 body .wd-header-mobile-nav .wd-tools-icon::after {
 	content: '';
 	display: block;
-	width: 20px;
+	width: 24px;
 	margin: 4px 0;
 	border-bottom: 3px solid var(--urbarbr-blue);
 }
