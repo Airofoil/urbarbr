@@ -2539,3 +2539,8 @@ body.single-product .wc-bookings-booking-cost {
 		font-weight: 700;
 	}
 }
+
+/* Hide Google logo on search bar dropdown list */
+.pac-container::after {
+	display: none;
+}
