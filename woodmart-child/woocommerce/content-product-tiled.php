@@ -1,92 +1,7 @@
 <?php 
 	global $woocommerce, $product;
 	$product_id = $product->get_id();
-
-	if ($_GET) {
-
-		//--$searching_location = $_GET['your-location'];
-		//--$searching_service = $_GET['booking-services'];
-		//--$searching_date = $_GET['booking-date'];
-
-		$filtering = false;
-
-		if($_GET['your-location'] || $_GET['booking-services'] || $_GET['booking-date']){
-			$filtering = true;
-			$qualified = false;
-		}else{
-			$qualified = true;
-		}
-		
-		if ($_GET['booking-services']) {
-			if($_GET['booking-services'] != "default"){
-				foreach ($product->get_meta_data() as $index => $data) { 
-					if($data->key == '_product_addons'){
-						foreach($data->value[0]['options'] as $index=>$value){
-							if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$_GET['booking-services'])))){
-								$qualified = true;
-							}
-						}
-					}
-				}
-			}
-			elseif($_GET['booking-services'] == "default"){
-				$qualified = true;
-			}
-		}
-
-		if($_GET['booking-date']){
-
-			global $wpdb;
-
-			$qualified = false;
-			$min_date = date('Y-m-d', strtotime(substr($_GET['booking-date'], 0, -3)));
-			$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
-
-			$url = get_site_url() . '/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
-
-			/* curl function not working on local, that needs to crawl staging/live site product data. Comment the above line and uncomment the below line to fetch from staging site */
-			// $url = 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
-
-			$curl = curl_init($url);
-			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-			// //for debug only!
-			// curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-			// curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-			$resp = curl_exec($curl);
-			try {
-				$resources = json_decode($resp, true);
-			} catch (JsonException $e) {
-				echo '[05] Error: ' . $e;
-				throw new EncryptException('Could not encrypt the data.', 0, $e);
-			}
-			curl_close($curl);
-
-			/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
-			$search_date_formatted = date("Y-m-d H:i", strtotime($_GET['booking-date']));
-
-			if (!$resources) return;
-			$slots_info = $resources['records'];
-
-			foreach($slots_info as $slot_info) {
-				if ($slot_info['available'] == 1) {
-
-					$start_time = str_replace("T"," ",$slot_info['date']);
-					$end_time = date('Y-m-d H:i', strtotime($start_time) + 3600);
-
-					if($search_date_formatted < $end_time && $start_time <= $search_date_formatted){
-						$qualified = true;
-						break;
-					}
-				}
-			}
-		}
-	}
 	
-	
-// 	echo $filtering?"true":"false";
 	$average = $product->get_average_rating();
 	$review_count = $product->get_review_count();
 	$product_title = $product->get_name();
@@ -138,6 +53,11 @@
 		<?php woodmart_hover_image(); ?>
 		
 		<div class="jac-barber-details <?php echo $show_brife_product_tile?"brief-product-tile":""; ?>">
+			<!-- <div>
+				<?php 
+					// echo '<pre>'; print_r($geo_result);  echo '</pre>'; 
+				?>
+			</div> -->
 			<div class="jac-products-header-top">
 				<div class="jac-products-header-top-left">
 					<h5 class="jac-barber-name">
@@ -152,8 +72,19 @@
 					} ?>
 					<?php if($show_brife_product_tile && !$display_addon  && get_field( "short_description",$product_id) && get_field( "short_description",$product_id)!=""){
 						echo '<p class="short_description">' . get_field( "short_description",$product_id) . '</p>';
-					} ?>
-					<?php if(!$display_addon){ ?>
+					}
+
+					$rating_count = $product->get_rating_count();
+					$review_count = $product->get_review_count(); ?>
+
+					<?php /*-woocommerce_template_single_rating(); * ///--Disabled in WooCommerce > Settings > Products ?>
+					<a href="<?php echo get_permalink() ?>#reviews" class="star" rel="nofollow"><span></span><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</a> */?>
+
+					<div class="product-reviews">
+						<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?><span class="count"> Reviews</span>)</p>
+					</div>
+					
+					<?php /*--if(!$display_addon){ ?>
 						<?php if(!$show_brife_product_tile){
 							echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
 						}?>
@@ -164,24 +95,13 @@
 								echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
 							}?>
 							
-							
-							<?php  /*if($show_brife_product_tile){
-								<span> <?php printf( _n( '%s',$review_count,'woocommerce' ), ' <span class="count">' . esc_html( $review_count ) . '</span>' ); ?>
-								<?php if (!$show_brife_product_tile){ echo ' Review' . (esc_html( $review_count ) == 1 ? '' : 's'); } ?> </span> 
-								//----echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>'; 
-							
-								<div class="product-reviews">
-									<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</p>
-								</div>
-							} */?>
-							
 							<?php if($show_brife_product_tile){
 								echo '<span class="barber_location">' . get_field( "barber_location",$product_id) . '</span>';
 							} ?>
 						</div>
 					<?php }else{
 						echo '<div class="barber_service_price"> From ' . $service_fee . '</div>';
-					}?>
+					} */ ?>
 				</div>
 			</div>
 			<?php if(!$show_brife_product_tile){ ?>
@@ -192,7 +112,7 @@
 			
 			<?php if(!$show_brife_product_tile){ ?>
 					<div class="jac-products-header-top-right">
-						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-alt">Learn more</a>
+						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-primary">Visit Barber</a>
 					</div>
 			<?php } ?>
 		</div>
