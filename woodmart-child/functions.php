@@ -696,22 +696,29 @@ function cw_function() {
 					} else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
 						just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+					
+					} else if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
+						if ((($jsonBooking[$i]['start'] + 3600) - $long) > -30 && (($jsonBooking[$i]['start'] + 3600) - $long) < 30) {
+							//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
+							complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], $jsonProduct[$j]['name']);
+							complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+						}
 					}
 				}
 			}
 		}
-
+/*
 		for ($i=0; $i < count($jsonBooking); $i++) {  //Complete the appointment
 			for ($j=0; $j < count($jsonProduct); $j++) { 
 				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-					if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
+					if ((($jsonBooking[$i]['start'] + 3600) - $long) > -30 && (($jsonBooking[$i]['start'] + 3600) - $long) < 30) {
 						//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
 						complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name']);
 						complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name']);
 					}
 				}
 			}
-		}
+		}*/
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
