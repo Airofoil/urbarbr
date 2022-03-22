@@ -1118,6 +1118,8 @@ content: '\f3c5';
 	/*-background-image: url('./svgs/calendar-outline.svg'); */
 	background-repeat: no-repeat;
 	background-position: 12px;
+	color: #ffffff!important;
+    border: 0.5px solid #555 !important;
 }
 #booking-date-search.entered {
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuODA2MDMgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTE1LjYxMjEgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTYuODMwMjggMTEuNDQyOEgxNi41ODc5SDYuODMwMjhaTTQuODc4NzYgMjEuMjAwNEgxOC41Mzk0QzE5LjA1NjkgMjEuMjAwNCAxOS41NTMzIDIwLjk5NDcgMTkuOTE5MyAyMC42Mjg4QzIwLjI4NTMgMjAuMjYyOCAyMC40OTA5IDE5Ljc2NjQgMjAuNDkwOSAxOS4yNDg4VjcuNTM5NzVDMjAuNDkwOSA3LjAyMjE3IDIwLjI4NTMgNi41MjU4IDE5LjkxOTMgNi4xNTk4MkMxOS41NTMzIDUuNzkzODQgMTkuMDU2OSA1LjU4ODIzIDE4LjUzOTQgNS41ODgyM0g0Ljg3ODc2QzQuMzYxMTkgNS41ODgyMyAzLjg2NDgxIDUuNzkzODQgMy40OTg4MyA2LjE1OTgyQzMuMTMyODUgNi41MjU4IDIuOTI3MjUgNy4wMjIxNyAyLjkyNzI1IDcuNTM5NzVWMTkuMjQ4OEMyLjkyNzI1IDE5Ljc2NjQgMy4xMzI4NSAyMC4yNjI4IDMuNDk4ODMgMjAuNjI4OEMzLjg2NDgxIDIwLjk5NDcgNC4zNjExOSAyMS4yMDA0IDQuODc4NzYgMjEuMjAwNFoiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==")
@@ -2665,4 +2667,8 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 }
 .ui-datepicker-days-cell-over.ui-datepicker-unselectable.ui-state-disabled.fully_booked {
 	opacity: 1;
+}
+
+.location_drop_down_hide {
+	display: none!important;
 }
