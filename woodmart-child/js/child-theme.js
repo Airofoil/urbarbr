@@ -81,5 +81,14 @@ jQuery(document).ready(function ($){
 //      minDate: moment({h:9}),
 //      maxDate: moment({h:16})
     });*/
+    
+    $("#your-location-search").on("keyup", function(){
+        if($(this).val()!=""){
+            $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
+        }
+        else {
+            $(".your-location-search .dropdown-menu").removeClass("location_drop_down_hide");
+        }
+    });
 
 });
