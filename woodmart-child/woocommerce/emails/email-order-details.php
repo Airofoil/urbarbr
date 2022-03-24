@@ -19,22 +19,56 @@ defined( 'ABSPATH' ) || exit;
 
 $text_align = is_rtl() ? 'right' : 'left';
 
+// foreach ( $order->get_items() as $item_id => $item ) {
+// 	// echo '<pre>'; print_r($item);  echo '</pre>';
+// 	$booking_services = $item['addons'];
+// 	echo '<pre>'; print_r($booking_services);  echo '</pre>';
+// }
+
+foreach ( $order->get_items() as $item_id => $item ) { 
+	$strings = array();
+	$product_id = $item['product_id'];
+
+	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'single-post-thumbnail' );
+	$product_name = $item->get_name();
+	
+	$product = $item->get_product();
+	
+	foreach ( $item->get_formatted_meta_data() as $meta_id => $meta ) {
+		$strings[] = $meta->key . ' ' . $meta->value;
+	}
+
+	// echo '<pre>'; print_r($strings);  echo '</pre>';
+
+	$services_count = 0;
+
+	foreach ($strings as $string) {
+		preg_match('/\d+\.?\d*/', $string, $matches);
+		$service_prices[$services_count] = $matches[0];
+		$service_items[$services_count] = substr($string, strpos($string, ") ") + 1);
+		$services_count++;
+	}
+
+	// echo '<pre>'; print_r($service_prices);  echo '</pre>';
+	// echo '<pre>'; print_r($service_items);  echo '</pre>';
+}
+
 do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plain_text, $email ); ?>
 
 
-<table class="td" cellspacing="0" cellpadding="6" style="width: 100%;">
+<table class="td" cellspacing="0" cellpadding="6" style="width: 100%; border: unset;">
 	<thead>
 		<tr>
-			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Booking No.', 'woocommerce' ); ?></th>
-			<td class="td" scope="col" style="text-align:right;"><?php echo '0' . $order->get_order_number() ?></td>
+			<th class="td" scope="col" style="text-align:left; padding-left:0; border-bottom: 1px solid #E5E5E5;"><?php esc_html_e( 'Booking No.', 'woocommerce' ); ?></th>
+			<td class="td" scope="col" style="text-align:right; border-bottom: 1px solid #E5E5E5;"><?php echo '0' . $order->get_order_number() ?></td>
 		</tr>
 		<tr>
-			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Booking Date', 'woocommerce' ); ?></th>
-			<td class="td" scope="col" style="text-align:right;"><?php echo wc_format_datetime( $order->get_date_created() ); ?></td>
+			<th class="td" scope="col" style="text-align:left; padding-left:0; border-bottom: 1px solid #E5E5E5;"><?php esc_html_e( 'Booking Date', 'woocommerce' ); ?></th>
+			<td class="td" scope="col" style="text-align:right; border-bottom: 1px solid #E5E5E5;"><?php echo wc_format_datetime( $order->get_date_created() ); ?></td>
 		</tr>
 		<tr>
-			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Booking Address', 'woocommerce' ); ?></th>
-			<td class="td" scope="col" style="text-align:right;"><?php echo $order->get_formatted_shipping_address() ?></td>
+			<th class="td" scope="col" style="text-align:left; padding-left:0; border-bottom: 1px solid #E5E5E5;"><?php esc_html_e( 'Booking Address', 'woocommerce' ); ?></th>
+			<td class="td" scope="col" style="text-align:right; border-bottom: 1px solid #E5E5E5;"><?php echo $order->get_formatted_shipping_address() ?></td>
 		</tr>
 	</thead>
 </table>
@@ -59,29 +93,44 @@ $booking = get_wc_booking( $booking_id );
 $start_date = $booking->get_start_date();
 </h2> */ ?>
 
-<p>Here's what you ordered:</p>
+<p style="margin-top: 30px;">Here's what you ordered:</p>
 
 <div style="margin-bottom: 40px;">
 	<table class="td" cellspacing="0" cellpadding="6" style="width: 100%;">
 		<thead>
 			<tr>
-				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Service', 'woocommerce' ); ?></th>
-				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>;"><?php esc_html_e( 'Qty', 'woocommerce' ); ?></th>
+				<th class="td" scope="col" style="text-align:<?php echo esc_attr( $text_align ); ?>; padding-left: 0;"><?php esc_html_e( 'Service', 'woocommerce' ); ?></th>
+				<th class="td" scope="col" style="text-align:right;"><?php esc_html_e( 'Qty', 'woocommerce' ); ?></th>
 				<th class="td" scope="col" style="text-align:right;"><?php esc_html_e( 'Price', 'woocommerce' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
+			<tr>
+				<td style="padding-left: 0;" colspan="3">
+					<img src="<?php echo $image[0]; ?>" width="32"; height="32";>
+					<span style="font-style: normal; font-weight: 400; color: #9F9F9F;"><?php echo $product_name ?></span>
+				</td>
+			</tr>
 			<?php
-			echo wc_get_email_order_items( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				$order,
-				array(
-					'show_sku'      => $sent_to_admin,
-					'show_image'    => false,
-					'image_size'    => array( 32, 32 ),
-					'plain_text'    => $plain_text,
-					'sent_to_admin' => $sent_to_admin,
-				)
-			);
+			// echo wc_get_email_order_items( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			// 	$order,
+			// 	array(
+			// 		'show_sku'      => false,
+			// 		'show_image'    => true,
+			// 		'image_size'    => array( 32, 32 ),
+			// 		'plain_text'    => false,
+			// 		'sent_to_admin' => false,
+			// 	)
+			// );
+			for ($i = 0; $i < $services_count; $i++) {
+				?>
+				<tr>
+					<td style="padding-left: 0; font-style: normal; font-weight: 700; color: #303030;"><?php echo $service_items[$i]?></td>
+					<td style="text-align: right;">1</td>
+					<td style="text-align: right;"><?php echo "$" . $service_prices[$i]?></td>
+				</tr>
+				<?php
+			}
 			?>
 		</tbody>
 		<tfoot>
@@ -94,8 +143,7 @@ $start_date = $booking->get_start_date();
 					$i++;
 					?>
 					<tr>
-						<th class="td" scope="row" colspan="2" style="text-align:<?php echo esc_attr( $text_align ); ?>; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['label'] ); ?></th>
-						<td class="td total" style="text-align:<?php echo esc_attr( $text_align ); ?>; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['value'] ); ?></td>
+						<td class="td total" colspan="3" style="text-align:right; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['label'] ); ?><?php echo " " . wp_kses_post( $total['value'] ); ?></td>
 					</tr>
 					<?php
 				}
