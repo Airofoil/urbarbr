@@ -29,7 +29,7 @@ foreach ( $order->get_items() as $item_id => $item ) {
 	$strings = array();
 	$product_id = $item['product_id'];
 
-	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'single-post-thumbnail' );
+	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'single-post-thumbnail', array(80, 80) );
 	$product_name = $item->get_name();
 	
 	$product = $item->get_product();
@@ -107,7 +107,7 @@ $start_date = $booking->get_start_date();
 		<tbody>
 			<tr>
 				<td style="padding-left: 0;" colspan="3">
-					<img src="<?php echo $image[0]; ?>" width="32"; height="32";>
+					<img style="width: 80px; border-radius: 10px;" src="<?php echo $image[0]; ?>" width="32"; height="32";>
 					<span style="font-style: normal; font-weight: 400; color: #9F9F9F;"><?php echo $product_name ?></span>
 				</td>
 			</tr>

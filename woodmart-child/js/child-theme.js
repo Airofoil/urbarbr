@@ -41,7 +41,7 @@ jQuery(document).ready(function ($){
     });
     
     setTimeout(function() {
-        $("#billing_address_1").attr("placeholder", "Enter address and select from the dropdown")
+        $("#billing_address_1").attr("placeholder", "Enter and select address")
     }, 100);
 
     $('h5.widget-title').unbind().click(e => $(e.target).toggleClass('open')); /* ++ For the footer toggleable menus */
@@ -58,10 +58,6 @@ jQuery(document).ready(function ($){
         else $('.wd-header-mobile-nav > a').removeClass('nav-open');
     });
 	
-    $('button.input-clear').unbind().on('click', function() {
-        if ($(this).parent() && $(this).parent().find('input').first()) $(this).parent().find('input').first().val('');
-    });
-
     // insert payment title
     $('<h3 id="payment_method">Payment Method</h3>').insertBefore('#payment');
 	//setTimeout(() => {
@@ -81,7 +77,7 @@ jQuery(document).ready(function ($){
 //      minDate: moment({h:9}),
 //      maxDate: moment({h:16})
     });*/
-    
+
     $("#your-location-search").on("keyup", function(){
         if($(this).val()!=""){
             $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
@@ -91,4 +87,7 @@ jQuery(document).ready(function ($){
         }
     });
 
+    // $('.your-location-search').on('input', function() {
+    //     $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
+    // });
 });

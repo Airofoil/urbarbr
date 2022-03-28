@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 	<head>
+		<link href="//db.onlinewebfonts.com/c/a5421f5aa8dda33abf9b56a9366cab4e?family=LIBRARY+3+AM" rel="stylesheet" type="text/css"/>
 		<meta http-equiv="Content-Type" content="text/html; charset=<?php bloginfo( 'charset' ); ?>" />
 		<title><?php echo get_bloginfo( 'name', 'display' ); ?></title>
 	</head>

@@ -214,13 +214,15 @@ function select_services() {
 		const url = window.location.href;
 		let hash = url.split('#')
 		let items = hash.slice(1);
-		let items_together = items[0].replace(/["'{}%2134567890:]/g, "");
-		let services = items_together.split(',');
+		if (items.length){
+			let items_together = items[0].replace(/["'{}%2134567890:]/g, "");
+			let services = items_together.split(',');
 
-		for (const i in services) {
-			document.querySelectorAll(`input[type='checkbox'][value=${services[i]}]`)[0].checked = true;
+			for (const i in services) {
+				document.querySelectorAll(`input[type='checkbox'][value=${services[i]}]`)[0].checked = true;
+			}
 		}
-	}); 
+	});
 	 </script> 
   <?php  
 }
@@ -914,10 +916,39 @@ add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_locat
 // You then need to divide by 15 to get the amount of blocks it will take. 
 // then times by 900. 900 is 15 minutes, so 2700 adds 45 minutes to the booking. you then add this to the...
 // $field_array['_end_date'] varibale, setting the end time to the right amount of time
-
+*/
 function edit_length_of_booking($field_array) {
 	$total_time = 0;
 	echo <<<'EOD'
+	<script>
+	const times = {
+		"burst-fade": 30,
+		"crew-cut": 30,
+		"buzzcut": 15,
+		"beard-trim": 15,
+		"event-styling": 45,
+		"headshave": 15,
+		"kids-haircut": 30,
+		"taper": 30,
+		"porpadour": 45,
+		"head-+-beard": 60,
+		"hair-colour": 105,
+		"perm": 90,
+		"toupe": 90
+	}
+	document.addEventListener('DOMContentLoaded', function(event) {
+		let increase_time = 0;
+		const input_fields = document.querySelectorAll('input.wc-pao-addon-field');
+		for (key in input_fields) {
+			if (times[input_fields[key].value]) {
+				increase_time += times[input_fields[key].value];
+			}
+		}
+	});
+	</script>
+	EOD;
+	
+	/*echo <<<'EOD'
 	<script>
 	document.addEventListener('DOMContentLoaded', function(event) {
 		// get the value of the start time
@@ -998,18 +1029,18 @@ function edit_length_of_booking($field_array) {
 				length: increase_time
 			},
 			success: function(response){
-				console.log('Successful! My post data is: ',response);
-				console.log(${json_encode($_POST['length'])});
+				//console.log('Successful! My post data is: ',response);
+				//console.log(${json_encode($_POST['length'])});
 			},
 			error: function(error){
 				console.log('error',error);
 			}
 		});
 	});
-	console.log(${json_encode($_POST['wc_bookings_field_start_month'])});
+	//console.log(${json_encode($_POST['wc_bookings_field_start_month'])});
 	console.log("Field here maybe");
 </script>
-EOD;
+EOD;*/
 		// 15 mins is 900
 		// set booking length to not fixed
 		$field_array['wc_bookings_field_start_date']['duration_type'] = "variable";
@@ -1034,7 +1065,7 @@ function edit_length_of_booking2($field_array) {
 	// $field_array['_end_date']	=
 	return $field_array;
 }
-add_filter('woocommerce_booking_form_get_posted_data', 'edit_length_of_booking', 10, 1); */
+add_filter('woocommerce_booking_form_get_posted_data', 'edit_length_of_booking', 10, 1); 
 
 function brrad_geocode($street_address,$city,$state,$country){
         
@@ -1088,4 +1119,30 @@ function distance($lat1, $lon1, $lat2, $lon2, $unit) {
 	} else {
 		return $miles;
 	}
+}
+
+// replace default WC header action with a custom one
+add_action( 'init', 'ml_replace_email_footer_hook' );    
+function ml_replace_email_footer_hook(){
+    remove_action( 'woocommerce_email_footer', array( WC()->mailer(), 'email_footer' ) );
+    add_action( 'woocommerce_email_footer', 'ml_woocommerce_email_footer', 10, 2 );
+}
+
+// new function that will switch template based on email type
+function ml_woocommerce_email_footer( $email ) {
+    // var_dump($email); die; // see what variables you have, $email->id contains type
+//     switch($email->id) {
+//         case 'new_order':
+//             $template = 'emails/email-header-new-order.php';
+//             break;
+//         default:
+//             $template = 'emails/email-header.php';
+//     }	
+
+	$template = 'emails/email-footer.php';
+	
+	// echo '<pre>'; print_r($email); echo '</pre>';
+
+    // wc_get_template( $template, array( 'email_heading' => $email_heading ) );
+	wc_get_template( $template, array( 'email_id' => $email->id ) );
 }
