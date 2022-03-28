@@ -119,7 +119,7 @@ if($street != "" && $city != "" && $state != "" && $country != "" && $prefer_dis
 
 $qualified = true;
 if ($_GET) {
-	$searching_location = $_GET['your-location'];
+	//--$searching_location = $_GET['your-location'];
 	$searching_service = $_GET['booking-services'];
 	$searching_date = $_GET['booking-date'];
 	$searching_time = $_GET['booking-time'];
@@ -127,14 +127,14 @@ if ($_GET) {
 	$location_qualified = true;
 	$searching_lat_long = $_GET['your-lat-long'];
 
-	if($searching_location || $searching_service || $searching_date || $searching_lat_long){
+	if($searching_service || $searching_date || $searching_lat_long){ //-|| searching_location
 		$filtering = true;
 		$qualified = false;
 	}else{
 		$qualified = true;
 	}
 
-	if($searching_location) {
+	/* Replaced with just searching_lat_long (AJAX is in search.php)--if($searching_location) {
 
 		$location_qualified = false;
 
@@ -173,7 +173,8 @@ if ($_GET) {
 			$location_qualified = true;
 			$qualified = true;
 		}
-	} elseif($searching_lat_long) { //use search input address instead of current location if there is an address in the search field
+	} */
+	if($searching_lat_long) { //use search input address instead of current location if there is an address in the search field
 
 		$location_qualified = false;
 

@@ -51,7 +51,7 @@ jQuery(document).ready(function ($){
 		if (!$('.searchform.woodmart-ajax-search input:not(.entered):not([type="hidden"])').length) {
 			$('.searchform .searchsubmit').addClass('entered');
 		}
-	})
+	});
 
     $('body').on('click', function() {
         if ($('.mobile-nav.wd-opened').length) $('.wd-header-mobile-nav > a').addClass('nav-open');

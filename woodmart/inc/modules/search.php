@@ -183,8 +183,8 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<?php if ($post_type == 'product') { ?>
 					<!-- <input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time"> -->
 					<div class="booking-date-search" class="input-group date">
-					   <input type="text" id="booking-date-search" name="booking-date" class="form-control" placeholder="Select Date and Time">
-					   <!-- <input type="hidden" id="booking-date" name="booking-date"> -->
+					   <input type="text" id="booking-date-search" class="form-control" placeholder="Select Date and Time">
+					   <!-- <input type="hidden" id="booking-date" name="booking-date"> name="booking-date" -->
 					   <input type="input" id="booking-time" name="booking-time" style="display:none;">
 					</div>
 					<?php } ?>
@@ -194,6 +194,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<?php if ($post_type == 'product') { ?>
 					<div class="your-location-search" class="input-group">
 						<input type="text" id="your-location-search" class="form-control" name="your-location" placeholder="Set your location" title="Set your location" data-toggle="dropdown" aria-label=".form-select-sm">
+						<button type="button" class="input-clear" title="Clear"></button>
 						<ul class="dropdown-menu" role="menu">
 							<li data-original-index="0">
 								<a tabindex="-1" data-tokens="null" href="javascript:getLocation();">Detect my location</a>
@@ -208,11 +209,40 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 								</a>
 							</li> -->
 						</ul>
-						<button type="button" class="input-clear" title="Clear"></button>
 						<input type="hidden" id="location_coords" value="" name="your-lat-long"><!--  name="location" -->
 					</div>
 					<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
 					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+							$ = jQuery;
+
+							$('body').on('click', '.pac-container .pac-item', setTimeout(() => document.getElementById('your-location-search').blur(), 50));
+
+							$('#your-location-search').on('blur', setTimeout(() => { console.log(40, this, this.value);
+								let location = document.getElementById('your-location-search');
+								if (!location.value) {
+									$(location).removeClass('invalid');
+									return;
+								}
+
+								if (location.value.length < 4) {
+									$(location).addClass('invalid');
+									return;
+								}
+
+								$.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${location.value}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) { console.log(41, data);
+									if (data.status !== 'OK' || !data["results"]) {
+										$(location).addClass('invalid');
+										return;
+									}
+									if (data["results"][0]) {
+										$(location).removeClass('invalid');
+										document.getElementById('location_coords').value = data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng;
+									}
+								});
+							}, 60));
+						});
+
 						var locBox = document.getElementById('location_coords');
 						var locationBtn = document.querySelector('.your-location-search');
 
