@@ -81,7 +81,7 @@
 					<a href="<?php echo get_permalink() ?>#reviews" class="star" rel="nofollow"><span></span><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</a> */?>
 
 					<div class="product-reviews">
-						<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?><span class="count"> Reviews</span>)</p>
+						<p class="star"><?php echo substr($product->get_average_rating(), 0, 3); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?><span class="count"> Reviews</span>)</p>
 					</div>
 					
 					<?php /*--if(!$display_addon){ ?>
@@ -142,19 +142,17 @@
 				}
 			}
 		}
-	?>
-	<style>
-		<?php
-		// Moved styling to style.css ✓
 
-		if (!$show_brife_product_tile) { ?>
+		if ($muffin && !$show_brife_product_tile) { ?>
+		<style>
 			.jac-products-header-top-left > div{
 				display: inline-block;
 			}
+		</style>
 		<?php } ?>
-	</style>
-	<!-- NOT SURE IF BELOW CODE IS REQUIRED -->
-	<?php
+
+		<!-- NOT SURE IF BELOW CODE IS REQUIRED -->
+		<?php
 			/**
 			 * woocommerce_shop_loop_item_title hook
 			 *

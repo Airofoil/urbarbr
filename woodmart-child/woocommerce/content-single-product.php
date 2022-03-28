@@ -159,7 +159,7 @@ if ( $full_height_sidebar && $page_layout != 'full-width' ) {
 							<a href="<?php echo get_permalink() ?>#reviews" class="star" rel="nofollow"><span></span><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</a> */?>
 
 							<div class="product-reviews">
-								<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</p>
+								<p class="star"><?php echo substr($product->get_average_rating(), 0, 3); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</p>
 							</div>
 
                             <?php //--woocommerce_template_single_price();--Not showing prices on barbers ?>

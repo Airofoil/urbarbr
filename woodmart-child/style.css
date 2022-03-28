@@ -147,20 +147,28 @@ body [type="button"]:hover {
 	font-size: 15px !important;
 	background-position: 12px !important;
 }
+.full-width + .input-clear {
+	display: block;
+}
+
+body .searchform input.invalid {
+	color: #fbb !important;
+}
 
 .input-clear {
-	font-size: 21px;
-	font-weight: normal;
-	height: 17px;
-	width: 17px;
-	padding: 0;
-	background: 0;
-	text-shadow: 0 0 14px #FFF;
-	text-align: center;
 	position: absolute;
+	display: none;
+	width: 17px;
+	height: 17px;
 	right: 12px;
 	top: 14px;
+	padding: 0;
+	background: 0;
+	font-size: 21px;
+	font-weight: normal;
 	color: #333;
+	text-align: center;
+	text-shadow: 0 0 14px #FFF;
 }
 .input-clear::after {
 	content: '×';
@@ -404,7 +412,11 @@ background-color: rgba(101,101,101,1);
 	white-space: nowrap;
 }
 .product-reviews > p {
-	margin: 0;
+	max-width: 100%;
+	margin: 0 -6px 0 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 @media (max-width: 380px) {
 	body .jac-barber-name {
@@ -1251,6 +1263,10 @@ body.home .vc_column-inner {
 	/*-background-image: url('./svgs/chevron-right.svg'); */
 	background-repeat: no-repeat;
 	background-position: 12px center;
+}
+.searchform.woodmart-ajax-search.jac-test-class .searchsubmit:hover {
+	background-color: var(--urbarbr-midblue);
+	border-color: var(--urbarbr-midblue);
 }
 .searchform .searchsubmit.entered{
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkuMjkyODkgMTguNzA3MUM4LjkwMjM3IDE4LjMxNjYgOC45MDIzNyAxNy42ODM0IDkuMjkyODkgMTcuMjkyOUwxNC41ODU4IDEyTDkuMjkyODkgNi43MDcxMUM4LjkwMjM3IDYuMzE2NTggOC45MDIzNyA1LjY4MzQyIDkuMjkyODkgNS4yOTI4OUM5LjY4MzQyIDQuOTAyMzcgMTAuMzE2NiA0LjkwMjM3IDEwLjcwNzEgNS4yOTI4OUwxNi43MDcxIDExLjI5MjlDMTcuMDk3NiAxMS42ODM0IDE3LjA5NzYgMTIuMzE2NiAxNi43MDcxIDEyLjcwNzFMMTAuNzA3MSAxOC43MDcxQzEwLjMxNjYgMTkuMDk3NiA5LjY4MzQyIDE5LjA5NzYgOS4yOTI4OSAxOC43MDcxWiIgZmlsbD0iI0ZGRkZGRiIvPgo8L3N2Zz4K") !important;
@@ -2370,9 +2386,9 @@ div.form-row.last > :last-child {
 	margin: 0 -10px 4px 0;
 	font-size: 20px;
 	color: #292727;
-	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 /*---.jac-products-header-top-right a{
@@ -2410,12 +2426,14 @@ width: 110px;
 content: "\f149" !important;
 color:#FFC702 !important;
 } */
-.product-grid-item .jac-products-header-top-left > div {
-	margin: 4px 0 15px 0;
+/*--.product-grid-item .jac-products-header-top-left > * {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
-.product-grid-item .jac-products-header-top-left > div:last-child {
+.product-grid-item .jac-products-header-top-left > *:last-child {
 	margin-bottom: 0;
-}
+} */
 
 .jac-products-header-top-left .product-grid-item .star-rating{
 	margin-bottom: 2px;
@@ -2469,8 +2487,8 @@ color:#FFC702 !important;
 .short_description{
 	margin-bottom: 10px;
 	overflow: hidden;
-	white-space: nowrap;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .quick-shop-wrapper {
 	display: none;
@@ -2484,7 +2502,7 @@ color:#FFC702 !important;
 	font-family: "woodmart-font";
 	font-size: 24px;
 	color: #333;
-	line-height: 0;
+	line-height: 25px;
 }
 @media (min-width: 476px) {
 	.star::before {
@@ -2671,4 +2689,8 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 
 .location_drop_down_hide {
 	display: none!important;
+}
+
+.autocomplete-suggestion {
+	display: none;
 }
