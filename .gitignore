@@ -48,3 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
+UNUSED_*
+*_REMOTE*
+BKUP_*
