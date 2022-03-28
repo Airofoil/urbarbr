@@ -36,7 +36,7 @@
 		}
 	}
 ?>
-<?php if($qualified){ ?>
+<?php /*--if($qualified){ */ ?>
 <div class="product-wrapper">
 	<div class="product-element-top">
 		<a href="<?php echo esc_url( get_permalink() ); ?>" class="product-image-link">
@@ -81,7 +81,7 @@
 					<a href="<?php echo get_permalink() ?>#reviews" class="star" rel="nofollow"><span></span><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</a> */?>
 
 					<div class="product-reviews">
-						<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</p>
+						<p class="star"><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?><span class="count"> Reviews</span>)</p>
 					</div>
 					
 					<?php /*--if(!$display_addon){ ?>
@@ -190,4 +190,4 @@
 			<?php woodmart_product_sale_countdown(); ?>
 		<?php endif ?>
 </div>
-<?php } ?>
+<?php /*--} */ ?>

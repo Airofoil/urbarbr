@@ -44,9 +44,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 									<!-- Header -->
 									<table border="0" cellpadding="0" cellspacing="0" width="100%" id="template_header">
 										<tr>
+										<?php if ($email_heading == "Payment Successful" || $email_heading == "Order Refunded") { ?>
+											<td id="header_wrapper">
+												<h1 style="color: #303030!important;"><?php echo $email_heading; ?></h1>
+											</td>
+										<?php } elseif ($email_heading == "Booking Reminder" || $email_heading == "Booking Cancelled") { ?>
+											<td id="header_wrapper" style="background-color: #273F60;">
+												<h1><?php echo $email_heading; ?></h1>
+											</td>
+										<?php } else { ?>
 											<td id="header_wrapper">
 												<h1><?php echo $email_heading; ?></h1>
 											</td>
+										<?php } ?>
 										</tr>
 									</table>
 									<!-- End Header -->

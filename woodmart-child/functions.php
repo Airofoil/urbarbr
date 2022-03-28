@@ -2,11 +2,41 @@
 /**
  * Enqueue script and styles for child theme
  */
-/* ++Must be at the top of this file: */
-function add_cors_http_header(){
-    header("Access-Control-Allow-Origin: *"); //IMPORTANT: This must be changed to the urbarbr site when moving onto production, as this will be a security issue
+/* ++Must be at the top of this file: * /
+
+function initCors( $value ) {
+	$hostname = $_SERVER['SERVER_NAME'];
+
+	// Verify which environment the site is running on
+	switch ($hostname) {
+		case 'staging-urbarbr.kinsta.cloud':
+			define('WP_ENV', 'staging');
+			$env = 'staging';
+			break;
+		case 'www.urbarbr.com.au':
+			define('WP_ENV', 'production');
+			$env = 'production';
+			break;
+		default:
+			define('WP_ENV', 'staging');
+			$env = 'staging';
+	}
+
+	$origin_url = '*';
+
+	// Check if production environment or not
+	if ($env === 'production') {
+		$origin_url = '--PRODUCTION URL'; //--someone gotta add the url - JDH
+	}
+
+	header( 'Access-Control-Allow-Origin: ' . $origin_url );
+	return $value;
 }
-add_action('init','add_cors_http_header');
+add_action( 'rest_api_init', function() {
+	remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
+	add_filter( 'rest_pre_serve_request', initCors);
+}, 15 );*/
+
 
 function woodmart_child_enqueue_styles() {
 	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css') );
@@ -543,7 +573,10 @@ function my_custom_js_css() {
 				}
 			});
 			$("#booking-time").trigger("click");
-			$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog")).append(`<button class="btn-link btn">Ok</button><button class="btn-link btn">Cancel</button>`);
+			$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog")).append(`<button class="datepicker-confirm btn-link btn">Ok</button><button class="datepicker-confirm btn-link btn">Cancel</button>`);
+			$(".datepicker-confirm").on("click", function () {
+				$("#booking-date-search").datetimepicker("hide");
+			});
 			//-$(".periodpicker_timepicker_dialog").appendTo(".xdsoft_datetimepicker");
 			//-$(".xdsoft_datetimepicker").append();
 		});
@@ -715,30 +748,37 @@ function cw_function() {
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					
-					} else if (($long - $jsonBooking[$i]['date_created']) > 0 && ($long - $jsonBooking[$i]['date_created']) < 90) {
+					} else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
 						just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+					
+					} else if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
+						if ((($jsonBooking[$i]['start'] + 3600) - $long) > -30 && (($jsonBooking[$i]['start'] + 3600) - $long) < 30) {
+							//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
+							complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], $jsonProduct[$j]['name']);
+							complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+						}
 					}
 				}
 			}
 		}
-
+/*
 		for ($i=0; $i < count($jsonBooking); $i++) {  //Complete the appointment
 			for ($j=0; $j < count($jsonProduct); $j++) { 
 				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-					if (($jsonBooking[$i]['end'] - $long) > -30 && ($jsonBooking[$i]['end'] - $long) < 30) {
+					if ((($jsonBooking[$i]['start'] + 3600) - $long) > -30 && (($jsonBooking[$i]['start'] + 3600) - $long) < 30) {
 						//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
 						complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name']);
 						complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name']);
 					}
 				}
 			}
-		}
+		}*/
 	}
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
 
-function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
+/*---TEMP-REMOVED-function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
 	$theta = $longitude1 - $longitude2; 
 	$distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))); 
 	$distance = acos($distance); 
@@ -751,7 +791,7 @@ function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $u
 		$distance = $distance * 1.609344; 
 	} 
 	return (round($distance,2)); 
-	}
+}
 
 function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 	
@@ -761,16 +801,16 @@ function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 	// get current user lat and lng
 	
 	// get current user coordiantes
-$user_ip = getenv('REMOTE_ADDR');
-$geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
-$latitude_current_user = $geo['geoplugin_latitude'];
-$longitude_current_user = $geo['geoplugin_longitude'];
+	$user_ip = getenv('REMOTE_ADDR');
+	$geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+	$latitude_current_user = $geo['geoplugin_latitude'];
+	$longitude_current_user = $geo['geoplugin_longitude'];
 
 
-if ($latitude_current_user == null || $longitude_current_user == null) {
-	$latitude_current_user = -34.925621825287166;
-	$longitude_current_user = 138.60092004661487;
-}
+	if ($latitude_current_user == null || $longitude_current_user == null) {
+		$latitude_current_user = -34.925621825287166;
+		$longitude_current_user = 138.60092004661487;
+	}
 
 	// might be able to use the rest api to get the bookings for today -> location can defineitley get the address -> just need access to the product id - maybe can user url to get id of product
 	$latitude_previous_booking = -34.925621825287166;
@@ -783,88 +823,88 @@ if ($latitude_current_user == null || $longitude_current_user == null) {
 	$previous_block_manually_hidden = false;
 
 	foreach ($available_arr as $key=>$block) {
-	// TODO get location of the barber during previous 
+		// TODO get location of the barber during previous 
 
-	// Check if there need to be more time blocks hidden decided by distance previously, otherwise continue 
-	if ($time_blocks_to_hide > 0) {
-		//used data block val to cehck correct time
-		$data_block_val = explode("data-block=",$block)[1];
-		unset($available_arr[$key]);
-		$time_blocks_to_hide--;
-		$previous_block_manually_hidden = true;
-	}
-	else {
-		// get time of html values
-		$data_block_val = explode("data-block=",$block)[1];
-		$data_block_val_new = explode(">",$data_block_val)[0];
-
-		$data_value =   explode("data-value=",$block)[1];
-		$data_value = explode("T",$data_value)[1];
-		$old_time = explode("+",$data_value)[0];
-
-		// check if previous block is booked
-		$previous_check_time = date('H:i:s', strtotime("-15 minutes", strtotime($old_time)));
-		
-		// prevent the first block from starting late 
-		if ($key == 0) {
-			$previous_block_time = $previous_check_time;
+		// Check if there need to be more time blocks hidden decided by distance previously, otherwise continue 
+		if ($time_blocks_to_hide > 0) {
+			//used data block val to cehck correct time
+			$data_block_val = explode("data-block=",$block)[1];
+			unset($available_arr[$key]);
+			$time_blocks_to_hide--;
+			$previous_block_manually_hidden = true;
 		}
+		else {
+			// get time of html values
+			$data_block_val = explode("data-block=",$block)[1];
+			$data_block_val_new = explode(">",$data_block_val)[0];
 
-		//calculate distance to travel
-		$distance = calculate_distance($latitude_current_user, $longitude_current_user, $latitude_previous_booking, $longitude_previous_booking);
+			$data_value =   explode("data-value=",$block)[1];
+			$data_value = explode("T",$data_value)[1];
+			$old_time = explode("+",$data_value)[0];
 
-		// Calculate whether it is peak hour or not
-		$morning_start = "7:30:00";
-		$morning_end = "9:30:00";
-		$night_start = "16:00:00";
-		$night_end = "18:30:00";
-
-		$time_formatted = DateTime::createFromFormat('H:i:s', $old_time);
-		$morning_peak_start = DateTime::createFromFormat('H:i:s', $morning_start);
-		$morning_peak_end = DateTime::createFromFormat('H:i:s', $morning_end);
-		$nightpeak_start = DateTime::createFromFormat('H:i:s', $night_start);
-		$nightpeak_end = DateTime::createFromFormat('H:i:s', $night_end);
-		if (($morning_peak_start < $time_formatted && $time_formatted < $morning_peak_end) || ($nightpeak_start < $time_formatted && $time_formatted < $nightpeak_end)) {
-			$time_drive_int = round(((5 * $distance)/5), 0) * 5;
-		} else {
-			$time_drive_int = round(((3 * $distance)/5), 0) * 5;
-		}
-
-		$time_drive = strval($time_drive_int);
-	
-		// if previous block has a booking add a buffer time based on above calculations
-		if ($previous_block_time != $previous_check_time && $previous_block_manually_hidden == false) {
-			if ($time_drive > 19 && $time_drive < 34) {
-				$time_blocks_to_hide++;
+			// check if previous block is booked
+			$previous_check_time = date('H:i:s', strtotime("-15 minutes", strtotime($old_time)));
+			
+			// prevent the first block from starting late 
+			if ($key == 0) {
+				$previous_block_time = $previous_check_time;
 			}
-			else if ($time_drive > 34 && $time_drive < 49)
-			{
-				$time_blocks_to_hide+=2;
+
+			//calculate distance to travel
+			$distance = calculate_distance($latitude_current_user, $longitude_current_user, $latitude_previous_booking, $longitude_previous_booking);
+
+			// Calculate whether it is peak hour or not
+			$morning_start = "7:30:00";
+			$morning_end = "9:30:00";
+			$night_start = "16:00:00";
+			$night_end = "18:30:00";
+
+			$time_formatted = DateTime::createFromFormat('H:i:s', $old_time);
+			$morning_peak_start = DateTime::createFromFormat('H:i:s', $morning_start);
+			$morning_peak_end = DateTime::createFromFormat('H:i:s', $morning_end);
+			$nightpeak_start = DateTime::createFromFormat('H:i:s', $night_start);
+			$nightpeak_end = DateTime::createFromFormat('H:i:s', $night_end);
+			if (($morning_peak_start < $time_formatted && $time_formatted < $morning_peak_end) || ($nightpeak_start < $time_formatted && $time_formatted < $nightpeak_end)) {
+				$time_drive_int = round(((5 * $distance)/5), 0) * 5;
+			} else {
+				$time_drive_int = round(((3 * $distance)/5), 0) * 5;
+			}
+
+			$time_drive = strval($time_drive_int);
+		
+			// if previous block has a booking add a buffer time based on above calculations
+			if ($previous_block_time != $previous_check_time && $previous_block_manually_hidden == false) {
+				if ($time_drive > 19 && $time_drive < 34) {
+					$time_blocks_to_hide++;
+				}
+				else if ($time_drive > 34 && $time_drive < 49)
+				{
+					$time_blocks_to_hide+=2;
+				}
+				else {
+					$previous_block_manually_hidden = false;
+				}
+				// // This code increased the next available time slot by x minutes // // 
+			// $display_time =  date('h:i a', strtotime("+".$time_drive." minutes", strtotime($old_time)));
+			// $new_time = date('h:i:s', strtotime("+".$time_drive." minutes", strtotime($old_time)));
+
+			// $available_arr[$key] = '<li class="block" data-block='. $data_block_val_new. '>
+			// <a href="#" data-value="2022-03-23T'.$new_time.'+1030">'.$display_time.'</a>
+			// </li>';
+
+				// instead, auto hide this next one, if drive time is less than 15, hide this one only, if more than 15 less than 30 hide next 2, if more than 30 hide next 3
+				unset($available_arr[$key]);
 			}
 			else {
 				$previous_block_manually_hidden = false;
 			}
-			// // This code increased the next available time slot by x minutes // // 
-		// $display_time =  date('h:i a', strtotime("+".$time_drive." minutes", strtotime($old_time)));
-		// $new_time = date('h:i:s', strtotime("+".$time_drive." minutes", strtotime($old_time)));
-
-		// $available_arr[$key] = '<li class="block" data-block='. $data_block_val_new. '>
-		// <a href="#" data-value="2022-03-23T'.$new_time.'+1030">'.$display_time.'</a>
-		// </li>';
-
-			// instead, auto hide this next one, if drive time is less than 15, hide this one only, if more than 15 less than 30 hide next 2, if more than 30 hide next 3
-			unset($available_arr[$key]);
+			$previous_block_time = $old_time;
 		}
-		else {
-			$previous_block_manually_hidden = false;
-		}
-		$previous_block_time = $old_time;
 	}
-}
-// join the string back back_together to be returned 
-$back_together = implode("</li>", $available_arr);
+	// join the string back back_together to be returned 
+	$back_together = implode("</li>", $available_arr);
 
-return $back_together;
+	return $back_together;
 }
 add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_location', 10, 2);
 
@@ -877,15 +917,16 @@ add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_locat
 
 function edit_length_of_booking($field_array) {
 	$total_time = 0;
-?><script src = "https://code.jquery.com/jquery-3.6.0.js">
-	document.addEventListener("DOMContentLoaded", function(event) {
-	// get the value of the start time
-	let increase_time = 0 
-		const input_fields = document.getElementsByTagName("input")
+	echo <<<'EOD'
+	<script>
+	document.addEventListener('DOMContentLoaded', function(event) {
+		// get the value of the start time
+		let increase_time = 0;
+		const input_fields = document.getElementsByTagName('input');
 		for (key in input_fields) {
 			if (input_fields[key].value == 'burst-fade') {
 				if (input_fields[key].checked != true) {
-				increase_time += 30;
+					increase_time += 30;
 				}
 			}
 			else if (input_fields[key].value == 'crew-cut') {
@@ -943,7 +984,7 @@ function edit_length_of_booking($field_array) {
 					increase_time += 90;
 				}
 			}
-			else if (input_fields[key].value == 'toupée') {
+			else if (input_fields[key].value == 'toupï¿½e') {
 				if (input_fields[key].checked) {
 					increase_time += 90;
 				}
@@ -951,27 +992,24 @@ function edit_length_of_booking($field_array) {
 		}
 		// this doesnt work yet, thought i could send the variable to the server and set it in php but it retrns null
 		$.ajax({
-                url: window.location, //window.location points to the current url. change is needed.
-                type: 'POST',
-                data: {
-                  length: increase_time
-                },
-                success: function( response){
-                  console.log("Successful! My post data is: "+response);
-					console.log(<?php echo json_encode($_POST['length']) ?>);
-                },
-                error: function(error){
-                  console.log("error");
-                }
-          });
-		  
-      });
-		console.log(<?php echo json_encode($_POST['wc_bookings_field_start_month']) ?>);
-		console.log("Field here maybe");
-</script> 
-<?php 
-		
-	
+			url: window.location, //window.location points to the current url. change is needed.
+			type: 'POST',
+			data: {
+				length: increase_time
+			},
+			success: function(response){
+				console.log('Successful! My post data is: ',response);
+				console.log(${json_encode($_POST['length'])});
+			},
+			error: function(error){
+				console.log('error',error);
+			}
+		});
+	});
+	console.log(${json_encode($_POST['wc_bookings_field_start_month'])});
+	console.log("Field here maybe");
+</script>
+EOD;
 		// 15 mins is 900
 		// set booking length to not fixed
 		$field_array['wc_bookings_field_start_date']['duration_type'] = "variable";
@@ -993,10 +1031,10 @@ function edit_length_of_booking2($field_array) {
 			console.log(<?php echo json_encode($field_array['_end_date']) ?>);
 		</script> 
 	<?php 
-// $field_array['_end_date']	=
-return $field_array;
+	// $field_array['_end_date']	=
+	return $field_array;
 }
-add_filter('woocommerce_booking_form_get_posted_data', 'edit_length_of_booking', 10, 1);
+add_filter('woocommerce_booking_form_get_posted_data', 'edit_length_of_booking', 10, 1); */
 
 function brrad_geocode($street_address,$city,$state,$country){
         

@@ -53,10 +53,15 @@ jQuery(document).ready(function ($){
 		}
 	})
 
-    $('.wd-tools-element.wd-header-mobile-nav > a').click(a => {
-        $(a).toggleClass('open');
+    $('body').on('click', function() {
+        if ($('.mobile-nav.wd-opened').length) $('.wd-header-mobile-nav > a').addClass('nav-open');
+        else $('.wd-header-mobile-nav > a').removeClass('nav-open');
     });
 	
+    $('button.input-clear').unbind().on('click', function() {
+        if ($(this).parent() && $(this).parent().find('input').first()) $(this).parent().find('input').first().val('');
+    });
+
     // insert payment title
     $('<h3 id="payment_method">Payment Method</h3>').insertBefore('#payment');
 	//setTimeout(() => {
@@ -76,5 +81,14 @@ jQuery(document).ready(function ($){
 //      minDate: moment({h:9}),
 //      maxDate: moment({h:16})
     });*/
+    
+    $("#your-location-search").on("keyup", function(){
+        if($(this).val()!=""){
+            $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
+        }
+        else {
+            $(".your-location-search .dropdown-menu").removeClass("location_drop_down_hide");
+        }
+    });
 
 });

@@ -30,6 +30,10 @@ Text Domain:  woodmart
 	--promo-blue: #9290FE;
 }
 
+::selection {
+	background: var(--urbarbr-lightgrey);
+}
+
 html body {
 	font-family: var(--urbarbr-fonts);
 	color: #929292;
@@ -101,7 +105,8 @@ body .button:hover,
 body button:hover,
 body [type="submit"]:hover,
 body [type="button"]:hover {
-	color: initial;
+	/*??color: initial; */
+	color: white;
 	box-shadow: none;
 	text-decoration: none;
 }
@@ -137,15 +142,35 @@ body [type="button"]:hover {
 	}
 }
 
+.full-width {
+	width: 100% !important;
+	font-size: 15px !important;
+	background-position: 12px !important;
+}
+
+.input-clear {
+	font-size: 21px;
+	font-weight: normal;
+	height: 17px;
+	width: 17px;
+	padding: 0;
+	background: 0;
+	text-shadow: 0 0 14px #FFF;
+	text-align: center;
+	position: absolute;
+	right: 12px;
+	top: 14px;
+	color: #333;
+}
+.input-clear::after {
+	content: '×';
+}
+
 i.fa:first-child {
 	position: relative;
 	top: 1px;
 	margin: 0 4px;
 	font-size: 18px;
-}
-
-::selection {
-	background: var(--urbarbr-lightgrey);
 }
 
 body .main-page-wrapper {
@@ -381,6 +406,17 @@ background-color: rgba(101,101,101,1);
 .product-reviews > p {
 	margin: 0;
 }
+@media (max-width: 380px) {
+	body .jac-barber-name {
+		font-size: 16px;
+	}
+	.product-reviews {
+		font-size: 12px;
+	}
+	.product-reviews .count {
+		display: none;
+	}
+}
 .single-product .product-reviews {
 	margin-bottom: 25px;
 }
@@ -604,7 +640,7 @@ background-color: rgba(101,101,101,1);
 }
 
 .wd-table-wrapper {
-	padding: 5px 15px 0 0;
+	/*??padding: 5px 15px 0 0; */
 	border: 1px solid #8896A2;
 	border-radius: 10px;
 	box-sizing: border-box;
@@ -1082,6 +1118,8 @@ content: '\f3c5';
 	/*-background-image: url('./svgs/calendar-outline.svg'); */
 	background-repeat: no-repeat;
 	background-position: 12px;
+	color: #ffffff!important;
+    border: 0.5px solid #555 !important;
 }
 #booking-date-search.entered {
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuODA2MDMgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTE1LjYxMjEgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTYuODMwMjggMTEuNDQyOEgxNi41ODc5SDYuODMwMjhaTTQuODc4NzYgMjEuMjAwNEgxOC41Mzk0QzE5LjA1NjkgMjEuMjAwNCAxOS41NTMzIDIwLjk5NDcgMTkuOTE5MyAyMC42Mjg4QzIwLjI4NTMgMjAuMjYyOCAyMC40OTA5IDE5Ljc2NjQgMjAuNDkwOSAxOS4yNDg4VjcuNTM5NzVDMjAuNDkwOSA3LjAyMjE3IDIwLjI4NTMgNi41MjU4IDE5LjkxOTMgNi4xNTk4MkMxOS41NTMzIDUuNzkzODQgMTkuMDU2OSA1LjU4ODIzIDE4LjUzOTQgNS41ODgyM0g0Ljg3ODc2QzQuMzYxMTkgNS41ODgyMyAzLjg2NDgxIDUuNzkzODQgMy40OTg4MyA2LjE1OTgyQzMuMTMyODUgNi41MjU4IDIuOTI3MjUgNy4wMjIxNyAyLjkyNzI1IDcuNTM5NzVWMTkuMjQ4OEMyLjkyNzI1IDE5Ljc2NjQgMy4xMzI4NSAyMC4yNjI4IDMuNDk4ODMgMjAuNjI4OEMzLjg2NDgxIDIwLjk5NDcgNC4zNjExOSAyMS4yMDA0IDQuODc4NzYgMjEuMjAwNFoiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==")
@@ -1556,8 +1594,9 @@ a:hover {
 .jac-booking-date-time .booking-time {
 	width: 40%;
 	font-family: Poppins;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 21px;
+	color: #03090e;
 }
 
 @media (max-width: 991px) and (min-width: 476px) {
@@ -1668,6 +1707,25 @@ display: none;
 .bootstrap-datetimepicker-widget .timepicker::before {
 	content: "Select Time";
 	margin-top: 15px;
+}
+
+.bootstrap-select .dropdown-menu {
+	background-color: unset;
+	background-image: linear-gradient(#fff 80px, #fff5 100%);
+}
+body .dropdown-menu li {
+	margin: 0;
+}
+body .dropdown-menu li > a,
+body .pac-item {
+	padding: 10px 20px;
+    border-top: 0;
+	border-bottom: 1px solid #E6E6E6;
+    line-height: 24px;
+}
+body .dropdown-menu li:last-child > a,
+body .pac-item:last-child {
+	border-bottom: 0;
 }
 
 .searchform .bootstrap-datetimepicker-widget.dropdown-menu table {
@@ -2179,16 +2237,30 @@ body .input-group-addon {
 }
 .open > .dropdown-menu {
 	font-size: 14px !important;
-	padding: 8px 0;
+	padding: 4px 0;
 }
 
 body .wd-header-mobile-nav .wd-tools-icon::before,
 body .wd-header-mobile-nav .wd-tools-icon::after {
 	content: '';
+    position: relative;
+	top: 0;
 	display: block;
 	width: 24px;
 	margin: 4px 0;
 	border-bottom: 3px solid var(--urbarbr-blue);
+    transition: .3s;
+	will-change: top, transform;
+}
+
+/* Animate the hamburger icon into a cross when opened */
+a.nav-open .wd-tools-icon::before {
+    transform: rotate(-45deg);
+    top: 3.5px;
+}
+a.nav-open .wd-tools-icon::after {
+    transform: rotate(45deg);
+    top: -3.5px;
 }
 
 .mobile-nav .wd-nav > li > a {
@@ -2207,11 +2279,27 @@ body .wd-header-mobile-nav .wd-tools-icon::after {
 	content: '';
 	display: block;
 	height: 56px;
-	text-align: center;
 	margin: auto;
-	padding: 40px;
+	padding: 36px;
 	background: url(https://staging-urbarbr.kinsta.cloud/wp-content/uploads/2022/02/UrBarbr-logo-transparent.png) no-repeat center / 56px;
+	text-align: center;
 }
+
+/* Ensure the hamburger button stays on top: */
+body .whb-main-header {
+	padding: 6px 0;
+    z-index: unset;
+}
+.mobile-nav.wd-side-hidden.wd-left {
+    z-index: 404;
+}
+body .whb-main-header .whb-column.whb-mobile-left.whb-hidden-lg {
+    z-index: 420;
+}
+.whb-column {
+    z-index: 2;
+}
+
 .wd-side-hidden {
 	background-color: unset;
 	background-image: linear-gradient(#fff 480px, #fff5 100%);
@@ -2271,14 +2359,14 @@ div.form-row.last > :last-child {
 	display: -webkit-box;
 	min-height: 80px;
 	max-height: 80px;
-	margin-bottom: 15px;
+	margin: 15px 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	-webkit-line-clamp: 4;
 	-webkit-box-orient: vertical;
 }
 .jac-barber-name{
-	width: max-content;
+	width: 100%;
 	margin: 0 -10px 4px 0;
 	font-size: 20px;
 	color: #292727;
@@ -2453,7 +2541,7 @@ body.single-product .wc-bookings-booking-cost {
 .wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox + span.cb {
 	color: #FFFA;
 }
-.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox + span.cb::after {
+.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox:not(:checked) + span.cb::after {
 	box-shadow: inset 0 0 0 10px #8896A2;
 	/*-color: #8896A2; */
 	opacity: .8;
@@ -2510,7 +2598,7 @@ body.single-product .wc-bookings-booking-cost {
 	/** payment method **/
 	#wc-stripe-cc-form{
 		border: 1px solid #8B96A1;
-		border-radius: 4px;
+		border-radius: 10px;
 		margin-top: 20px;
 		padding: 20px 14px 20px 14px;
 	}
@@ -2521,7 +2609,9 @@ body.single-product .wc-bookings-booking-cost {
 		justify-content: space-between;
 		margin-bottom: 15px;
 	}
-
+	fieldset#wc-stripe-cc-form .form-row > label {
+		white-space: nowrap;
+	}
 	
 	.woocommerce-checkout #payment ul.payment_methods li .stripe-credit-card-brand{
 		top: 20%;
@@ -2540,7 +2630,45 @@ body.single-product .wc-bookings-booking-cost {
 	}
 }
 
+
+/* Google Location Dropdown: */
+
 /* Hide Google logo on search bar dropdown list */
 .pac-container::after {
 	display: none;
+}
+
+body .pac-container {
+	margin: 2px 0 0;
+	padding: 4px 0;
+	border-radius: 4px;
+}
+body .pac-container,
+body .pac-container span {
+    font-family: inherit;
+    font-size: 14px;
+}
+body .pac-icon {
+    margin-left: -6px;
+    margin-top: 3px;
+}
+body .pac-item-query {
+    font-weight: normal;
+    color: var(--urbarbr-shade);
+}
+
+
+
+
+body .wc-bookings-date-picker .ui-datepicker td.fully_booked span,
+body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
+	border-radius: 6px;
+	background: var(--urbarbr-midgrey) !important;
+}
+.ui-datepicker-days-cell-over.ui-datepicker-unselectable.ui-state-disabled.fully_booked {
+	opacity: 1;
+}
+
+.location_drop_down_hide {
+	display: none!important;
 }

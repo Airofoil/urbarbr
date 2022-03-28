@@ -208,6 +208,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 								</a>
 							</li> -->
 						</ul>
+						<button type="button" class="input-clear" title="Clear"></button>
 						<input type="hidden" id="location_coords" value="" name="your-lat-long"><!--  name="location" -->
 					</div>
 					<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
@@ -229,7 +230,8 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 						}
 
 						function enterLocation() {
-							document.getElementById('your-location-search').focus();
+							jQuery('#your-location-search').addClass('full-width').focus();
+							//-document.getElementById('your-location-search').focus();
 							/*--var locationInput = document.createElement('input');
 							locationInput.type = 'text';
 							locationInput.placeholder = 'Enter an address or suburb...';
