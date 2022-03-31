@@ -1142,16 +1142,16 @@ function ml_replace_email_footer_hook(){
 // new function that will switch template based on email type
 function ml_woocommerce_email_footer( $email ) {
     // var_dump($email); die; // see what variables you have, $email->id contains type
-    // switch($email->id) {
-    //     case 'new_order':
-    //         $template = 'emails/email-header-new-order.php';
-    //         break;
-    //     default:
-    //         $template = 'emails/email-header.php';
-    // }
-    // 
-    $template = 'emails/email-footer.php';
+//     switch($email->id) {
+//         case 'new_order':
+//             $template = 'emails/email-header-new-order.php';
+//             break;
+//         default:
+//             $template = 'emails/email-header.php';
+//     }	
 
+	$template = 'emails/email-footer.php';
+	
 	// echo '<pre>'; print_r($email); echo '</pre>';
 
     // wc_get_template( $template, array( 'email_heading' => $email_heading ) );
