@@ -50,6 +50,9 @@ body.home p {
 body h4, .h4 {
 	font-size: 20px;
 }
+body h3, .h3 {
+	color: black;
+}
 body h2, .h2 {
 	margin-bottom: 20px;
 	color: var(--urbarbr-blue);
@@ -87,8 +90,15 @@ input:not([class*="wpcf7"]), select, .btn-group .btn {
 	color: inherit !important;
 	transition: .3s cubic-bezier(.2,.85,.35,1);
 }
-input:not([class*="wpcf7"]):hover {
-	background: #68819855;
+div input:not([class*="wpcf7"]):hover {
+	background: #88A1B855;
+}
+.woocommerce-billing-fields input:hover {
+	background: var(--urbarbr-softwhite);
+}
+
+body .form-control[readonly] {
+	background: var(--urbarbr-softwhite);
 }
 
 body .btn, button, .button {
@@ -150,6 +160,10 @@ body [type="button"]:hover {
 .full-width + .input-clear {
 	display: block;
 }
+.entered + .input-clear {
+	font-weight: 300;
+	color: white;
+}
 
 body .searchform input.invalid {
 	color: #fbb !important;
@@ -166,7 +180,7 @@ body .searchform input.invalid {
 	background: 0;
 	font-size: 21px;
 	font-weight: normal;
-	color: #333;
+	color: var(--urbarbr-midgrey);
 	text-align: center;
 	text-shadow: 0 0 14px #FFF;
 }
@@ -329,27 +343,13 @@ body.home .vc-hoverbox-wrapper {
 	color: #8896a2;
 }
 
-::-webkit-input-placeholder {
-	/* WebKit browsers */
-	color: #9a9a9a !important;
-	opacity: 1;
-	letter-spacing: 0.03em;
-}
-:-moz-placeholder {
-	/* Mozilla Firefox 4 to 18 */
-	color: #9a9a9a !important;
-	opacity: 1;
-	letter-spacing: 0.03em;
-}
-::-moz-placeholder {
-	/* Mozilla Firefox 19+ */
-	color: #9a9a9a !important;
-	opacity: 1;
-	letter-spacing: 0.03em;
-}
-:-ms-input-placeholder {
-	/* Internet Explorer 10+ */
-	color: #9a9a9a !important;
+::placeholder, /* General */
+::-webkit-input-placeholder, /* WebKit browsers */
+:-moz-placeholder, /* Mozilla Firefox 4 to 18 */
+::-moz-placeholder,	/* Mozilla Firefox 19+ */
+:-ms-input-placeholder /* Internet Explorer 10+ */ {
+	/*?color: #9a9a9a !important; */
+	color: inherit !important;
 	opacity: 1;
 	letter-spacing: 0.03em;
 }
@@ -1130,8 +1130,7 @@ content: '\f3c5';
 	/*-background-image: url('./svgs/calendar-outline.svg'); */
 	background-repeat: no-repeat;
 	background-position: 12px;
-	color: #ffffff!important;
-    border: 0.5px solid #555 !important;
+    /*--border: 0.5px solid #555 !important; */
 }
 #booking-date-search.entered {
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuODA2MDMgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTE1LjYxMjEgNy41Mzk3NVYzLjYzNjcyVjcuNTM5NzVaTTYuODMwMjggMTEuNDQyOEgxNi41ODc5SDYuODMwMjhaTTQuODc4NzYgMjEuMjAwNEgxOC41Mzk0QzE5LjA1NjkgMjEuMjAwNCAxOS41NTMzIDIwLjk5NDcgMTkuOTE5MyAyMC42Mjg4QzIwLjI4NTMgMjAuMjYyOCAyMC40OTA5IDE5Ljc2NjQgMjAuNDkwOSAxOS4yNDg4VjcuNTM5NzVDMjAuNDkwOSA3LjAyMjE3IDIwLjI4NTMgNi41MjU4IDE5LjkxOTMgNi4xNTk4MkMxOS41NTMzIDUuNzkzODQgMTkuMDU2OSA1LjU4ODIzIDE4LjUzOTQgNS41ODgyM0g0Ljg3ODc2QzQuMzYxMTkgNS41ODgyMyAzLjg2NDgxIDUuNzkzODQgMy40OTg4MyA2LjE1OTgyQzMuMTMyODUgNi41MjU4IDIuOTI3MjUgNy4wMjIxNyAyLjkyNzI1IDcuNTM5NzVWMTkuMjQ4OEMyLjkyNzI1IDE5Ljc2NjQgMy4xMzI4NSAyMC4yNjI4IDMuNDk4ODMgMjAuNjI4OEMzLjg2NDgxIDIwLjk5NDcgNC4zNjExOSAyMS4yMDA0IDQuODc4NzYgMjEuMjAwNFoiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==")
@@ -1154,10 +1153,10 @@ content: '\f3c5';
 	padding-left: 45px;
 	border-color: currentColor !important;
 }
-.searchform input[type="text"]::placeholder {
+/*-.searchform input[type="text"]::placeholder {
 	color: inherit;
 	opacity: 1;
-}
+} */
 .searchform .input-group,
 .booking-date-search,
 .your-location-search {
@@ -1167,7 +1166,8 @@ content: '\f3c5';
 }
 
 .searchform input.entered {
-	background-color: var(--urbarbr-midgrey);
+	/*-background-color: var(--urbarbr-midgrey); */
+	background-color: #28415899;
 	border: .5px solid var(--urbarbr-blue) !important;
 	color: white !important;
 }
@@ -1266,7 +1266,7 @@ body.home .vc_column-inner {
 }
 .searchform.woodmart-ajax-search.jac-test-class .searchsubmit:hover {
 	background-color: var(--urbarbr-midblue);
-	border-color: var(--urbarbr-midblue);
+	border-color: var(--urbarbr-midblue) !important;
 }
 .searchform .searchsubmit.entered{
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkuMjkyODkgMTguNzA3MUM4LjkwMjM3IDE4LjMxNjYgOC45MDIzNyAxNy42ODM0IDkuMjkyODkgMTcuMjkyOUwxNC41ODU4IDEyTDkuMjkyODkgNi43MDcxMUM4LjkwMjM3IDYuMzE2NTggOC45MDIzNyA1LjY4MzQyIDkuMjkyODkgNS4yOTI4OUM5LjY4MzQyIDQuOTAyMzcgMTAuMzE2NiA0LjkwMjM3IDEwLjcwNzEgNS4yOTI4OUwxNi43MDcxIDExLjI5MjlDMTcuMDk3NiAxMS42ODM0IDE3LjA5NzYgMTIuMzE2NiAxNi43MDcxIDEyLjcwNzFMMTAuNzA3MSAxOC43MDcxQzEwLjMxNjYgMTkuMDk3NiA5LjY4MzQyIDE5LjA5NzYgOS4yOTI4OSAxOC43MDcxWiIgZmlsbD0iI0ZGRkZGRiIvPgo8L3N2Zz4K") !important;
@@ -2130,11 +2130,18 @@ display: none;
 } */
 
 .wd-btn-arrow {
+	height: 100%;
+	top: 0;
+	margin-top: 0;
 	font-size: 22px !important;
 	color: white;
+	text-shadow: 0 0 15px #000;
 }
 .wd-btn-arrow.owl-prev {
 	left: -30px !important;
+}
+.wd-btn-arrow.owl-next {
+	right: -30px !important;
 }
 
 /* The product page image */
@@ -2556,13 +2563,15 @@ body.single-product .wc-bookings-booking-cost {
 	order: 2;
 	transition: .3s;
 }
-.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox + span.cb {
-	color: #FFFA;
-}
-.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox:not(:checked) + span.cb::after {
-	box-shadow: inset 0 0 0 10px #8896A2;
-	/*-color: #8896A2; */
-	opacity: .8;
+@media (hover: hover) {
+	.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox + span.cb {
+		color: #FFFA;
+	}
+	.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox:not(:checked) + span.cb::after {
+		box-shadow: inset 0 0 0 10px #8896A2;
+		/*-color: #8896A2; */
+		opacity: .8;
+	}
 }
 .wc-pao-addon-checkbox:checked + span.cb {
 	color: #FFF;
@@ -2576,18 +2585,23 @@ body.single-product .wc-bookings-booking-cost {
 	border-radius: 4px;
 }
 
+/** payment method **/
+#wc-stripe-cc-form{
+	border: 1px solid #8B96A1;
+	border-radius: 10px;
+	margin-top: 20px;
+	padding: 20px 15px;
+}
+.woocommerce-billing-fields p.form-row label,
+.woocommerce-additional-fields p.form-row label {
+	color: #000000;
+	font-weight: 600;
+}
 /**  on mobile version **/
 @media (max-width: 414px){
 	/** checkout page **/
 	.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-message{
 		background-color: #365277;
-	}
-	div.woocommerce-billing-fields h3, div.woocommerce-additional-fields h3 {
-		color: #000000;
-	}
-	.woocommerce-billing-fields p.form-row label, .woocommerce-additional-fields p.form-row label {
-		color: #000000;
-		font-weight: 600;
 	}
 	.woocommerce-additional-fields #order_comments::placeholder{
 		color: #D0D7DF;
@@ -2598,8 +2612,8 @@ body.single-product .wc-bookings-booking-cost {
 	.woocommerce-EditAccountForm .woocommerce-form-row input[type="email"],
 	.woocommerce-EditAccountForm .woocommerce-form-row input[type="text"],
 	.woocommerce-EditAccountForm .woocommerce-form-row input[type="tel"] {
-		color: #D0D7DF !important;
-		-webkit-text-fill-color: #D0D7DF !important;
+/* 		color: #D0D7DF !important;
+		-webkit-text-fill-color: #D0D7DF !important; */
 	}
 	.jac-booking-date-time .booking-time{
 		text-align: right;
@@ -2612,13 +2626,6 @@ body.single-product .wc-bookings-booking-cost {
 	li.woocommerce-SavedPaymentMethods-token:nth-child(2),
 	li.woocommerce-SavedPaymentMethods-new {
 		display: none;
-	}
-	/** payment method **/
-	#wc-stripe-cc-form{
-		border: 1px solid #8B96A1;
-		border-radius: 10px;
-		margin-top: 20px;
-		padding: 20px 14px 20px 14px;
 	}
 	
 	fieldset#wc-stripe-cc-form .form-row{

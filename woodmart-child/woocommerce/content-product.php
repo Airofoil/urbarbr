@@ -120,12 +120,13 @@ if($street != "" && $city != "" && $state != "" && $country != "" && $prefer_dis
 $qualified = true;
 if ($_GET) {
 	//--$searching_location = $_GET['your-location'];
-	$searching_service = $_GET['booking-services'];
-	$searching_date = $_GET['booking-date'];
-	$searching_time = $_GET['booking-time'];
+	$searching_service = 	!empty($_GET['booking-services']) ? $_GET['booking-services'] : null;
+	$searching_date =    	!empty($_GET['booking-date']) ? $_GET['booking-date'] : null;
+	$searching_time =    	!empty($_GET['booking-time']) ? $_GET['booking-time'] : null;
+	$searching_lat_long = 	!empty($_GET['your-lat-long']) ? $_GET['your-lat-long'] : null;
+	
 	$filtering = false;
 	$location_qualified = true;
-	$searching_lat_long = $_GET['your-lat-long'];
 
 	if($searching_service || $searching_date || $searching_lat_long){ //-|| searching_location
 		$filtering = true;
@@ -187,11 +188,13 @@ if ($_GET) {
 		// echo '<pre>'; print_r($location_lat);  echo '</pre>';
 		// echo '<pre>'; print_r($location_long);  echo '</pre>';
 
-		$distance_between = distance($location_lat, $location_long, $bar_lat, $bar_long, "K");
+		if (!empty($bar_lat) && !empty($bar_long)) { // If the barber's location is set, and the lat & long are found - JDH
+			$distance_between = distance($location_lat, $location_long, $bar_lat, $bar_long, "K");
 
-		if($distance_between < $prefer_distance) {
-			$location_qualified = true;
-			$qualified = true;
+			if($distance_between < $prefer_distance) {
+				$location_qualified = true;
+				$qualified = true;
+			}
 		}
 	}
 	
@@ -201,11 +204,12 @@ if ($_GET) {
 
 		foreach ($product->get_meta_data() as $index => $data) { 
 			if($data->key == '_product_addons'){
-				foreach($data->value[0]['options'] as $index=>$value){
-					if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$searching_service))) && $location_qualified){
-						$qualified = true;
+				if ($data->value[0] && $data->value[0]['options'])
+					foreach($data->value[0]['options'] as $index=>$value){
+						if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$searching_service))) && $location_qualified){
+							$qualified = true;
+						}
 					}
-				}
 			}
 		}
 	}elseif($searching_service== "default" && $location_qualified){
@@ -235,28 +239,32 @@ if ($_GET) {
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
 		$resp = curl_exec($curl);
-		$resources = json_decode($resp, true);
+		try {
+			$resources = json_decode($resp, true);
+		} catch (JsonException $e) {
+			//--echo '[05] Error: ' . $e;
+			throw new EncryptException('[09] Could not encrypt the data.', 0, $e);
+		}
 		curl_close($curl);
 
 		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
 		// $search_date_formatted = date("Y-m-d H:i", strtotime($searching_date));
+		if (isset($resources) && !empty($resources['records'])) {
+			$slots_info = $resources['records'];
 
-		$slots_info = $resources['records'];
+			foreach($slots_info as $slot_info) {
+				if ($slot_info['available'] == 1) {
 
-		foreach($slots_info as $slot_info) {
-			if ($slot_info['available'] == 1) {
+					$start_time = str_replace("T"," ",$slot_info['date']);
+					$end_time = date('Y-m-d H:i', strtotime($start_time) + 3600);
 
-				$start_time = str_replace("T"," ",$slot_info['date']);
-				$end_time = date('Y-m-d H:i', strtotime($start_time) + 3600);
-
-				if($search_date_formatted < $end_time && $start_time <= $search_date_formatted && $location_qualified){
-					$qualified = true;
-					break;
+					if($search_date_formatted < $end_time && $start_time <= $search_date_formatted && $location_qualified){
+						$qualified = true;
+						break;
+					}
 				}
-
 			}
 		}
-
 	}
 }
 

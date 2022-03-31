@@ -160,7 +160,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 						$search = $wpdb->prepare(" SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_product_addons' ");
 						$search_results = $wpdb->get_results($search);
 						foreach($search_results as $service){
-							if (unserialize($service->meta_value) && unserialize($service->meta_value)[0])
+							if (unserialize($service->meta_value) && unserialize($service->meta_value)[0] && unserialize($service->meta_value)[0]['options'])
 								foreach(unserialize($service->meta_value)[0]['options'] as $option){
 									$global_services[] = $option['label'];
 								}
@@ -179,12 +179,12 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<?php } ?>
 					<input type="hidden" name="post_type" value="<?php echo esc_attr( $post_type ); ?>">
 					
-					<!-- 		TEST DATA			 -->
+					<!-- TEST DATA -->
 					<?php if ($post_type == 'product') { ?>
 					<!-- <input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time"> -->
 					<div class="booking-date-search" class="input-group date">
-					   <input type="text" id="booking-date-search" class="form-control" placeholder="Select Date and Time">
-					   <!-- <input type="hidden" id="booking-date" name="booking-date"> name="booking-date" -->
+					   <input type="text" id="booking-date-search" name="booking-date" class="form-control" placeholder="Select Date and Time" readonly>
+					   <!-- <input type="hidden" id="booking-date" name="booking-date"> -->
 					   <input type="input" id="booking-time" name="booking-time" style="display:none;">
 					</div>
 					<?php } ?>
@@ -193,7 +193,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					
 					<?php if ($post_type == 'product') { ?>
 					<div class="your-location-search" class="input-group">
-						<input type="text" id="your-location-search" class="form-control" name="your-location" placeholder="Set your location" title="Set your location" data-toggle="dropdown" aria-label=".form-select-sm">
+						<input type="text" id="your-location-search" class="form-control" name="your-location" placeholder="Set your location" title="Set your location" data-toggle="dropdown" aria-label=".form-select-sm" readonly>
 						<button type="button" class="input-clear" title="Clear"></button>
 						<ul class="dropdown-menu" role="menu">
 							<li data-original-index="0">
@@ -213,12 +213,12 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					</div>
 					<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
 					<script>
-						document.addEventListener('DOMContentLoaded', () => {
+						document.addEventListener('DOMContentLoaded', function() {
 							$ = jQuery;
 
-							$('body').on('click', '.pac-container .pac-item', setTimeout(() => document.getElementById('your-location-search').blur(), 50));
+							$('body').on('click touchstart', '.pac-container .pac-item', setTimeout(() => document.getElementById('your-location-search').blur(), 50));
 
-							$('#your-location-search').on('blur', setTimeout(() => { console.log(40, this, this.value);
+							$('#your-location-search').on('blur', setTimeout(() => {
 								let location = document.getElementById('your-location-search');
 								if (!location.value) {
 									$(location).removeClass('invalid');
@@ -256,11 +256,17 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 
 						function showLocation(position) { /* Set the value in the location box */
 							locBox.value = position.coords.latitude + ',' + position.coords.longitude;
+
+							$('#your-location-search').addClass('entered');
+							
+							if ($('#booking-date-search').hasClass('entered') && $('#your-location-search').hasClass('entered')) {
+								$('.searchform .searchsubmit').prop('disabled','').addClass('entered');
+							}
 							//--locationBtn.classList.add('tick');
 						}
 
 						function enterLocation() {
-							jQuery('#your-location-search').addClass('full-width').focus();
+							jQuery('#your-location-search').addClass('full-width').prop('readonly','').focus();
 							//-document.getElementById('your-location-search').focus();
 							/*--var locationInput = document.createElement('input');
 							locationInput.type = 'text';

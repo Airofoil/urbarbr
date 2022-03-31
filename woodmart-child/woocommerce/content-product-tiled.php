@@ -143,13 +143,13 @@
 			}
 		}
 
-		if ($muffin && !$show_brife_product_tile) { ?>
+		/* if ($muffin && !$show_brife_product_tile) { ?>
 		<style>
 			.jac-products-header-top-left > div{
 				display: inline-block;
 			}
 		</style>
-		<?php } ?>
+		<?php } */ ?>
 
 		<!-- NOT SURE IF BELOW CODE IS REQUIRED -->
 		<?php

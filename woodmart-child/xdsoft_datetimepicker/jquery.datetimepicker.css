@@ -286,6 +286,7 @@
 }
 
 .xdsoft_datetimepicker .xdsoft_calendar {
+	padding-top: 0;
 	clear: both;
 }
 
@@ -297,21 +298,19 @@
 
 .xdsoft_datetimepicker .xdsoft_calendar td > div {
 	display: block;
-	height: 100%;
+	/* height: 100%;--breaks for Chrome/Webkit */
 	margin: 2px;
 	border-radius: 4px;
-	line-height: 40px;
+	line-height: 38px;
 }
 
 .xdsoft_datetimepicker .xdsoft_calendar td:not(.xdsoft_disabled) > div {
 	border: 1px solid #E2E2E2;
 	color: #5982B7;
 }
-.xdsoft_datetimepicker .xdsoft_calendar th {
-	height: 25px;
-}
 
-.xdsoft_datetimepicker .xdsoft_calendar td, .xdsoft_datetimepicker .xdsoft_calendar th {
+.xdsoft_datetimepicker .xdsoft_calendar td,
+.xdsoft_datetimepicker .xdsoft_calendar th {
 	width: calc(100% / 7);
 	/* background: #fff; */
 	/*! color: #666; */
@@ -327,7 +326,15 @@
 	color: inherit;
 }
 
-.xdsoft_datetimepicker.xdsoft_showweeks .xdsoft_calendar td, .xdsoft_datetimepicker.xdsoft_showweeks .xdsoft_calendar th {
+.xdsoft_datetimepicker .xdsoft_calendar th {
+	font-size: 0;
+}
+.xdsoft_datetimepicker .xdsoft_calendar th::first-letter {
+	font-size: 14px;
+}
+
+.xdsoft_datetimepicker.xdsoft_showweeks .xdsoft_calendar td,
+.xdsoft_datetimepicker.xdsoft_showweeks .xdsoft_calendar th {
 	width: 12.5%;
 }
 
@@ -445,49 +452,6 @@
 	font-size: 13px;
 }
 
-.xdsoft_datetimepicker .blue-gradient-button {
-	font-family: "museo-sans", "Book Antiqua", sans-serif;
-	font-size: 12px;
-	font-weight: 300;
-	color: #82878c;
-	height: 28px;
-	position: relative;
-	padding: 4px 17px 4px 33px;
-	border: 1px solid #d7d8da;
-	background: -moz-linear-gradient(top, #fff 0%, #f4f8fa 73%);
-	/* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(73%, #f4f8fa));
-	/* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #fff 0%, #f4f8fa 73%);
-	/* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #fff 0%, #f4f8fa 73%);
-	/* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #fff 0%, #f4f8fa 73%);
-	/* IE10+ */
-	background: linear-gradient(to bottom, #fff 0%, #f4f8fa 73%);
-	/* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff', endColorstr='#f4f8fa', GradientType=0);
-	/* IE6-9 */
-}
-
-.xdsoft_datetimepicker .blue-gradient-button:hover, .xdsoft_datetimepicker .blue-gradient-button:focus, .xdsoft_datetimepicker .blue-gradient-button:hover span, .xdsoft_datetimepicker .blue-gradient-button:focus span {
-	color: #454551;
-	background: -moz-linear-gradient(top, #f4f8fa 0%, #FFF 73%);
-	/* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f4f8fa), color-stop(73%, #FFF));
-	/* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #f4f8fa 0%, #FFF 73%);
-	/* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #f4f8fa 0%, #FFF 73%);
-	/* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #f4f8fa 0%, #FFF 73%);
-	/* IE10+ */
-	background: linear-gradient(to bottom, #f4f8fa 0%, #FFF 73%);
-	/* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f8fa', endColorstr='#FFF', GradientType=0);
-	/* IE6-9 */
-}
-
 
 
 .xdsoft_datetimepicker {
@@ -506,8 +470,16 @@
 	display: inline-block;
 }
 
-.xdsoft_datetimepicker .xdsoft_prev, .xdsoft_datetimepicker .xdsoft_next {
+.xdsoft_monthpicker {
+	display: flex;
+}
+
+.xdsoft_datetimepicker .xdsoft_prev,
+.xdsoft_datetimepicker .xdsoft_next {
 	display: inline-block !important;
+	max-width: 80px;
+	flex: 1;
+	margin: auto;
 	background: 0;
 }
 
@@ -528,18 +500,6 @@
 }
 .xdsoft_datetimepicker .xdsoft_next::after {
 	float: left;
-}
-
-.xdsoft_monthpicker {
-	display: flex;
-}
-
-.xdsoft_monthpicker>* {
-	flex: 1;
-}
-
-.xdsoft_next {
-	text-align: right;
 }
 
 .xdsoft_datetimepicker .xdsoft_next {
@@ -598,8 +558,6 @@
 
 
 
-
-
 /* Periodpicker styling */
 .periodpicker_timepicker_dialog.visible {
 	left: unset !important;
@@ -611,6 +569,18 @@ body .xdsoft_datepicker {
 body .periodpicker_timepicker {
 	transform: none !important;
 }
+body .periodpicker_timepicker::after {
+	height: 100%;
+	box-shadow: inset 0 0 25px 10px #FFF;
+	pointer-events: none;
+}
+body .periodpicker_timepicker::before {
+	content: unset;
+	pointer-events: none;
+}
+body .periodpicker_timepicker .periodpicker_timepicker_center::before {
+	margin-top: -13px;
+}
 body .periodpicker_timepicker_dialog {
 	position: relative;
 	display: block;
@@ -618,7 +588,6 @@ body .periodpicker_timepicker_dialog {
 	max-width: 200px;
 	height: 125px;
 	margin: auto;
-	margin-bottom: 15px;
 	border: 0;
 	border-radius: 6px;
 	overflow: hidden;
@@ -628,14 +597,18 @@ body .periodpicker_timepicker_dialog {
 body .periodpicker_timepicker_dialog * {
 	font-family: Poppins !important;
 }
+.periodpicker_timepicker_center::after,
+.periodpicker_timepicker_center::before {
+	left: 0;
+	border-top: 1px solid #E2E2E2;
+}
 @media (max-width: 460px) {
 	body .xdsoft_datetimepicker {
-		/* box-shadow: 0 0 80px #0004; */
-		box-shadow: 0 0 160px #000B;
-		left: unset !important;
-		overflow: hidden;
+		max-height: 100%;
 		top: 50% !important;
 		left: 50% !important;
+		overflow: hidden;
+		box-shadow: 0 0 160px #000B;
 		transform: translate(-50%,-50%);
 	}
 	.periodpicker_timepicker_dialog.visible {
@@ -653,8 +626,20 @@ body .periodpicker_timepicker_dialog * {
 
 .xdsoft_datetimepicker .btn-link.btn {
 	float: right;
-	padding: 10px 20px 20px 15px;
+	padding: 15px 20px;
 	font-weight: 500;
 	color: var(--urbarbr-blue);
 	text-transform: uppercase;
+}
+
+@media (max-height: 600px) { /* For small devices (iPhone 4/5/SE) */
+	body .periodpicker_timepicker_dialog {
+		height: 85px;
+	}
+	.xdsoft_datetimepicker .xdsoft_calendar td, .xdsoft_datetimepicker .xdsoft_calendar th {
+		height: 38px;
+	}
+	.xdsoft_datetimepicker .xdsoft_calendar td:not(.xdsoft_disabled) > div {
+		line-height: 36px;
+	}
 }

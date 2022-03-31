@@ -46,11 +46,14 @@ jQuery(document).ready(function ($){
 
     $('h5.widget-title').unbind().click(e => $(e.target).toggleClass('open')); /* ++ For the footer toggleable menus */
 
-    $('.searchform input').on('change, blur', function() {
+    $('.searchform input').on('change blur', function() {
 		if ($(this).is(':valid')) $(this).addClass('entered');
 		if (!$('.searchform.woodmart-ajax-search input:not(.entered):not([type="hidden"])').length) {
 			$('.searchform .searchsubmit').addClass('entered');
 		}
+        if ($('#booking-date-search').hasClass('entered') && $('#your-location-search').hasClass('entered')) {
+            $('.searchform .searchsubmit').prop('disabled','').addClass('entered');
+        }
 	});
 
     $('body').on('click', function() {

@@ -559,12 +559,17 @@ function my_custom_js_css() {
 		$(document).ready(function() {
 			$(".searchform input").unbind();
 			$("#booking-date-search").datetimepicker({
-				// timepicker: false,
+				// timepicker: false, // Need timepicker enabled to insert the other timepicker
 				format: "Y-m-d",
-				minDate: Date.now()
+				yearStart: 2022,
+				yearEnd: new Date().getFullYear() + 1,
+				minDate: Date.now(),
+				maxDate: Date.now() + 3600000*24*200 // Allow up to 200 days in the future
+				// closeOnWithoutClick: false
 			});
 			$("#booking-time").TimePickerAlone({
 				inputFormat: "HH:mm:ss",
+				defaultTime: "00:00",
 				hours: true,
 				minutes: true,
 				seconds: false,
@@ -575,8 +580,14 @@ function my_custom_js_css() {
 				}
 			});
 			$("#booking-time").trigger("click");
-			$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog")).append(`<button class="datepicker-confirm btn-link btn">Ok</button><button class="datepicker-confirm btn-link btn">Cancel</button>`);
-			$(".datepicker-confirm").on("click", function () {
+			$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog")).append(`<button class="datepicker-confirm btn-link btn">Ok</button><button class="datepicker-cancel btn-link btn">Cancel</button>`);
+			$(".datepicker-confirm").on("click touchstart", function() {
+				$("#booking-date-search").datetimepicker("hide");
+				$("#booking-date-search").addClass("entered");
+			});
+			$(".datepicker-cancel").on("click touchstart", function() {
+				$("#booking-date-search").datetimepicker("reset");
+				$("#booking-time").TimePickerAlone("setValue", "00:00");
 				$("#booking-date-search").datetimepicker("hide");
 			});
 			//-$(".periodpicker_timepicker_dialog").appendTo(".xdsoft_datetimepicker");
@@ -1119,4 +1130,30 @@ function distance($lat1, $lon1, $lat2, $lon2, $unit) {
 	} else {
 		return $miles;
 	}
+}
+
+// replace default WC header action with a custom one
+add_action( 'init', 'ml_replace_email_footer_hook' );    
+function ml_replace_email_footer_hook(){
+    remove_action( 'woocommerce_email_footer', array( WC()->mailer(), 'email_footer' ) );
+    add_action( 'woocommerce_email_footer', 'ml_woocommerce_email_footer', 10, 2 );
+}
+
+// new function that will switch template based on email type
+function ml_woocommerce_email_footer( $email ) {
+    // var_dump($email); die; // see what variables you have, $email->id contains type
+    // switch($email->id) {
+    //     case 'new_order':
+    //         $template = 'emails/email-header-new-order.php';
+    //         break;
+    //     default:
+    //         $template = 'emails/email-header.php';
+    // }
+    // 
+    $template = 'emails/email-footer.php';
+
+	// echo '<pre>'; print_r($email); echo '</pre>';
+
+    // wc_get_template( $template, array( 'email_heading' => $email_heading ) );
+	wc_get_template( $template, array( 'email_id' => $email->id ) );
 }
