@@ -2701,3 +2701,85 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 .autocomplete-suggestion {
 	display: none;
 }
+
+@media (max-width: 475px) {	
+	.woocommerce-order-received .woocommerce-order {
+		padding: 0!important;
+	}
+}
+
+.woocommerce-order-received table {
+	margin-bottom: 0;
+}
+
+.woocommerce-order-received table td {
+	border-bottom: unset!important;
+}
+
+
+
+.home .booking-services-search button {
+	height: auto;
+}
+
+.home form .error-select-button {
+	border: 1px solid #CE341E!important;
+	/* height: auto; */
+}
+
+.home form .error-date-select-field {
+	border: 1px solid #CE341E!important;
+}
+
+.search-error-message {
+	margin-top: 10px;
+	/* display: inline-block; */
+	padding: 5px 10px;
+	background: #CE341E;
+	border-radius: 4px;
+	color: #FFFFFF;
+	width: 100%;
+	font-weight: 400;
+	font-size: 12px;
+	letter-spacing: 0.3px;
+	line-height: 20px;
+	font-style: normal;
+	text-align: left;
+}
+
+#error-search-service {
+	display: inline-block;
+}
+
+.your-location-search .dropdown-menu {
+	top: auto;
+}
+
+@media (max-width: 475px) {
+	#error-search-date-select-mobile, #error-search-location-mobile {
+		display: inline-block;
+	}
+
+	#error-search-date-select, #error-search-location {
+		display: none!important;
+	}
+
+	.search-error-message {
+		padding: 4px;
+		font-size: 10px;
+	}
+
+	#error-search-date-select-mobile.search-error-message, #error-search-location-mobile.search-error-message {
+		text-align: center;
+	}
+}
+
+@media (min-width: 476px) {
+	#error-search-date-select, #error-search-location {
+		display: inline-block;
+	}
+
+	#error-search-date-select-mobile, #error-search-location-mobile {
+		display: none!important;
+	}
+}

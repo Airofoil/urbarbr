@@ -97,4 +97,57 @@ jQuery(document).ready(function ($){
     // $('.your-location-search').on('input', function() {
     //     $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
     // });
+
+    $('.searchsubmit.btn').click(function(event){
+        if ( $(".home .filter-option").text() == "" || $(".home .filter-option").text() == "Select a service") {
+            // $(".booking-services-search button.btn").css('border-color', 'red!important');
+            // $(".booking-services-search button.btn").css('border-width', '1px!important');
+            // $(".booking-services-search button.btn").css('height', 'auto');
+            $('.booking-services-search button.btn').addClass('error-select-button');
+            if(!$('#error-search-service').length) {
+                $( '<div class="search-error-message" id="error-search-service">please select a sercive</div>' ).insertAfter( ".booking-services-search button.btn" );
+            } else {
+                $("#error-search-service").css('display', 'inline-block');
+            }
+            event.preventDefault();
+        } else {
+            $('.booking-services-search button.btn').removeClass('error-select-button');
+            $("#error-search-service").css('display', 'none');
+        }
+
+        // alert($('#booking-date-search.entered').length);
+
+        if( !$('#booking-date-search.entered').length ) {
+            $('#booking-date-search').addClass('error-date-select-field');
+            if(!$('#error-search-date-select').length) {
+                $( '<div class="search-error-message" id="error-search-date-select">select date & time</div>' ).insertAfter( "#booking-date-search" );
+                $( '<div class="search-error-message" id="error-search-date-select-mobile">when?</div>' ).insertAfter( "#booking-date-search" );
+            } else {
+                $("#error-search-date-select").css('display', 'inline-block');
+                $("#error-search-date-select-mobile").css('display', 'inline-block');
+            }
+            event.preventDefault();
+        } else {
+            $('#booking-date-search').removeClass('error-date-select-field');
+            $("#error-search-date-select").css('display', 'none');
+            $("#error-search-date-select-mobile").css('display', 'none');
+        }
+
+        if( !$('#your-location-search.entered').length ) {
+            $('#your-location-search').addClass('error-date-select-field');
+            if(!$('#error-search-location').length) {
+                $( '<div class="search-error-message" id="error-search-location">enter your address</div>' ).insertAfter( ".your-location-search .dropdown-menu" );
+                $( '<div class="search-error-message" id="error-search-location-mobile">where?</div>' ).insertAfter( ".your-location-search .dropdown-menu" );
+            } else {
+                $("#error-search-location").css('display', 'inline-block');
+                $("#error-search-location-mobile").css('display', 'inline-block');
+            }
+            event.preventDefault();
+        } else {
+            $('#your-location-search').removeClass('error-date-select-field');
+            $("#error-search-location").css('display', 'none');
+            $("#error-search-location-mobile").css('display', 'none');
+        }
+    });
+
 });
