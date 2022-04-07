@@ -53,7 +53,7 @@ if ( function_exists( 'wcfm_is_store_page' ) && wcfm_is_store_page() ) {
 		<?php if ( $pagination == 'more-btn' || $pagination == 'infinit' ) : ?>
 			<?php if ( get_next_posts_link() ) : ?>
 				<?php woodmart_enqueue_inline_style( 'load-more-button' ); ?>
-				<a href="<?php echo next_posts( 1, false ); ?>" rel="nofollow noopener" class="btn wd-load-more wd-products-load-more load-on-<?php echo 'more-btn' === $pagination ? 'click' : 'scroll'; ?>"><span class="load-more-label"><?php esc_html_e( 'Load more products', 'woodmart' ); ?></span></a>
+				<a href="<?php echo next_posts( 1, false ); ?>" rel="nofollow noopener" class="btn wd-load-more wd-products-load-more load-on-<?php echo 'more-btn' === $pagination ? 'click' : 'scroll'; ?>"><span class="load-more-label"><?php esc_html_e( 'See more Barbers', 'woodmart' ); ?></span></a>
 				<div class="btn wd-load-more wd-load-more-loader"><span class="load-more-loading"><?php esc_html_e( 'Loading...', 'woodmart' ); ?></span></div>
 			<?php endif; ?>
 		<?php else : ?>
