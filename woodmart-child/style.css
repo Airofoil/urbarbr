@@ -1282,6 +1282,9 @@ body.home .vc_column-inner {
 header .booking-date-search { /* Hide the booking date selection from the header search */
 	display: none;
 }
+.wd-search-form .search-results-wrapper{
+	display:none;
+}
 /*--.searchform .searchsubmit {
 position: unset !important;
 /*--color: #001F35 !important; * /
