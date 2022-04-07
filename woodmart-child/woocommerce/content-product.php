@@ -216,7 +216,7 @@ if ($_GET) {
 		$qualified = true;
 	}
 
-	if($searching_date && $searching_time){
+	if(false && $searching_date && $searching_time){
 
 		$qualified = false;
 
@@ -269,6 +269,26 @@ if ($_GET) {
 }
 
 ?>
-<?php if($qualified){ ?>
-<div <?php wc_product_class( $classes, $product ); ?> data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>" data-id="<?php echo esc_attr( $product->get_id() ); ?>"><?php wc_get_template_part( 'content', 'product-' . $hover ); ?></div>
+<?php if($qualified && $searching_date && $searching_time){ 
+	$min_date = date('Y-m-d', strtotime($searching_date));
+	$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
+	/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
+	$search_date_formatted = date("Y-m-d H:i", strtotime($searching_date . $searching_time));
+	?>
+	<div style="display:none;" 
+		<?php wc_product_class( $classes, $product ); ?> 
+		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>" 
+		data-mindate ="<?php echo $min_date;?>"
+		data-maxdate ="<?php echo $max_date;?>"
+		data-formattedDate ="<?php echo $search_date_formatted;?>"
+		data-id="<?php echo esc_attr( $product->get_id() ); ?>">
+			<?php wc_get_template_part( 'content', 'product-' . $hover ); ?>
+	</div>
+<?php }else if($qualified) {?>
+	<div 
+		<?php wc_product_class( $classes, $product ); ?> 
+		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>" 
+		data-id="<?php echo esc_attr( $product->get_id() ); ?>">
+			<?php wc_get_template_part( 'content', 'product-' . $hover ); ?>
+	</div>
 <?php } ?>

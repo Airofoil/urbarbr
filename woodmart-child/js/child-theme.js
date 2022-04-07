@@ -149,5 +149,48 @@ jQuery(document).ready(function ($){
             $("#error-search-location-mobile").css('display', 'none');
         }
     });
+	
+	if($('.product-grid-item[data-mindate]').length){
+        var products='';
+        var minDate='';
+        var maxDate='';
+        var formattedDate='';
+        $( ".product-grid-item" ).each(function( index ) {
+            products +=$(this).data('id');
+            products +=",";
+            minDate = $(this).data('mindate');
+            maxDate = $(this).data('maxdate');
+            formattedDate = $(this).data('formatteddate');
+
+        });
+        products = products.replace(/,*$/, "");
+        console.log(products);
+
+        $.ajax({
+            url: "/wp-json/wc-bookings/v1/products/slots",
+            type: "get",
+            data: { 
+              min_date: minDate, 
+              max_date: maxDate, 
+              product_ids: products
+            },
+            success: function(response) {
+			  var formattedDateTime = new Date(formattedDate).getTime();
+			  for(var [key,slotinfo] of Object.entries(response.records)){
+                if(slotinfo.available == 1){
+                  var startDateTime = new Date(slotinfo.date).getTime();
+                  var endDateTime = startDateTime + slotinfo.duration*1000;
+                  if(formattedDateTime >= startDateTime && formattedDateTime <=endDateTime){
+                      $('[data-id='+slotinfo.product_id+']').show();
+                  }
+				}
+              }
+              console.log(response);
+            },
+            error: function(xhr) {
+              //Do Something to handle error
+            }
+          });
+    }
 
 });
