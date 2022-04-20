@@ -46,7 +46,35 @@ jQuery(document).ready(function ($){
     $('h5.widget-title').unbind().click(e => $(e.target).toggleClass('open')); /* ++ For the footer toggleable menus */
 
     $('.searchform input').on('change blur', function() {
-		if ($(this).is(':valid')) $(this).addClass('entered');
+		if ($(this).is(':valid')) {
+            $(this).addClass('entered');
+
+            $('#your-location-search').on('blur', setTimeout(() => {
+                let location = document.getElementById('your-location-search');
+                if (!location.value) {
+                    $(location).removeClass('invalid');
+                    return;
+                }
+
+                if (location.value.length < 4) {
+                    $(location).addClass('invalid');
+                    return;
+                }
+
+                $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${location.value}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) { console.log(41, data);
+                    if (data.status !== 'OK' || !data["results"]) {
+                        $(location).addClass('invalid');
+                        return;
+                    }
+                    if (data["results"][0]) {
+                        $(location).removeClass('invalid');
+                        document.getElementById('location_coords').value = data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng;
+                        document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}`;
+                    }
+                });
+            }, 60));
+        }
+
 		if (!$('.searchform.woodmart-ajax-search input:not(.entered):not([type="hidden"])').length) {
 			$('.searchform .searchsubmit').addClass('entered');
 		}
@@ -61,7 +89,10 @@ jQuery(document).ready(function ($){
     });
 	
     $('button.input-clear').unbind().on('click', function() {
-        if ($(this).parent() && $(this).parent().find('input').first()) $(this).parent().find('input').first().val('');
+        if ($(this).parent() && $(this).parent().find('input').first()){
+            $(this).parent().find('input').removeClass('entered');
+            $(this).parent().find('input').first().val('');
+        }
     });
 
     // insert payment title
