@@ -2758,6 +2758,9 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 	top: auto;
 }
 
+#wc-bookings-form-end-time option[data-value]{
+	display:none;
+}
 @media (max-width: 475px) {
 	#error-search-date-select-mobile, #error-search-location-mobile {
 		display: inline-block;

@@ -1157,3 +1157,51 @@ function ml_woocommerce_email_footer( $email ) {
     // wc_get_template( $template, array( 'email_heading' => $email_heading ) );
 	wc_get_template( $template, array( 'email_id' => $email->id ) );
 }
+add_action( 'save_post_wc_booking', 'save_post_wc_booking', 10, 3 );
+
+function save_post_wc_booking( $post_id, \WP_Post $post, $update ) {
+
+	//Get customer's latitude and lontitude from COOKIE
+	$location = isset($_COOKIE['location_lat_long']) ? $_COOKIE['location_lat_long'] : false;
+	$location_latitutde = false;
+	$location_longtitude = false;
+	if($location){
+		$coord = explode(",",$location);
+		if(count($coord) == 2){
+			$location_latitutde = $coord[0];
+			$location_longtitude = $coord[1];
+		}
+	}
+
+	if($location_latitutde){
+		if( ! get_post_meta( $post_id,'latitude', true ) ){
+			add_post_meta($post_id,'latitude',$location_latitutde);
+		}else{
+			update_post_meta($post_id,'latitude',$location_latitutde);
+		}
+	}
+	if($location_longtitude){
+		if( ! get_post_meta( $post_id,'lontitude', true ) ){
+			add_post_meta($post_id,'lontitude',$location_longtitude);
+		}else{
+			update_post_meta($post_id,'lontitude',$location_longtitude);
+		}
+	}
+}
+
+add_filter( 'calculate_buffer_time','calculate_buffer_time_filter',10,6);
+
+function calculate_buffer_time_filter($buffertime,$latitude,$longtitude,$booking_latitude,$booking_longtitude,$duration){
+	if($latitude && $longtitude && $booking_latitude && $booking_longtitude){
+		$distance = distance($latitude,$longtitude,$booking_latitude,$booking_longtitude,"K");
+		$speed = 50;
+		//calculate time based on distance/speed. convert to how many duration
+		$buffertime = round($distance*(60/$duration) / $speed,0); 
+	}
+
+	$buffertime = intval($buffertime);
+	$buffertime = $buffertime <= 0? 1: $buffertime;
+	$buffertime = $buffertime >=4? 4: $buffertime;
+
+	return $buffertime;
+}

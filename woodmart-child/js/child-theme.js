@@ -223,4 +223,21 @@ jQuery(document).ready(function ($){
           });
     }
 
+    $("body").on('DOMSubtreeModified', ".wc-bookings-time-block-picker", updateValidEnddate);
+    function updateValidEnddate(){
+        $('#wc-bookings-form-end-time option[value!=0]').hide();
+        //service*duration + buffer time.
+        var allowedBlock = $('.wc-pao-addon-checkbox:checked').length * 3;
+        if($('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').length){
+            $('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').show();
+        }else{
+            $('#wc-bookings-form-end-time option[value="0"]').show();
+            $('#wc-bookings-form-end-time option[value="0"]').prop('selected','true');
+        }
+    }
+    $('.wc-pao-addon-checkbox').on('change',function(){
+        var servicesCount = $('.wc-pao-addon-checkbox:checked').length;
+        Cookies.set("servicesCount", servicesCount);
+        $('.selection-start-date.ui-datepicker-current-day').trigger('click');
+    })
 });
