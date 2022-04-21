@@ -249,7 +249,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 									if (data["results"][0]) {
 										$(location).removeClass('invalid');
 										document.getElementById('location_coords').value = data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng;
-										document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}`;
+										document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}; path=/`;
 									}
 								});
 							}, 60));
@@ -270,7 +270,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 							locBox.value = position.coords.latitude + ',' + position.coords.longitude;
 
 							$('#your-location-search').addClass('entered');
-							document.cookie = `location_lat_long=${position.coords.latitude + ',' + position.coords.longitude}`;
+							document.cookie = `location_lat_long=${position.coords.latitude + ',' + position.coords.longitude}; path=/`;
 							
 							if ($('#booking-date-search').hasClass('entered') && $('#your-location-search').hasClass('entered')) {
 								$('.searchform .searchsubmit').prop('disabled','').addClass('entered');
