@@ -1181,19 +1181,19 @@ function save_post_wc_booking( $post_id, \WP_Post $post, $update ) {
 		}
 	}
 	if($location_longtitude){
-		if( ! get_post_meta( $post_id,'lontitude', true ) ){
-			add_post_meta($post_id,'lontitude',$location_longtitude);
+		if( ! get_post_meta( $post_id,'longitude', true ) ){
+			add_post_meta($post_id,'longitude',$location_longtitude);
 		}else{
-			update_post_meta($post_id,'lontitude',$location_longtitude);
+			update_post_meta($post_id,'longitude',$location_longtitude);
 		}
 	}
 }
 
 add_filter( 'calculate_buffer_time','calculate_buffer_time_filter',10,6);
 
-function calculate_buffer_time_filter($buffertime,$latitude,$longtitude,$booking_latitude,$booking_longtitude,$duration){
-	if($latitude && $longtitude && $booking_latitude && $booking_longtitude){
-		$distance = distance($latitude,$longtitude,$booking_latitude,$booking_longtitude,"K");
+function calculate_buffer_time_filter($buffertime,$latitude,$longitude,$booking_latitude,$booking_longitude,$duration){
+	if($latitude && $longitude && $booking_latitude && $booking_longitude){
+		$distance = distance($latitude,$longitude,$booking_latitude,$booking_longitude,"K");
 		$speed = 50;
 		//calculate time based on distance/speed. convert to how many duration
 		$buffertime = round($distance*(60/$duration) / $speed,0); 
