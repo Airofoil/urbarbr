@@ -69,7 +69,7 @@ jQuery(document).ready(function ($){
                     if (data["results"][0]) {
                         $(location).removeClass('invalid');
                         document.getElementById('location_coords').value = data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng;
-                        document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}`;
+                        document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}; path=/`;
                     }
                 });
             }, 60));
