@@ -354,10 +354,10 @@ body.home .vc-hoverbox-wrapper {
 	letter-spacing: 0.03em;
 }
 
+/* Contact Form 7 plugin */
 .wpcf7-form input {
 	font-weight: normal;
 }
-
 .wpcf7-submit {
 	width: 100%;
 	background: #657F97;
@@ -369,13 +369,28 @@ body.home .vc-hoverbox-wrapper {
 	color: white;
 	background: var(--urbarbr-shade);
 }
-
 .wpcf7-submit#barber {
 	margin-bottom: 20px;
 }
-
 div.wpcf7 .wpcf7-spinner {
 	margin-left: 0;
+}
+.wpcf7-form label {
+	position: relative;
+}
+.wpcf7-form.invalid input.wpcf7-text {
+	margin-bottom: 36px;
+}
+body div.wpcf7 .wpcf7-spinner::before {
+	width: 15px;
+	height: 15px;
+	top: unset;
+	left: unset;
+	right: 15px;
+	margin-top: 14px;
+}
+#wpcf7-f8389-p8343-o1 input[type="submit"] + .wpcf7-spinner { /* Hide the submitting loader for the submit buttons, in favour of the one JDH added to the input box */
+	display: none;
 }
 
 .product-section-title {
@@ -1149,9 +1164,12 @@ content: '\f3c5';
 }
 
 .searchform input[type="text"] {
+	height: 46px;
 	padding-right: 0;
-	padding-left: 45px;
 	border-color: currentColor !important;
+}
+.searchform input[type="text"].icon {
+	padding-left: 45px;
 }
 /*-.searchform input[type="text"]::placeholder {
 	color: inherit;
@@ -1241,15 +1259,15 @@ body.home .vc_column-inner {
 
 
 
-.searchform.woodmart-ajax-search.jac-test-class{
+.searchform{
 	display: flex;
 	justify-content: flex-start;
 }
-.searchform.woodmart-ajax-search.jac-test-class > * {
+.searchform > * {
 	position: relative;
 	margin: 0 20px 20px 0 !important;
 }
-.searchform.woodmart-ajax-search.jac-test-class .searchsubmit{
+.searchform .searchsubmit{
 	position: unset !important;
 	width: unset;
 	height: 46px;
@@ -1261,10 +1279,10 @@ body.home .vc_column-inner {
 	/* background: #001F35; */
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTkuMjkyODkgMTguNzA3MUM4LjkwMjM3IDE4LjMxNjYgOC45MDIzNyAxNy42ODM0IDkuMjkyODkgMTcuMjkyOUwxNC41ODU4IDEyTDkuMjkyODkgNi43MDcxMUM4LjkwMjM3IDYuMzE2NTggOC45MDIzNyA1LjY4MzQyIDkuMjkyODkgNS4yOTI4OUM5LjY4MzQyIDQuOTAyMzcgMTAuMzE2NiA0LjkwMjM3IDEwLjcwNzEgNS4yOTI4OUwxNi43MDcxIDExLjI5MjlDMTcuMDk3NiAxMS42ODM0IDE3LjA5NzYgMTIuMzE2NiAxNi43MDcxIDEyLjcwNzFMMTAuNzA3MSAxOC43MDcxQzEwLjMxNjYgMTkuMDk3NiA5LjY4MzQyIDE5LjA5NzYgOS4yOTI4OSAxOC43MDcxWiIgZmlsbD0iIzg4OTZBMiIvPgo8L3N2Zz4K");
 	/*-background-image: url('./svgs/chevron-right.svg'); */
-	background-repeat: no-repeat;
-	background-position: 12px center;
+	background-repeat: no-repeat !important;
+	background-position: 12px center !important;
 }
-.searchform.woodmart-ajax-search.jac-test-class .searchsubmit:hover {
+.searchform .searchsubmit:hover {
 	background-color: var(--urbarbr-midblue);
 	border-color: var(--urbarbr-midblue) !important;
 }
@@ -1375,17 +1393,17 @@ footer .wd-social-icons .wd-social-icon .wd-icon {
 }
 @media (min-width: 768px) {
 	/*--footer .wd-social-icons .wd-social-icon:nth-child(2n+1) {
-	margin-left: 25% !important;
-} */
+		margin-left: 25% !important;
+	} */
 	.searchform .searchsubmit:hover span {
 		max-width: 200px;
 		padding-left: 8px;
 	}
 }
-@media (max-width: 390px) {
-	/*--footer .wd-social-icons .wd-social-icon:nth-child(2n+1) {
-	margin-left: 30px !important;
-} */
+@media (max-width: 365px) {
+	footer .wd-social-icons .wd-social-icon:nth-child(2n+1) {
+		margin-left: 20px !important;
+	}
 }
 footer .widget {
 	border-bottom: 0;
@@ -1511,15 +1529,15 @@ background:#fff;
 	.related-products .product-image-link .size-woocommerce_thumbnail{
 		height: 250px;
 	}
-	/*@@@.searchform.woodmart-ajax-search.jac-test-class{
+	/*@@@.searchform{
 	flex-direction:column;
 } */
-	/*--TEST.searchform.woodmart-ajax-search.jac-test-class input,
-	.searchform.woodmart-ajax-search.jac-test-class .booking-services-search{
+	/*--TEST.searchform input,
+	.searchform .booking-services-search{
 	height:42px;
 }
-	.searchform.woodmart-ajax-search.jac-test-class input:not(.booking-date-search),
-	.searchform.woodmart-ajax-search.jac-test-class .booking-services-search{
+	.searchform input:not(.booking-date-search),
+	.searchform .booking-services-search{
 	margin-bottom:10px;
 } * /
 	.searchform .searchsubmit {
@@ -1619,48 +1637,48 @@ a:hover {
 }
 
 @media (max-width: 991px) and (min-width: 476px) {
-	.searchform.woodmart-ajax-search.jac-test-class {
+	.searchform {
 		flex-wrap: wrap;
 	}
 
-	/*@@@.searchform.woodmart-ajax-search.jac-test-class .your-location-search, 
-	.wd-search-form .searchform.woodmart-ajax-search.jac-test-class .booking-services-search {
+	/*@@@.searchform .your-location-search, 
+	.wd-search-form .searchform .booking-services-search {
 	height: 46px;
 	width: 45%;
 	max-width: 45%;
 } */
 
-	/*@@@.searchform.woodmart-ajax-search.jac-test-class .booking-date-search {
+	/*@@@.searchform .booking-date-search {
 	margin-top: 20px;
 	width: 45%;
 	max-width: 45%!important;
 } */
 
-	/*@@@.searchform.woodmart-ajax-search.jac-test-class .searchsubmit {
+	/*@@@.searchform .searchsubmit {
 	margin-top: 20px;
 } */
 }
 
 @media (max-width: 475px) {
-	.searchform.woodmart-ajax-search.jac-test-class {
+	.searchform {
 		flex-wrap: wrap;
 	}
 
-	/*@@@.searchform.woodmart-ajax-search.jac-test-class .your-location-search, 
-	.wd-search-form .searchform.woodmart-ajax-search.jac-test-class .booking-services-search {
+	/*@@@.searchform .your-location-search, 
+	.wd-search-form .searchform .booking-services-search {
 	height: 46px;
 	width: 100%;
 	/*--max-width: 100%; * /
 } */
 
-	/*@@@.searchform.woodmart-ajax-search.jac-test-class .booking-date-search {
+	/*@@@.searchform .booking-date-search {
 	margin-top: 20px;
 	width: 60%;
 	max-width: 60%!important;
 } */
 
-	/*@@@.searchform.woodmart-ajax-search.jac-test-class .searchsubmit,
-	.wd-search-form .searchform.woodmart-ajax-search.jac-test-class .booking-services-search {
+	/*@@@.searchform .searchsubmit,
+	.wd-search-form .searchform .booking-services-search {
 	margin-top: 20px;
 } */
 
@@ -2164,7 +2182,7 @@ display: none;
 	object-fit: cover;
 }
 
-/*??.searchform.woodmart-ajax-search.jac-test-class i.fa {
+/*??.searchform i.fa {
 position: absolute;
 width: 100%;
 height: 100%;
@@ -2216,7 +2234,7 @@ border-color: white !important;
 } */
 
 @media (max-width: 475px) {	
-	.searchform.woodmart-ajax-search.jac-test-class > * {
+	.searchform > * {
 		margin: 0 10px 10px 0 !important;
 	}
 
@@ -2725,16 +2743,19 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 	height: auto;
 }
 
-.home form .error-select-button {
+.home form .error-select-button,
+.home form .error-date-select-field {
+	margin-bottom: 36px;
 	border: 1px solid #CE341E!important;
 	/* height: auto; */
 }
 
-.home form .error-date-select-field {
-	border: 1px solid #CE341E!important;
-}
-
-.search-error-message {
+.search-error-message,
+.wpcf7-not-valid-tip {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	margin-top: 10px;
 	/* display: inline-block; */
 	padding: 5px 10px;
@@ -2758,9 +2779,6 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 	top: auto;
 }
 
-#wc-bookings-form-end-time option[data-value]{
-	display:none;
-}
 @media (max-width: 475px) {
 	#error-search-date-select-mobile, #error-search-location-mobile {
 		display: inline-block;
@@ -2789,3 +2807,12 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 		display: none!important;
 	}
 }
+
+.error404 .page-header::before { /* Fix the 404 page text overlaps */
+	position: unset;
+	display: block;
+	margin: -64px;
+	text-align: center;
+	transform: none;
+}
+  

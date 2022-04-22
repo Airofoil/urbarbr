@@ -49,30 +49,32 @@ jQuery(document).ready(function ($){
 		if ($(this).is(':valid')) {
             $(this).addClass('entered');
 
-            $('#your-location-search').on('blur', setTimeout(() => {
-                let location = document.getElementById('your-location-search');
-                if (!location.value) {
-                    $(location).removeClass('invalid');
-                    return;
-                }
+            if ($('#your-location-search').length) {
+                $('#your-location-search').on('blur', setTimeout(() => {
+                    let location = document.getElementById('your-location-search');
+                    if (!location.value) {
+                        $(location).removeClass('invalid');
+                        return;
+                    }
 
-                if (location.value.length < 4) {
-                    $(location).addClass('invalid');
-                    return;
-                }
-
-                $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${location.value}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) { console.log(41, data);
-                    if (data.status !== 'OK' || !data["results"]) {
+                    if (location.value.length < 4) {
                         $(location).addClass('invalid');
                         return;
                     }
-                    if (data["results"][0]) {
-                        $(location).removeClass('invalid');
-                        document.getElementById('location_coords').value = data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng;
-                        document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}; path=/`;
-                    }
-                });
-            }, 60));
+
+                    $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${location.value}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) { console.log(41, data);
+                        if (data.status !== 'OK' || !data["results"]) {
+                            $(location).addClass('invalid');
+                            return;
+                        }
+                        if (data["results"][0]) {
+                            $(location).removeClass('invalid');
+                            document.getElementById('location_coords').value = data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng;
+                            document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}; path=/`;
+                        }
+                    });
+                }, 60));
+            }
         }
 
 		if (!$('.searchform.woodmart-ajax-search input:not(.entered):not([type="hidden"])').length) {
@@ -128,14 +130,14 @@ jQuery(document).ready(function ($){
     //     $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
     // });
 
-    $('.searchsubmit.btn').click(function(event){
+    $('body.home .searchsubmit.btn').click(function(event){
         if ( $(".home .filter-option").text() == "" || $(".home .filter-option").text() == "Select a service") {
             // $(".booking-services-search button.btn").css('border-color', 'red!important');
             // $(".booking-services-search button.btn").css('border-width', '1px!important');
             // $(".booking-services-search button.btn").css('height', 'auto');
             $('.booking-services-search button.btn').addClass('error-select-button');
             if(!$('#error-search-service').length) {
-                $( '<div class="search-error-message" id="error-search-service">please select a sercive</div>' ).insertAfter( ".booking-services-search button.btn" );
+                $( '<div class="search-error-message" id="error-search-service">please select a service</div>' ).insertAfter( ".booking-services-search button.btn" );
             } else {
                 $("#error-search-service").css('display', 'inline-block');
             }
@@ -240,4 +242,8 @@ jQuery(document).ready(function ($){
         Cookies.set("servicesCount", servicesCount);
         $('.selection-start-date.ui-datepicker-current-day').trigger('click');
     })
+
+    $('input[placeholder*="posts"]').each(function() { // Change any 'posts' input placeholders to 'barbers'
+        $(this).attr('placeholder',$(this).attr('placeholder').replace('posts', 'barbers'));
+    });
 });

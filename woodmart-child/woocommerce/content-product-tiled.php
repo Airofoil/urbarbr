@@ -81,7 +81,11 @@
 					<a href="<?php echo get_permalink() ?>#reviews" class="star" rel="nofollow"><span></span><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</a> */?>
 
 					<div class="product-reviews">
+						<?php if ($review_count > 0) { ?>
 						<p class="star"><?php echo substr($product->get_average_rating(), 0, 3); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?><span class="count"> Reviews</span>)</p>
+						<?php } else { ?>
+						<p class="star">No reviews</p>
+						<?php } ?>
 					</div>
 					
 					<?php /*--if(!$display_addon){ ?>

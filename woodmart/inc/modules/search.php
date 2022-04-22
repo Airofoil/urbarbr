@@ -45,7 +45,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 			'search_style' => '',
 			'custom_icon' => '',
 			'el_classes' => '',
-			'wrapper_custom_classes' => '',
+			'wrapper_custom_classes' => ''
 		) );
 
 		extract( $args );
@@ -82,7 +82,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 			'post_type' => $post_type,
 			'count' => $count,
 			'sku' => woodmart_get_opt( 'show_sku_on_ajax' ) ? '1' : '0',
-			'symbols_count' => apply_filters( 'woodmart_ajax_search_symbols_count', 3 ),
+			'symbols_count' => apply_filters( 'woodmart_ajax_search_symbols_count', 3 )
 		);
 
 		if( $ajax ) {
@@ -188,13 +188,13 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<?php } else { ?>
 					<input type="text" class="s" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo get_search_query(); ?>" name="s" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>" title="<?php echo esc_attr( $placeholder ); ?>">
 					<?php } ?>
-					<input type="hidden" name="post_type" value="<?php echo esc_attr( $post_type ); ?>">
+					<input type="hidden" name="post_type" value="product"><?php /* echo esc_attr( $post_type ); --Replaced $post_type with 'product' hardcoded to ensure search forms on other pages work and can find barbers */ ?>
 					
 					<!-- TEST DATA -->
 					<?php if ($post_type == 'product') { ?>
 					<!-- <input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time"> -->
 					<div class="booking-date-search" class="input-group date">
-					   <input type="text" id="booking-date-search" name="booking-date" class="form-control" placeholder="Select Date and Time" readonly>
+					   <input type="text" id="booking-date-search" name="booking-date" class="form-control icon" placeholder="Select Date and Time" title="Select Date and Time" readonly>
 					   <!-- <input type="hidden" id="booking-date" name="booking-date"> -->
 					   <input type="input" id="booking-time" name="booking-time" style="display:none;">
 					</div>
@@ -204,7 +204,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					
 					<?php if ($post_type == 'product') { ?>
 					<div class="your-location-search" class="input-group">
-						<input type="text" id="your-location-search" class="form-control" name="your-location" placeholder="Set your location" title="Set your location" data-toggle="dropdown" aria-label=".form-select-sm" readonly>
+						<input type="text" id="your-location-search" name="your-location" class="form-control icon" placeholder="Set your location" title="Set your location" data-toggle="dropdown" aria-label=".form-select-sm" readonly>
 						<button type="button" class="input-clear" title="Clear"></button>
 						<ul class="dropdown-menu" role="menu">
 							<li data-original-index="0">
@@ -241,7 +241,11 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 									return;
 								}
 
+								$(location).addClass('loading');
+								
 								$.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${location.value}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) { console.log(41, data);
+									$(location).removeClass('loading');
+
 									if (data.status !== 'OK' || !data["results"]) {
 										$(location).addClass('invalid');
 										return;

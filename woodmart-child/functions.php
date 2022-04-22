@@ -549,60 +549,60 @@ function custom_cart_items_prices( $cart ) {
 
 function my_custom_js_css() {
     echo '<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>
-	<script src="' . get_stylesheet_directory_uri() . '/periodpicker/jquery.mousewheel.min.js"></script>
-	<script src="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.css">
-	<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.css">
-	<script>
-		$(document).ready(function() {
-			$(".searchform input").unbind();
-			$("#booking-date-search").datetimepicker({
-				// timepicker: false, // Need timepicker enabled to insert the other timepicker
-				format: "Y-m-d",
-				yearStart: 2022,
-				yearEnd: new Date().getFullYear() + 1,
-				minDate: Date.now(),
-				maxDate: Date.now() + 3600000*24*200 // Allow up to 200 days in the future
-				// closeOnWithoutClick: false
+		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+		<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>
+		<script src="' . get_stylesheet_directory_uri() . '/periodpicker/jquery.mousewheel.min.js"></script>
+		<script src="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.css">
+		<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.css">
+		<script>
+			$(document).ready(function() {
+				$(".searchform input").unbind();
+				$("#booking-date-search").datetimepicker({
+					// timepicker: false, // Need timepicker enabled to insert the other timepicker
+					format: "Y-m-d",
+					yearStart: 2022,
+					yearEnd: new Date().getFullYear() + 1,
+					minDate: Date.now(),
+					maxDate: Date.now() + 3600000*24*200 // Allow up to 200 days in the future
+					// closeOnWithoutClick: false
+				});
+				$("#booking-time").TimePickerAlone({
+					inputFormat: "HH:mm:ss",
+					defaultTime: "00:00",
+					hours: true,
+					minutes: true,
+					seconds: false,
+					ampm: true,
+					steps: [1,5,30,1],
+					onHide: function ($input) { console.log($input.val())
+						return $input.val() === "12:34:00";
+					}
+				});
+				$("#booking-time").trigger("click");
+				$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog")).append(`<button class="datepicker-confirm btn-link btn">Ok</button><button class="datepicker-cancel btn-link btn">Cancel</button>`);
+				$(".datepicker-confirm").on("click touchstart", function() {
+					$("#booking-date-search").datetimepicker("hide");
+					$("#booking-date-search").addClass("entered");
+				});
+				$(".datepicker-cancel").on("click touchstart", function() {
+					$("#booking-date-search").datetimepicker("reset");
+					$("#booking-time").TimePickerAlone("setValue", "00:00");
+					$("#booking-date-search").datetimepicker("hide");
+				});
+				//-$(".periodpicker_timepicker_dialog").appendTo(".xdsoft_datetimepicker");
+				//-$(".xdsoft_datetimepicker").append();
 			});
-			$("#booking-time").TimePickerAlone({
-				inputFormat: "HH:mm:ss",
-				defaultTime: "00:00",
-				hours: true,
-				minutes: true,
-				seconds: false,
-				ampm: true,
-				steps: [1,5,30,1],
-				onHide: function ($input) { console.log($input.val())
-					return $input.val() === "12:34:00";
-				}
-			});
-			$("#booking-time").trigger("click");
-			$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog")).append(`<button class="datepicker-confirm btn-link btn">Ok</button><button class="datepicker-cancel btn-link btn">Cancel</button>`);
-			$(".datepicker-confirm").on("click touchstart", function() {
-				$("#booking-date-search").datetimepicker("hide");
-				$("#booking-date-search").addClass("entered");
-			});
-			$(".datepicker-cancel").on("click touchstart", function() {
-				$("#booking-date-search").datetimepicker("reset");
-				$("#booking-time").TimePickerAlone("setValue", "00:00");
-				$("#booking-date-search").datetimepicker("hide");
-			});
-			//-$(".periodpicker_timepicker_dialog").appendTo(".xdsoft_datetimepicker");
-			//-$(".xdsoft_datetimepicker").append();
-		});
-	</script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
-	
-	<!-- --<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">-->
- 	<!-- --<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>-->
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
-';
+		</script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+		
+		<!-- --<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css">-->
+		<!-- --<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>-->
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+	';
 }
 /*
 echo '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -616,6 +616,9 @@ echo '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.
 	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>';
 */
 add_action( 'wp_head', 'my_custom_js_css' );
+
+remove_action('wp_head', 'moment-js');
+remove_action('wp_head', 'moment-js-after'); 
 
 /**
  * @snippet       Redirect to Checkout Upon Add to Cart - WooCommerce
@@ -929,6 +932,8 @@ add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_locat
 // $field_array['_end_date'] varibale, setting the end time to the right amount of time
 */
 function edit_length_of_booking($field_array) {
+	if (!is_singular('product')) return $field_array; // To stop the extra field data showing on product info e.g. for Favourites/Wishlist page //-echo 'post_type:' . get_post_type();
+
 	$total_time = 0;
 	echo <<<'EOD'
 	<script>
@@ -1050,19 +1055,19 @@ function edit_length_of_booking($field_array) {
 	});
 	//console.log(${json_encode($_POST['wc_bookings_field_start_month'])});
 	console.log("Field here maybe");
-</script>
-EOD;*/
-		// 15 mins is 900
-		// set booking length to not fixed
-		$field_array['wc_bookings_field_start_date']['duration_type'] = "variable";
-	
-		// calculate what services are selected and their length
-	
-	
-		$field_array['_end_date'] = $field_array['_end_date'] + 2700;
-		return $field_array;
-	}
-	add_filter('booking_form_fields', 'edit_length_of_booking', 10, 1);
+	</script>
+	EOD;*/
+
+	// 15 mins is 900
+	// set booking length to not fixed
+	$field_array['wc_bookings_field_start_date']['duration_type'] = "variable";	
+
+	// calculate what services are selected and their length
+
+	$field_array['_end_date'] = $field_array['_end_date'] + 2700;
+	return $field_array;
+}
+add_filter('booking_form_fields', 'edit_length_of_booking', 10, 1);
 
 
 function edit_length_of_booking2($field_array) {
