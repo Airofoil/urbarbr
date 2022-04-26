@@ -271,7 +271,26 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 						}
 
 						function showLocation(position) { /* Set the value in the location box */
+							jQuery('#your-location-search').addClass('full-width').prop('readonly','').focus();
+
 							locBox.value = position.coords.latitude + ',' + position.coords.longitude;
+
+							$(location).addClass('loading');
+							$('#your-location-search').on('blur', setTimeout(() => {
+							    let location = document.getElementById('your-location-search');
+								$.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) {
+									$(location).removeClass('loading');
+
+									if (data.status !== 'OK' || !data["results"]) {
+										$(location).addClass('invalid');
+										return;
+									}
+									if (data["results"][0]) {
+										$(location).removeClass('invalid');
+										document.getElementById('your-location-search').value = data["results"][0].formatted_address;
+									}
+								});
+						    }, 60));
 
 							$('#your-location-search').addClass('entered');
 							document.cookie = `location_lat_long=${position.coords.latitude + ',' + position.coords.longitude}; path=/`;
