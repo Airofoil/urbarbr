@@ -233,6 +233,8 @@ jQuery(document).ready(function ($){
         if($('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').length){
             $('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').show();
             $('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').prop('selected','true');
+            $('.wc-bookings-booking-form-button').removeClass('disabled');
+            $('.wc_bookings_field_duration').val(allowedBlock);
         }else{
             $('#wc-bookings-form-end-time option[value="0"]').show();
             $('#wc-bookings-form-end-time option[value="0"]').prop('selected','true');
