@@ -410,6 +410,12 @@ body div.wpcf7 .wpcf7-spinner::before {
 	color: #102c45;
 }
 
+/* For the Favourites/Wishlist page */
+body.page-id-8724 .product-stock,
+body.page-id-8724 .variation {
+	display: none !important;
+}
+
 /*@@@.product-section .production-section-button {
 width: 100%;
 background: #102C45;
@@ -2119,8 +2125,14 @@ h5.widget-title + [class*="menu"] {
 	}
 }
 
+@media (max-width: 400px) {
+	.widget_nav_menu ul li a {
+		height: 30px;
+	}
+}
+
 footer .footer-sidebar.widget-area::after {
-	content: '© 2022 Urbarbr';
+	content: '© 2022 UrBarbr';
 	position: absolute;
 	bottom: 0;
 	left: 50%;
@@ -2584,7 +2596,7 @@ body.single-product .wc-bookings-booking-cost {
 	order: 2;
 	transition: .3s;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
 	.wc-pao-addons-container .form-row > label:hover .wc-pao-addon-checkbox + span.cb {
 		color: #FFFA;
 	}

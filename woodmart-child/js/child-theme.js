@@ -249,4 +249,15 @@ jQuery(document).ready(function ($){
     $('input[placeholder*="posts"]').each(function() { // Change any 'posts' input placeholders to 'barbers'
         $(this).attr('placeholder',$(this).attr('placeholder').replace('posts', 'barbers'));
     });
+
+    $('.create-account-button').attr('href',window.location.origin + '/registration-form');
+
+    if ($('body').hasClass('page-id-8724')) { // Replace the 'Product Name' table headings with 'Barber Name' on the Favourites page
+        $('.product-name .tinvwl-full').text('Barber Name');
+        $('.product-name .tinvwl-mobile').text('Barber');
+
+        $('.tinv-wishlist .wishlist_item').each(function() { // Replace the 'Add to Cart' button with a direct 'View Barber' link to the barber, much like the thumbnail link
+            $(this).find('.product-action').html(`<a href="${$(this).find('.product-thumbnail > a').attr('href')}" class="single_add_to_cart_button button">View Barber</a>`);
+        });
+    }
 });

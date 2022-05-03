@@ -201,30 +201,28 @@ function woo_custom_order_button_text() {
 
 add_action( 'template_redirect', 'select_services' );
 function select_services() {
-  // Make sure the request is for a user-facing page
-  if ( 
-    ! is_product()
-  ) {
-    return false;
-  }
+	// Make sure the request is for a user-facing product page
+	if (!is_product()) {
+		return false;
+	}
+	
+	?>
+	<script>
+		document.addEventListener("DOMContentLoaded", function(event) {
+			const url = window.location.href;
+			let hash = url.split('#');
+			let items = hash.slice(1);
+			if (items.length){
+				let items_together = items[0].replace(/["'{}%2134567890:]/g, "");
+				let services = items_together.split(',');
 
-  // Otherwise do your thing
-  ?><script>
-	document.addEventListener("DOMContentLoaded", function(event) {
-		const url = window.location.href;
-		let hash = url.split('#')
-		let items = hash.slice(1);
-		if (items.length){
-			let items_together = items[0].replace(/["'{}%2134567890:]/g, "");
-			let services = items_together.split(',');
-
-			for (const i in services) {
-				document.querySelectorAll(`input[type='checkbox'][value=${services[i]}]`)[0].checked = true;
+				for (const i in services) {
+					if (services[i]) document.querySelectorAll(`input[type="checkbox"][value="${services[i]}"]`)[0].checked = true;
+				}
 			}
-		}
-	});
-	 </script> 
-  <?php  
+		});
+	</script>
+	<?php 
 }
 
 /* Change the base Author url from '/author/' to '/profile/' - JDH * /
@@ -237,8 +235,11 @@ function cng_author_base() {
 
 // REGISTRATION SHORTCODE
 function wc_registration_form_function() {
-	if ( is_admin() ) return;
-	if ( is_user_logged_in() ) return;
+	/* If the user is logged in, redirect them to their account page instead of showing a blank page */
+	if (is_admin() || is_user_logged_in()) {
+		wp_redirect('/my-account');
+		exit();
+	}
   
 	ob_start();
   
@@ -316,8 +317,8 @@ function bbloomer_remove_address_my_account( $items ) {
 		'edit-account'    => __( 'My Profile', 'woocommerce' ),
 		// 'edit-address'    => _n( 'My Addresses', 'Address', (int) wc_shipping_enabled(), 'woocommerce' ),
 		'orders'          => __( 'My Orders', 'woocommerce' ),
-		'wishlist'   	  => __( 'My Wishlist', 'woocommerce' ),
-		'my-review'   	  => __( 'My Review', 'woocommerce' ),
+		'wishlist'   	  => __( 'My Favourites', 'woocommerce' ),
+		'my-review'   	  => __( 'My Reviews', 'woocommerce' ),
 		'customer-logout' => __( 'Logout', 'woocommerce' ),
 	);
 
@@ -556,6 +557,19 @@ function my_custom_js_css() {
 		<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.css">
 		<link rel="stylesheet" type="text/css" href="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.css">
 		<script>
+			var listener = function(e) {
+				if (!document.getElementsByClassName("xdsoft_datetimepicker")[0].contains(e.target)) { console.log(11,"clicked on",e,"- hiding datetimepicker");
+					$(".xdsoft_datetimepicker").hide();
+					if ($("#booking-date-search").val()) $("#booking-date-search").addClass("entered");
+					else {
+						$("#booking-date-search").datetimepicker("reset");
+						$("#booking-time").TimePickerAlone("setValue", "00:00");
+						$(".xdsoft_datetimepicker").hide();//datetimepicker("hide");
+						$("#booking-date-search").datetimepicker("hide");
+					}
+					window.removeEventListener("click", listener, false);
+				}
+			};
 			$(document).ready(function() {
 				$(".searchform input").unbind();
 				$("#booking-date-search").datetimepicker({
@@ -564,8 +578,13 @@ function my_custom_js_css() {
 					yearStart: 2022,
 					yearEnd: new Date().getFullYear() + 1,
 					minDate: Date.now(),
-					maxDate: Date.now() + 3600000*24*200 // Allow up to 200 days in the future
-					// closeOnWithoutClick: false
+					maxDate: Date.now() + 3600000*24*200, // Allow up to 200 days in the future
+					// closeOnWithoutClick: true,
+					// closeOnDateSelect: false,
+					onClose: function(ct,$i){ console.log("cancelling close"); return false; /* Cancel the default close - this is since touching in the timepicker will close the datepicker */ },
+					onShow: function(){ console.log("opening");
+						setTimeout(() => window.addEventListener("click", listener, false), 100);
+					}
 				});
 				$("#booking-time").TimePickerAlone({
 					inputFormat: "HH:mm:ss",
@@ -582,12 +601,14 @@ function my_custom_js_css() {
 				$("#booking-time").trigger("click");
 				$(".xdsoft_datetimepicker .xdsoft_timepicker").html($(".periodpicker_timepicker_dialog")).append(`<button class="datepicker-confirm btn-link btn">Ok</button><button class="datepicker-cancel btn-link btn">Cancel</button>`);
 				$(".datepicker-confirm").on("click touchstart", function() {
+					$(".xdsoft_datetimepicker").hide();//datetimepicker("hide");
 					$("#booking-date-search").datetimepicker("hide");
-					$("#booking-date-search").addClass("entered");
+					if ($("#booking-date-search").val()) $("#booking-date-search").addClass("entered");
 				});
 				$(".datepicker-cancel").on("click touchstart", function() {
 					$("#booking-date-search").datetimepicker("reset");
 					$("#booking-time").TimePickerAlone("setValue", "00:00");
+					$(".xdsoft_datetimepicker").hide();//datetimepicker("hide");
 					$("#booking-date-search").datetimepicker("hide");
 				});
 				//-$(".periodpicker_timepicker_dialog").appendTo(".xdsoft_datetimepicker");
