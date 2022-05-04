@@ -208,16 +208,21 @@ jQuery(document).ready(function ($){
             },
             success: function(response) {
 			  var formattedDateTime = new Date(formattedDate).getTime();
+              var slotsFound=0;
 			  for(var [key,slotinfo] of Object.entries(response.records)){
                 if(slotinfo.available == 1){
                   var startDateTime = new Date(slotinfo.date).getTime();
                   var endDateTime = startDateTime + slotinfo.duration*1000;
                   if(formattedDateTime >= startDateTime && formattedDateTime <=endDateTime){
                       $('[data-id='+slotinfo.product_id+']').show();
+                      slotsFound +=1;
                   }
 				}
               }
               console.log(response);
+              if(slotsFound==0){
+                  console.log("No Slots Found");
+              }
             },
             error: function(xhr) {
               //Do Something to handle error
