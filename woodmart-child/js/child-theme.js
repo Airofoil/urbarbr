@@ -180,6 +180,14 @@ jQuery(document).ready(function ($){
             $("#error-search-location").css('display', 'none');
             $("#error-search-location-mobile").css('display', 'none');
         }
+
+        //write to cookie here
+        var searchData = {
+            "service": $(".home .filter-option").text().toLowerCase(),
+            "date": $("#booking-date-search").val(),
+            "time": $('#booking-time').val()
+        };
+        document.cookie = "lastSearch="+JSON.stringify(searchData);
     });
 	
 	if($('.product-grid-item[data-mindate]').length){
@@ -268,4 +276,63 @@ jQuery(document).ready(function ($){
             $(this).find('.product-action').html(`<a href="${$(this).find('.product-thumbnail > a').attr('href')}" class="single_add_to_cart_button button">View Barber</a>`);
         });
     }
+
+    if ($('body').hasClass('single-product')) {
+        if(typeof(Cookies.get('lastSearch'))=='string'){
+            var searchValues = JSON.parse(Cookies.get('lastSearch'));
+            if(searchValues.service){
+                $(".wc-pao-addon-container .wc-pao-addon-checkbox[value='"+searchValues.service+"']").click();
+            }
+            if(searchValues.date){
+                var dateSet=false;
+                var timeSet=false;
+
+                let dates= searchValues.date.split("-");
+                let month=parseInt(dates[1])-1;
+                let day=parseInt(dates[2]);
+                searchValues = JSON.parse(Cookies.get('lastSearch'));
+                let times=searchValues.time.split(":");
+                let pastNoon="am";
+                if(times[0]>=12){
+                    pastNoon="pm";
+                    
+                }
+                if(times[0]>12){
+                    times[0]-=12;
+                }
+                let timeValue=times[0]+":"+times[1]+" "+pastNoon;
+                console.log("Time value is: "+timeValue);
+
+
+                let timerId = "";
+                
+
+                function setDateTime() {if(dateSet==false){
+                    console.log("Setting time");
+                        if($(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").length > 0){
+                            $(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").parent().trigger("click");
+                            dateSet=true;
+                        }
+                    }
+
+                    if(timeSet==false){
+                        if($("#wc-bookings-form-start-time").length > 0){
+                            //$("#wc-bookings-form-start-time option:contains('"+timeValue+"')").attr('selected', 'selected');
+                            //$("#wc-bookings-form-start-time").trigger("change");
+                            timeSet=true;
+                        }
+                    }
+                    if(dateSet == true && timeSet == true){
+                        clearTimeout(timerId);
+                    } else {
+                        timerId=setTimeout(setDateTime, 1000);
+                    }
+                    
+                }
+                setDateTime();
+            }
+        }
+
+    }
+
 });
