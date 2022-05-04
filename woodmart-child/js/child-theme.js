@@ -213,7 +213,10 @@ jQuery(document).ready(function ($){
                 if(slotinfo.available == 1){
                   var startDateTime = new Date(slotinfo.date).getTime();
                   var endDateTime = startDateTime + slotinfo.duration*1000;
-                  if(formattedDateTime >= startDateTime && formattedDateTime <=endDateTime){
+                  var minimumStartTime = new Date();
+                  minimumStartTime.setHours(minimumStartTime.getHours() + 1);
+                  minimumStartTime=minimumStartTime.getTime();
+                  if(formattedDateTime >= startDateTime && formattedDateTime <=endDateTime && formattedDateTime > minimumStartTime){
                       $('[data-id='+slotinfo.product_id+']').show();
                       slotsFound +=1;
                   }
