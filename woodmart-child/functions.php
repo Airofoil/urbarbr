@@ -45,6 +45,12 @@ add_action( 'wp_enqueue_scripts', 'woodmart_child_enqueue_styles', 10010 );
 
 function my_theme_scripts() {
 	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js');
+
+	if(wp_script_is('wc-bookings-user-my-account')){
+		global $wp_scripts; 
+    	$wp_scripts->registered[ 'wc-bookings-user-my-account' ]->src = esc_url( get_stylesheet_directory_uri() )  . '/js/user-my-account.js';
+	}
+	
 }
 add_action( 'wp_enqueue_scripts', 'my_theme_scripts' );
 
@@ -550,7 +556,7 @@ function custom_cart_items_prices( $cart ) {
 
 function my_custom_js_css() {
     echo '<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
-		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>
 		<script src="' . get_stylesheet_directory_uri() . '/periodpicker/jquery.mousewheel.min.js"></script>
 		<script src="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.js"></script>
