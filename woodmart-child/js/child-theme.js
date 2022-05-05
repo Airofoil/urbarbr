@@ -322,69 +322,17 @@ jQuery(document).ready(function ($){
                     if(timeSet==false){
                         if($("#wc-bookings-form-start-time").length > 0){
                             
-                            $("#wc-bookings-form-start-time option:contains('"+timeValue+"')").attr('selected', 'selected');
+                            /*$("#wc-bookings-form-start-time option:contains('"+timeValue+"')").attr('selected', 'selected');
+                            $("#wc-bookings-form-start-time option:contains('"+timeValue+"')").change();
+                            $("#wc-bookings-form-start-time").val("2022-05-11T15:15:00+0930").change();
+                            
                             $( '.wc-bookings-booking-form' ).on( 'changeAuto', '#wc-bookings-form-start-time', function() {
-                                var value     = $( this ).val(),
-                                    id        = $( this ).parents( '.wc-bookings-start-time-container' ).data( 'productId' ),
-                                    blocks    = $( this ).parents( '.wc-bookings-start-time-container' ).data( 'blocks' ),
-                                    formField = $( this ).parents( '.form-field' ).eq( 0 );
-
-                                // Disable end time dropdown.
-                                $( '#wc-bookings-form-end-time' ).attr( 'disabled', 'disabled' );
-
-                                // Set the end time dropdown opacity.
-                                $( '#wc-bookings-form-end-time' ).css( 'opacity', '0.5' );
-
-                                // Hide the cost as a reset.
-                                $( this ).closest( 'form' ).find( '.wc-bookings-booking-cost' ).html( '' ).hide();
-
-                                if ( '0' === value ) {
-                                    $( this ).closest( 'form' ).find( '.wc-bookings-booking-form-button' ).addClass( 'disabled' );
-                                    return false;
-                                }
-
-                                // Disable the Book button.
-                                $( '.wc-bookings-booking-form' ).closest( 'form' ).find( '.wc-bookings-booking-form-button' ).addClass( 'disabled' );
-
-                                var fieldset     = $( '#wc-bookings-booking-form' );
-                                var resource_id = fieldset.find( '#wc_bookings_field_resource' ).val();
-
-                                var year_str = fieldset.find( 'input.booking_date_year' ).val();
-                                var year  = parseInt( year_str, 10 );
-                                var month_str = fieldset.find( 'input.booking_date_month' ).val();
-
-                                var month  = parseInt( month_str, 10 );
-                                var day_str = fieldset.find( 'input.booking_date_day' ).val();
-                                var day  = parseInt( day_str, 10 );
-
-                                var date_str =  year_str + '-' + month_str + '-' + day_str;
-
-                                if ( ! year || ! month || ! day ) {
-                                    return;
-                                }
-
-                                xhr = $.ajax( {
-                                    type: 		'POST',
-                                    url: 		booking_form_params.ajax_url,
-                                    data: 		{
-                                        action: 'wc_bookings_get_end_time_html',
-                                        security: booking_form_params.nonce.get_end_time_html,
-                                        start_date_time: value,
-                                        product_id: id,
-                                        blocks: blocks,
-                                        resource_id: resource_id,
-                                    },
-                                    success: function( response ) {
-                                        $( '.wc-bookings-end-time-container' ).replaceWith( response );
-                                        offset_block_times_for_end_time( date_str );
-                                        formField.find( 'input.required_for_calculation' ).val( value );
-                                    },
-                                    dataType: 	"html"
-                                } );
-
-                                return false;
-                            });
-                            $("#wc-bookings-form-start-time").trigger("changeAuto");
+                                $(".wc-bookings-booking-form #wc-bookings-form-start-time").change();
+                                $(".wc-bookings-booking-form #wc-bookings-form-start-time").trigger('change');
+                                $( this ).children('#wc-bookings-form-start-time').trigger('change');
+                                $( this ).children('#wc-bookings-form-start-time').change();
+                                                            });
+                            $("#wc-bookings-form-start-time").trigger("changeAuto");*/
 
                             timeSet=true;
                         }
