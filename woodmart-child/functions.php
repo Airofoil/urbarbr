@@ -148,6 +148,62 @@ function wpse27856_set_content_type(){
 }
 add_filter( 'wp_mail_content_type','wpse27856_set_content_type' );
 
+/*?? From the Live site 5-5-22 - JDH:
+/*
+ * Moving the payments
+ *@@/
+add_action( 'woocommerce_checkout_shipping', 'my_custom_display_payments', 20 );
+
+/**
+ * Displaying the Payment Gateways 
+ *@@/
+function my_custom_display_payments() {
+  if ( WC()->cart->needs_payment() ) {
+    $available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+    WC()->payment_gateways()->set_current_gateway( $available_gateways );
+  } else {
+    $available_gateways = array();
+  }
+  ?>
+  <div id="checkout_payments">
+    <h3><?php esc_html_e( 'Payment Method', 'woocommerce' ); ?></h3>
+    <?php if ( WC()->cart->needs_payment() ) : ?>
+    <ul class="wc_payment_methods payment_methods methods">
+    <?php
+    if ( ! empty( $available_gateways ) ) {
+      foreach ( $available_gateways as $gateway ) {
+        wc_get_template( 'checkout/payment-method.php', array( 'gateway' => $gateway ) );
+      }
+    } else {
+      echo '<li class="woocommerce-notice woocommerce-notice--info woocommerce-info">' . apply_filters( 'woocommerce_no_available_payment_methods_message', WC()->customer->get_billing_country() ? esc_html__( 'Sorry, it seems that there are no available payment methods for your state. Please contact us if you require assistance or wish to make alternate arrangements.', 'woocommerce' ) : esc_html__( 'Please fill in your details above to see available payment methods.', 'woocommerce' ) ) . '</li>'; // @codingStandardsIgnoreLine
+    }
+    ?>
+    </ul>
+  <?php endif; ?>
+  </div>
+<?php
+}
+
+/**
+ * Adding the payment fragment to the WC order review AJAX response
+ *@@/
+add_filter( 'woocommerce_update_order_review_fragments', 'my_custom_payment_fragment' );
+
+/**
+ * Adding our payment gateways to the fragment #checkout_payments so that this HTML is replaced with the updated one.
+ *@@/
+function my_custom_payment_fragment( $fragments ) {
+	ob_start();
+
+	my_custom_display_payments();
+
+	$html = ob_get_clean();
+
+	$fragments['#checkout_payments'] = $html;
+
+	return $fragments;
+} */
+
 function filter_gettext( $translated, $text, $domain  ) {
   if( $text == 'Your order' && is_checkout() && ! is_wc_endpoint_url() ) {
       // Loop through cart items
@@ -225,12 +281,25 @@ function select_services() {
 	<?php 
 }
 
-/* Change the base Author url from '/author/' to '/profile/' - JDH * /
+/*--Not used(?) using 'Edit Author Slug' plugin instead--Change the base Author url from '/author/' to '/profile/' - JDH * /
 add_action('init', 'cng_author_base');
 function cng_author_base() {
     global $wp_rewrite;
     $author_slug = 'profile';
     $wp_rewrite->author_base = $author_slug;
+} */
+
+/*@@@@add_action( 'wp_head', 'jdh_head_code' );
+function jdh_head_code() {
+	// Google Universal Analytics: ?>
+	<!-- Google Tag Manager -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-N83WRM8');</script>
+	<!-- End Google Tag Manager -->
+	<?php
 }*/
 
 // REGISTRATION SHORTCODE
@@ -550,7 +619,7 @@ function custom_cart_items_prices( $cart ) {
 
 function my_custom_js_css() {
     echo '<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
-		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>
 		<script src="' . get_stylesheet_directory_uri() . '/periodpicker/jquery.mousewheel.min.js"></script>
 		<script src="' . get_stylesheet_directory_uri() . '/periodpicker/build/jquery.timepicker.min.js"></script>

@@ -71,6 +71,15 @@ get_header(); ?>
                 background-color: #284158;
                 color: #FFF !important;
             }
+            /*--.btn:not(:last-child) {
+                margin-bottom: 15px;
+            } */
+            .profile-btns .btn {
+                max-width: 240px;
+                border: 3px solid #284158;
+                background: #FFF;
+                color: #284158;
+            }
             /* The Background for the profile page */
             body .website-wrapper {
                 background: no-repeat center/cover;
