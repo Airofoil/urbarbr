@@ -180,6 +180,18 @@ jQuery(document).ready(function ($){
             $("#error-search-location").css('display', 'none');
             $("#error-search-location-mobile").css('display', 'none');
         }
+
+        //write to cookie here
+        var serviceText = "";
+        if($(".home .filter-option").length>0){
+            serviceText = $(".home .filter-option").text().toLowerCase();
+        }
+        var searchData = {
+            "service": serviceText,
+            "date": $("#booking-date-search").val(),
+            "time": $('#booking-time').val()
+        };
+        document.cookie = "lastSearch="+JSON.stringify(searchData);
     });
 	
 	if($('.product-grid-item[data-mindate]').length){
@@ -196,7 +208,7 @@ jQuery(document).ready(function ($){
 
         });
         products = products.replace(/,*$/, "");
-        console.log(products);
+		console.log(products);
 
         $.ajax({
             url: "/wp-json/wc-bookings/v1/products/slots",
@@ -208,16 +220,27 @@ jQuery(document).ready(function ($){
             },
             success: function(response) {
 			  var formattedDateTime = new Date(formattedDate).getTime();
+              var slotsFound=0;
 			  for(var [key,slotinfo] of Object.entries(response.records)){
                 if(slotinfo.available == 1){
                   var startDateTime = new Date(slotinfo.date).getTime();
                   var endDateTime = startDateTime + slotinfo.duration*1000;
-                  if(formattedDateTime >= startDateTime && formattedDateTime <=endDateTime){
+                  var minimumStartTime = new Date();
+                  minimumStartTime.setHours(minimumStartTime.getHours() + 1);
+                  minimumStartTime=minimumStartTime.getTime();
+                  if(formattedDateTime >= startDateTime && formattedDateTime <=endDateTime && formattedDateTime > minimumStartTime){
                       $('[data-id='+slotinfo.product_id+']').show();
+                      slotsFound +=1;
                   }
 				}
               }
               console.log(response);
+              if(slotsFound==0){
+                  console.log("No Slots Found");
+                  var buttonHtml="<p>There are no barbers available at this time</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
+                  $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
+                  $('.wd-loop-footer.products-footer').append(buttonHtml)
+              }
             },
             error: function(xhr) {
               //Do Something to handle error
@@ -260,4 +283,71 @@ jQuery(document).ready(function ($){
             $(this).find('.product-action').html(`<a href="${$(this).find('.product-thumbnail > a').attr('href')}" class="single_add_to_cart_button button">View Barber</a>`);
         });
     }
+
+    if ($('body').hasClass('single-product')) {
+        if(typeof(Cookies.get('lastSearch'))=='string'){
+            var searchValues = JSON.parse(Cookies.get('lastSearch'));
+            if(searchValues.service){
+                $(".wc-pao-addon-container .wc-pao-addon-checkbox[value='"+searchValues.service+"']").click();
+            }
+            if(searchValues.date){
+                var dateSet=false;
+                var timeSet=false;
+
+                let dates= searchValues.date.split("-");
+                let month=parseInt(dates[1])-1;
+                let day=parseInt(dates[2]);
+                searchValues = JSON.parse(Cookies.get('lastSearch'));
+                let times=searchValues.time.split(":");
+                let pastNoon="am";
+                if(times[0]>=12){
+                    pastNoon="pm";
+                    
+                }
+                if(times[0]>12){
+                    times[0]-=12;
+                }
+                let timeValue=times[0]+":"+times[1]+" "+pastNoon;
+
+                let timerId = "";
+
+                function setDateTime() {
+                    if(dateSet==false){
+                        if($(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").length > 0){
+                            $(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").parent().trigger("click");
+                            dateSet=true;
+                        }
+                    }
+
+                    if(timeSet==false){
+                        if($("#wc-bookings-form-start-time").length > 0){
+                            
+                            /*$("#wc-bookings-form-start-time option:contains('"+timeValue+"')").attr('selected', 'selected');
+                            $("#wc-bookings-form-start-time option:contains('"+timeValue+"')").change();
+                            $("#wc-bookings-form-start-time").val("2022-05-11T15:15:00+0930").change();
+                            
+                            $( '.wc-bookings-booking-form' ).on( 'changeAuto', '#wc-bookings-form-start-time', function() {
+                                $(".wc-bookings-booking-form #wc-bookings-form-start-time").change();
+                                $(".wc-bookings-booking-form #wc-bookings-form-start-time").trigger('change');
+                                $( this ).children('#wc-bookings-form-start-time').trigger('change');
+                                $( this ).children('#wc-bookings-form-start-time').change();
+                                                            });
+                            $("#wc-bookings-form-start-time").trigger("changeAuto");*/
+
+                            timeSet=true;
+                        }
+                    }
+                    if(dateSet == true && timeSet == true){
+                        clearTimeout(timerId);
+                    } else {
+                        timerId=setTimeout(setDateTime, 1000);
+                    }
+                    
+                }
+                setDateTime();
+            }
+        }
+
+    }
+
 });

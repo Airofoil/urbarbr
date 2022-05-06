@@ -45,6 +45,12 @@ add_action( 'wp_enqueue_scripts', 'woodmart_child_enqueue_styles', 10010 );
 
 function my_theme_scripts() {
 	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js');
+
+	if(wp_script_is('wc-bookings-user-my-account')){
+		global $wp_scripts; 
+    	$wp_scripts->registered[ 'wc-bookings-user-my-account' ]->src = esc_url( get_stylesheet_directory_uri() )  . '/js/user-my-account.js';
+	}
+	
 }
 add_action( 'wp_enqueue_scripts', 'my_theme_scripts' );
 
