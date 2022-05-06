@@ -184,7 +184,7 @@ jQuery(document).ready(function ($){
         //write to cookie here
         var serviceText = "";
         if($(".home .filter-option").length>0){
-            serviceText = $(".home .filter-option").text().toLowerCase();
+            serviceText = $(".home .filter-option").text();
         }
         var searchData = {
             "service": serviceText,
@@ -195,6 +195,7 @@ jQuery(document).ready(function ($){
     });
 	
 	if($('.product-grid-item[data-mindate]').length){
+        $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
         var products='';
         var minDate='';
         var maxDate='';
@@ -240,6 +241,8 @@ jQuery(document).ready(function ($){
                   var buttonHtml="<p>There are no barbers available at this time</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
                   $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
                   $('.wd-loop-footer.products-footer').append(buttonHtml)
+              } else {
+                $('.wd-loop-footer.products-footer a.wd-products-load-more').show();
               }
             },
             error: function(xhr) {
@@ -247,6 +250,12 @@ jQuery(document).ready(function ($){
             }
           });
     }
+	else {
+		console.log("No nearby Barbers found");
+		var buttonHtml="<p>There are no barbers available at this location</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
+		$('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
+		$('.wd-loop-footer.products-footer').append(buttonHtml)
+	}
 
     $("body").on('DOMSubtreeModified', ".wc-bookings-time-block-picker", updateValidEnddate);
     function updateValidEnddate(){
@@ -263,6 +272,25 @@ jQuery(document).ready(function ($){
             $('#wc-bookings-form-end-time option[value="0"]').prop('selected','true');
         }
     }
+
+    $( 'header' ).on( 'change', '.booking-services-search', function() {
+        if($('header .searchform .booking-services-search .filter-option').length){
+            
+            //console.log("Selector changed to "+$('header .searchform .booking-services-search .filter-option').text());
+            if(typeof(Cookies.get('lastSearch'))=='string'){
+                var searchData = JSON.parse(Cookies.get('lastSearch'));
+                searchData.service=$('header .searchform .booking-services-search .filter-option').text();
+                document.cookie = "lastSearch="+JSON.stringify(searchData)+"; path=/";
+            } else {
+                var searchData = {
+                    "service": $('header .searchform .booking-services-search .filter-option').text()
+                };
+                document.cookie = "lastSearch="+JSON.stringify(searchData)+"; path=/";
+            }
+        }
+        
+    });
+
     $('.wc-pao-addon-checkbox').on('change',function(){
         var servicesCount = $('.wc-pao-addon-checkbox:checked').length;
         Cookies.set("servicesCount", servicesCount);
@@ -288,7 +316,8 @@ jQuery(document).ready(function ($){
         if(typeof(Cookies.get('lastSearch'))=='string'){
             var searchValues = JSON.parse(Cookies.get('lastSearch'));
             if(searchValues.service){
-                $(".wc-pao-addon-container .wc-pao-addon-checkbox[value='"+searchValues.service+"']").click();
+                //$(".wc-pao-addon-container .wc-pao-addon-checkbox[value='"+searchValues.service+"']").click();
+                $(".wc-pao-addon-container .wc-pao-addon-wrap:contains('"+searchValues.service+"') .wc-pao-addon-checkbox").click();
             }
             if(searchValues.date){
                 var dateSet=false;
@@ -315,25 +344,26 @@ jQuery(document).ready(function ($){
                     if(dateSet==false){
                         if($(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").length > 0){
                             $(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").parent().trigger("click");
+                            
                             dateSet=true;
+                            $(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").parent().trigger("input");
+                            $(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").parent().trigger("change");
                         }
                     }
 
                     if(timeSet==false){
                         if($("#wc-bookings-form-start-time").length > 0){
-                            
-                            /*$("#wc-bookings-form-start-time option:contains('"+timeValue+"')").attr('selected', 'selected');
-                            $("#wc-bookings-form-start-time option:contains('"+timeValue+"')").change();
-                            $("#wc-bookings-form-start-time").val("2022-05-11T15:15:00+0930").change();
-                            
-                            $( '.wc-bookings-booking-form' ).on( 'changeAuto', '#wc-bookings-form-start-time', function() {
-                                $(".wc-bookings-booking-form #wc-bookings-form-start-time").change();
-                                $(".wc-bookings-booking-form #wc-bookings-form-start-time").trigger('change');
-                                $( this ).children('#wc-bookings-form-start-time').trigger('change');
-                                $( this ).children('#wc-bookings-form-start-time').change();
-                                                            });
-                            $("#wc-bookings-form-start-time").trigger("changeAuto");*/
+                            /*$("#wc-bookings-form-start-time option[selected='selected']").prop("selected", false);
+                            $("#wc-bookings-form-start-time option:contains('"+timeValue+"')").prop('selected', 'selected');
 
+                            $("#wc-bookings-form-start-time option:contains('"+timeValue+"')").change();
+
+                            $("#wc-bookings-form-start-time").val($("#wc-bookings-form-start-time option:contains('"+timeValue+"')").val()).change();
+                            $(".wc-bookings-time-block-picker").trigger("DOMSubtreeModified");
+                            $('#wc-bookings-form-start-time').change();
+                            $('#wc-bookings-form-start-time').trigger('change');
+                            console.log("Ran change commands");*/
+                            
                             timeSet=true;
                         }
                     }
@@ -351,3 +381,4 @@ jQuery(document).ready(function ($){
     }
 
 });
+
