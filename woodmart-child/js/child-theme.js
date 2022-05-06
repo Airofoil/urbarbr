@@ -247,6 +247,12 @@ jQuery(document).ready(function ($){
             }
           });
     }
+	else {
+		console.log("No nearby Barbers found");
+		var buttonHtml="<p>There are no barbers available at this location</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
+		$('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
+		$('.wd-loop-footer.products-footer').append(buttonHtml)
+	}
 
     $("body").on('DOMSubtreeModified', ".wc-bookings-time-block-picker", updateValidEnddate);
     function updateValidEnddate(){
