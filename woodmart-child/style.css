@@ -1,11 +1,8 @@
 /*
 Theme Name:   Woodmart Child
-Description:  Woodmart Child Theme
-Author:       XTemos
-Author URI:   http://xtemos.com
+Description:  Woodmart Child Theme for UrBarbr
 Template:     woodmart
 Version:      1.0.0
-Text Domain:  woodmart
 */
 
 /* start here */
@@ -85,13 +82,21 @@ input:not([class*="wpcf7"]), select, .btn-group .btn {
 	background: var(--urbarbr-softwhite);
 	border: .5px solid #001F35 !important;
 	border-radius: 4px !important;
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: 400 !important;
 	color: inherit !important;
 	transition: .3s cubic-bezier(.2,.85,.35,1);
 }
 div input:not([class*="wpcf7"]):hover {
 	background: #88A1B855;
+}
+.mc4wp-form input[type="submit"],
+.mc4wp-form input[type="button"] {
+	color: white !important;
+	text-transform: unset !important;
+}
+.mc4wp-form input[type="submit"]:hover {
+	background: var(--urbarbr-midblue) !important;
 }
 .woocommerce-billing-fields input:hover {
 	background: var(--urbarbr-softwhite);
@@ -152,12 +157,12 @@ body [type="button"]:hover {
 	}
 }
 
-.full-width {
+.your-location-search.full-width input {
 	width: 100% !important;
 	font-size: 15px !important;
 	background-position: 12px !important;
 }
-.full-width + .input-clear {
+.your-location-search.full-width .input-clear {
 	display: block;
 }
 .entered + .input-clear {
@@ -172,18 +177,20 @@ body .searchform input.invalid {
 .input-clear {
 	position: absolute;
 	display: none;
-	width: 17px;
-	height: 17px;
-	right: 12px;
-	top: 14px;
+	width: 42px;
+	height: calc(100% - 2px);
+	right: 1px;
+	top: 1px;
 	padding: 0;
 	background: 0;
+	/*-background: linear-gradient(90deg, #0000 0, #284158CC 40%); */
 	font-size: 21px;
 	font-weight: normal;
 	color: var(--urbarbr-midgrey);
 	text-align: center;
 	text-shadow: 0 0 14px #FFF;
 }
+
 .input-clear::after {
 	content: '×';
 }
@@ -621,11 +628,11 @@ background-color: rgba(101,101,101,1);
 	background-color: unset;
 }
 
-.archive .product-grid-item .product-element-top {
-	/*---display: flex; */
+/*--.archive .product-grid-item .product-element-top {
+	---display: flex; */
 	/*--padding: 20px; */
-	/*--margin-bottom: 20px; */
-}
+	/*--margin-bottom: 20px;
+} */
 
 .product-element-top .wd-buttons.wd-pos-r-t {
 	display: none;
@@ -1168,6 +1175,13 @@ content: '\f3c5';
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNy42IDIgNCA1LjYgNCAxMEM0IDE1LjQgMTEgMjEuNSAxMS4zIDIxLjhDMTEuNSAyMS45IDExLjggMjIgMTIgMjJDMTIuMiAyMiAxMi41IDIxLjkgMTIuNyAyMS44QzEzIDIxLjUgMjAgMTUuNCAyMCAxMEMyMCA1LjYgMTYuNCAyIDEyIDJaTTEyIDE5LjdDOS45IDE3LjcgNiAxMy40IDYgMTBDNiA2LjcgOC43IDQgMTIgNEMxNS4zIDQgMTggNi43IDE4IDEwQzE4IDEzLjMgMTQuMSAxNy43IDEyIDE5LjdaTTEyIDZDOS44IDYgOCA3LjggOCAxMEM4IDEyLjIgOS44IDE0IDEyIDE0QzE0LjIgMTQgMTYgMTIuMiAxNiAxMEMxNiA3LjggMTQuMiA2IDEyIDZaTTEyIDEyQzEwLjkgMTIgMTAgMTEuMSAxMCAxMEMxMCA4LjkgMTAuOSA4IDEyIDhDMTMuMSA4IDE0IDguOSAxNCAxMEMxNCAxMS4xIDEzLjEgMTIgMTIgMTJaIiBmaWxsPSIjRkZGRkZGIi8+Cjwvc3ZnPgo=");
 	/*-background-image: url('./svgs/location-white.svg'); */
 }
+#your-location-search.loading {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQogICAgPHN0eWxlPg0KICAgICAgICBzdmcgew0KICAgICAgICAgICAgd2lkdGg6IDMwcHg7DQogICAgICAgICAgICBhbmltYXRpb246IGxvYWRpbmcgM3MgbGluZWFyIGluZmluaXRlOw0KICAgICAgICAgICAgLXdlYmtpdC10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1vei10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1zLXRyYW5zZm9ybS1vcmlnaW46IGNlbnRlciBjZW50ZXI7DQogICAgICAgICAgICAtby10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgdHJhbnNmb3JtLW9yaWdpbjogY2VudGVyIGNlbnRlcjsNCiAgICAgICAgfQ0KICAgICAgICBjaXJjbGUgew0KICAgICAgICAgICAgY29sb3I6IHdoaXRlOw0KICAgICAgICAgICAgYW5pbWF0aW9uOiBsb2FkaW5nLWNpcmNsZSAycyBsaW5lYXIgaW5maW5pdGU7DQogICAgICAgICAgICBzdHJva2U6IGN1cnJlbnRDb2xvcjsNCiAgICAgICAgICAgIGZpbGw6IHRyYW5zcGFyZW50Ow0KICAgICAgICAgICAgLXdlYmtpdC10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1vei10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1zLXRyYW5zZm9ybS1vcmlnaW46IGNlbnRlciBjZW50ZXI7DQogICAgICAgICAgICAtby10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgdHJhbnNmb3JtLW9yaWdpbjogY2VudGVyIGNlbnRlcjsNCiAgICAgICAgfQ0KICAgICAgICBAa2V5ZnJhbWVzIGxvYWRpbmcgew0KICAgICAgICAgICAgMCUgew0KICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDApOw0KICAgICAgICAgICAgfQ0KDQogICAgICAgICAgICAxMDAlIHsNCiAgICAgICAgICAgICAgICB0cmFuc2Zvcm06IHJvdGF0ZSgzNjBkZWcpOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgICAgIEBrZXlmcmFtZXMgbG9hZGluZy1jaXJjbGUgew0KICAgICAgICAgICAgMCUgew0KICAgICAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAwDQogICAgICAgICAgICB9DQoNCiAgICAgICAgICAgIDEwMCUgew0KICAgICAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAtNjAwOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgPC9zdHlsZT4NCiAgICA8Y2lyY2xlIGN4PSI3NSIgY3k9Ijc1IiByPSI2MCIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0cm9rZS1kYXNoYXJyYXk9IjMwMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMTQiIC8+DQogICAgPHN0eWxlIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT4NCjwvc3ZnPg==");
+	background-size: 22px;
+}
+#your-location-search:not(:empty) ~ ul.dropdown-menu {
+	display: none !important;
+}
 
 .searchform input[type="text"] {
 	height: 46px;
@@ -1277,7 +1291,7 @@ body.home .vc_column-inner {
 	position: unset !important;
 	width: unset;
 	height: 46px;
-	margin-right: 0 !important;
+	/*--margin-right: 0 !important; */
 	padding: 0 15px 0 30px;
 	/*--color: #001F35 !important; */
 	border: 1px solid #8896A2;
@@ -2250,8 +2264,9 @@ border-color: white !important;
 		margin: 0 10px 10px 0 !important;
 	}
 
-	.booking-services-search {
+	.booking-services-search, .your-location-search.full-width {
 		width: unset !important;
+		flex: 48%;
 		flex-grow: 1;
 	}
 
@@ -2370,6 +2385,11 @@ footer img[src*="logo"], header img[src*="logo"] {
 
 /* Wishlist page */
 .tinvwl-table-manage-list .product-cb {
+	display: none !important;
+}
+.tinv-wishlist .social-buttons .social-pinterest,
+.tinv-wishlist .social-buttons .social-clipboard,
+.tinv-wishlist .social-buttons .social-whatsapp {
 	display: none !important;
 }
 
@@ -2639,15 +2659,15 @@ body.single-product .wc-bookings-booking-cost {
 	.woocommerce-additional-fields #order_comments::placeholder{
 		color: #D0D7DF;
 	}
-	.woocommerce-billing-fields input[type="email"],
+/*??.woocommerce-billing-fields input[type="email"],
 	.woocommerce-billing-fields input[type="text"],
 	.woocommerce-billing-fields input[type="tel"],
 	.woocommerce-EditAccountForm .woocommerce-form-row input[type="email"],
 	.woocommerce-EditAccountForm .woocommerce-form-row input[type="text"],
 	.woocommerce-EditAccountForm .woocommerce-form-row input[type="tel"] {
-/* 		color: #D0D7DF !important;
-		-webkit-text-fill-color: #D0D7DF !important; */
-	}
+		color: #D0D7DF !important;
+		-webkit-text-fill-color: #D0D7DF !important;
+	} */
 	.jac-booking-date-time .booking-time{
 		text-align: right;
 		padding-right: 10px;

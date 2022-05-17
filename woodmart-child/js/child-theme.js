@@ -47,7 +47,7 @@ jQuery(document).ready(function ($){
 
     $('.searchform input').on('change blur', function() {
 		if ($(this).is(':valid')) {
-            $(this).addClass('entered');
+            //--$(this).addClass('entered');
 
             if ($('#your-location-search').length) {
                 $('#your-location-search').on('blur', setTimeout(() => {
@@ -117,20 +117,25 @@ jQuery(document).ready(function ($){
 //      maxDate: moment({h:16})
     });*/
     
-    $("#your-location-search").on("keyup", function(){
+    /*-$("#your-location-search").on("keyup", function(){
         if($(this).val()!=""){
             $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
         }
         else {
             $(".your-location-search .dropdown-menu").removeClass("location_drop_down_hide");
         }
-    });
+    }); */
 
     // $('.your-location-search').on('input', function() {
     //     $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
     // });
 
-    $('body.home .searchsubmit.btn').click(function(event){
+    $('body.home #your-location-search, body.home #booking-date-search, body.home .booking-services-search button').on('click focus', function() {
+        $(this).removeClass('error-select-button error-date-select-field');
+        $(this).parent().find('.search-error-message').fadeOut();
+    });
+
+    $('body.home .searchsubmit.btn').on('click', function(event){
         if ( $(".home .filter-option").text() == "" || $(".home .filter-option").text() == "Select a service") {
             // $(".booking-services-search button.btn").css('border-color', 'red!important');
             // $(".booking-services-search button.btn").css('border-width', '1px!important');
@@ -139,12 +144,12 @@ jQuery(document).ready(function ($){
             if(!$('#error-search-service').length) {
                 $( '<div class="search-error-message" id="error-search-service">please select a service</div>' ).insertAfter( ".booking-services-search button.btn" );
             } else {
-                $("#error-search-service").css('display', 'inline-block');
+                $("#error-search-service").fadeIn();
             }
             event.preventDefault();
         } else {
             $('.booking-services-search button.btn').removeClass('error-select-button');
-            $("#error-search-service").css('display', 'none');
+            $("#error-search-service").fadeOut();
         }
 
         // alert($('#booking-date-search.entered').length);
@@ -155,14 +160,14 @@ jQuery(document).ready(function ($){
                 $( '<div class="search-error-message" id="error-search-date-select">select date & time</div>' ).insertAfter( "#booking-date-search" );
                 $( '<div class="search-error-message" id="error-search-date-select-mobile">when?</div>' ).insertAfter( "#booking-date-search" );
             } else {
-                $("#error-search-date-select").css('display', 'inline-block');
-                $("#error-search-date-select-mobile").css('display', 'inline-block');
+                $("#error-search-date-select").fadeIn();
+                $("#error-search-date-select-mobile").fadeIn();
             }
             event.preventDefault();
         } else {
             $('#booking-date-search').removeClass('error-date-select-field');
-            $("#error-search-date-select").css('display', 'none');
-            $("#error-search-date-select-mobile").css('display', 'none');
+            $("#error-search-date-select").fadeOut();
+            $("#error-search-date-select-mobile").fadeOut();
         }
 
         if( !$('#your-location-search.entered').length ) {
@@ -171,14 +176,14 @@ jQuery(document).ready(function ($){
                 $( '<div class="search-error-message" id="error-search-location">enter your address</div>' ).insertAfter( ".your-location-search .dropdown-menu" );
                 $( '<div class="search-error-message" id="error-search-location-mobile">where?</div>' ).insertAfter( ".your-location-search .dropdown-menu" );
             } else {
-                $("#error-search-location").css('display', 'inline-block');
-                $("#error-search-location-mobile").css('display', 'inline-block');
+                $("#error-search-location").fadeIn();
+                $("#error-search-location-mobile").fadeIn();
             }
             event.preventDefault();
         } else {
             $('#your-location-search').removeClass('error-date-select-field');
-            $("#error-search-location").css('display', 'none');
-            $("#error-search-location-mobile").css('display', 'none');
+            $("#error-search-location").fadeOut();
+            $("#error-search-location-mobile").fadeOut();
         }
 
         //write to cookie here
@@ -250,12 +255,12 @@ jQuery(document).ready(function ($){
             }
           });
     }
-	else {
+	/*@@else {
 		console.log("No nearby Barbers found");
 		var buttonHtml="<p>There are no barbers available at this location</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
 		$('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
 		$('.wd-loop-footer.products-footer').append(buttonHtml)
-	}
+	} */
 
     $("body").on('DOMSubtreeModified', ".wc-bookings-time-block-picker", updateValidEnddate);
     function updateValidEnddate(){

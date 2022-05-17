@@ -175,7 +175,7 @@ if ($_GET) {
 			$qualified = true;
 		}
 	} */
-	if($searching_lat_long) { //use search input address instead of current location if there is an address in the search field
+	if ($searching_lat_long) { //use search input address instead of current location if there is an address in the search field
 
 		$location_qualified = false;
 
@@ -198,25 +198,32 @@ if ($_GET) {
 		}
 	}
 	
-	if($searching_service && $searching_service != "default"){
+	if($searching_service && !in_array($searching_service, array("all", "default"))) {
 
 		$qualified = false;
 
-		foreach ($product->get_meta_data() as $index => $data) { 
-			if($data->key == '_product_addons'){
+		$services = array_map('trim', explode(',', strtolower($searching_service))); // In case multiple services are selected, create a trimmed, lowercase array with them
+		
+		//testing--echo '.1.____' . strtolower($searching_service);
+		//testing--var_dump($services);
+		//testing--echo '____.2.____';
+
+		foreach ($product->get_meta_data() as $index => $data) {
+			if ($data->key == '_product_addons') {
 				if ($data->value[0] && $data->value[0]['options'])
-					foreach($data->value[0]['options'] as $index=>$value){
-						if(trim(strtolower($value['label'])) == trim(strtolower(str_replace('_',' ',$searching_service))) && $location_qualified){
+					foreach ($data->value[0]['options'] as $index=>$value) {
+						//testing--echo str_replace(' ','_',trim(strtolower($value['label']))) . ' ? ' . in_array(str_replace(' ','_',trim(strtolower($value['label']))), $services);
+						if (in_array(str_replace(' ','_',trim(strtolower($value['label']))), $services) && $location_qualified) {
 							$qualified = true;
 						}
 					}
 			}
 		}
-	}elseif($searching_service== "default" && $location_qualified){
+	} elseif (in_array($searching_service, array("all", "default")) && $location_qualified) {
 		$qualified = true;
 	}
 
-	if(false && $searching_date && $searching_time){
+	if (false && $searching_date && $searching_time) {
 
 		$qualified = false;
 

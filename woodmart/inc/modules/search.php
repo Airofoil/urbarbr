@@ -194,7 +194,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					<?php if ($post_type == 'product') { ?>
 					<!-- <input type="text" name="booking-date" value="" class="booking-date-search" id="booking-date-search" placeholder="Select Date and Time"> -->
 					<div class="booking-date-search" class="input-group date">
-					   <input type="text" id="booking-date-search" name="booking-date" class="form-control icon" placeholder="Select Date and Time" title="Select Date and Time" readonly>
+					   <input type="text" id="booking-date-search" name="booking-date" class="form-control icon" placeholder="Select date & time" title="Select date & time" readonly>
 					   <!-- <input type="hidden" id="booking-date" name="booking-date"> -->
 					   <input type="input" id="booking-time" name="booking-time" style="display:none;">
 					</div>
@@ -224,34 +224,45 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					</div>
 					<!-- <button type="button" class="your-location-search" name="your-location" aria-label=".form-select-sm" style="background-color: #001F35;color: #fff;font-weight: 500;text-transform: none;font-size: 14px;"><i class="fa fa-map-marker" aria-hidden="true"></i> Set your location</button> -->
 					<script>
+
+						var locationBox = document.getElementById('your-location-search');
+						var locationCoords = document.getElementById('location_coords');
+						var locationContainer = document.querySelector('.your-location-search');
+
 						document.addEventListener('DOMContentLoaded', function() {
 							$ = jQuery;
 
-							$('body').on('click touchstart', '.pac-container .pac-item', setTimeout(() => document.getElementById('your-location-search').blur(), 50));
+							//$('body').on('click', '.pac-container .pac-item', setTimeout(() => locationBox.blur(), 50));
 
-							$('#your-location-search').on('blur', setTimeout(() => {
-								let location = document.getElementById('your-location-search');
-								if (!location.value) {
-									$(location).removeClass('invalid');
+							if ($('#your-location-search').val() && $('#your-location-search').val().length > 3) $('#your-location-search').addClass('entered');
+							if ($('#booking-date-search').val() && $('#booking-date-search').val().length > 3) $('#booking-date-search').addClass('entered');
+							
+							/*-$('#your-location-search, #booking-date-search').on('blur', function() { console.log($(this).val(),$(this).val().length, Boolean($(this).val() && $(this).val().length > 3))
+								if ($(this).val() && $(this).val().length > 3) $(this).addClass('entered');
+							}); */
+							
+							$(locationBox).on('blur', setTimeout(() => {
+								if (!locationBox.value) {
+									$(locationBox).removeClass('invalid');
 									return;
 								}
 
-								if (location.value.length < 4) {
-									$(location).addClass('invalid');
+								if (locationBox.value.length < 4) {
+									$(locationBox).addClass('invalid');
 									return;
 								}
 
-								$(location).addClass('loading');
+								$(locationBox).addClass('loading');
 								
-								$.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${location.value}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) { console.log(41, data);
-									$(location).removeClass('loading');
+								$.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${locationBox.value}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) { console.log(41, data);
+									$(locationBox).removeClass('loading');
 
 									if (data.status !== 'OK' || !data["results"]) {
-										$(location).addClass('invalid');
+										$(locationBox).addClass('invalid');
 										return;
 									}
 									if (data["results"][0]) {
-										$(location).removeClass('invalid');
+										$(locationBox).removeClass('invalid');
 										document.getElementById('location_coords').value = data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng;
 										document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}; path=/`;
 									}
@@ -259,50 +270,80 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 							}, 60));
 						});
 
-						var locBox = document.getElementById('location_coords');
-						var locationBtn = document.querySelector('.your-location-search');
-
 						function getLocation() { /* Get the user's location */
 							if (navigator.geolocation) {
-								navigator.geolocation.getCurrentPosition(showLocation);
+								$(locationBox).addClass('entered loading');
+								navigator.geolocation.getCurrentPosition(showLocation, function(){ /* Error */
+									$('.your-location-search .dropdown-menu li:first-child a').css('color','indianred').text('Please allow location in your browser');
+									setTimeout(() => $('.your-location-search .dropdown-menu li:first-child a').css('color','').text('Detect my location'), 6000);
+									
+									$(locationBox).removeClass('entered loading');
+								});
 							} else {
-								locBox.value = 0; //"Geolocation is not supported by this browser.";
+								locationCoords.value = 0; //"Geolocation is not supported by this browser.";
 							}
 						}
 
 						function showLocation(position) { /* Set the value in the location box */
-							jQuery('#your-location-search').addClass('full-width').prop('readonly','').focus();
+							$(locationContainer).addClass('full-width');
+							$(locationBox).prop('readonly','').focus();
 
-							locBox.value = position.coords.latitude + ',' + position.coords.longitude;
+							locationCoords.value = position.coords.latitude + ',' + position.coords.longitude;
 
-							$(location).addClass('loading');
-							$('#your-location-search').on('blur', setTimeout(() => {
-							    let location = document.getElementById('your-location-search');
+							$(locationBox).on('blur', setTimeout(() => {
 								$.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) {
-									$(location).removeClass('loading');
+									$(locationBox).removeClass('loading');
 
 									if (data.status !== 'OK' || !data["results"]) {
-										$(location).addClass('invalid');
+										$(locationBox).addClass('invalid');
 										return;
 									}
 									if (data["results"][0]) {
-										$(location).removeClass('invalid');
-										document.getElementById('your-location-search').value = data["results"][0].formatted_address;
+										$(locationBox).removeClass('invalid');
+										locationBox.value = data["results"][0].formatted_address;
 									}
 								});
 						    }, 60));
 
-							$('#your-location-search').addClass('entered');
+							//-$(locationBox).addClass('entered');
 							document.cookie = `location_lat_long=${position.coords.latitude + ',' + position.coords.longitude}; path=/`;
 							
-							if ($('#booking-date-search').hasClass('entered') && $('#your-location-search').hasClass('entered')) {
+							if ($('#booking-date-search').hasClass('entered') && $(locationBox).hasClass('entered')) {
 								$('.searchform .searchsubmit').prop('disabled','').addClass('entered');
 							}
-							//--locationBtn.classList.add('tick');
+							//--locationContainer.classList.add('tick');
 						}
 
 						function enterLocation() {
-							jQuery('#your-location-search').addClass('full-width').prop('readonly','').focus();
+							$(locationContainer).addClass('full-width');
+							$(locationBox).prop('readonly','').focus();
+							setTimeout(() => $(locationBox).focus(), 2000); /* Allow the box to be editable, and focus to it */
+							
+							/* Not working: focus and open the keyboard, for iOS devices:
+								//setTimeout(() => $(locationBox).focus(), 2000); /* Allow the box to be editable, and focus to it * /
+
+								// $(locationBox).focus();
+
+								// document.body.ontouchend = function() {
+								// 	$(locationBox).focus();
+								// 	document.body.ontouchend = null;
+								// };
+
+								// $(locationBox).off('click').on('click', function (){ locationBox.focus(); }) $(locationBox).trigger('click');
+								// $(document).on('touchstart', '#your-location-search', function(){ $(locationBox).focus(); }
+								// setTimeout(function() {
+								// 	locationBox.focus();
+								
+								// 	locationBox.click();
+								// }, 100);
+								// locationBox.setSelectionRange(0, 0);
+
+								// setTimeout(() => {
+								// 	alert('test');
+								// 	$(locationBox).focus();
+								// }, 5000);
+							//*/
+
 							//-document.getElementById('your-location-search').focus();
 							/*--var locationInput = document.createElement('input');
 							locationInput.type = 'text';
@@ -310,7 +351,7 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 							locationInput.classList.add('booking-date-search'); // Need to replace this class with a more general styling class - JDH
 							locationInput.style.paddingRight = '0';
 
-							locationBtn.parentNode.replaceChild(locationInput, locationBtn);
+							locationContainer.parentNode.replaceChild(locationInput, locationContainer);
 							locationInput.focus();*/
 						}
 					</script>
