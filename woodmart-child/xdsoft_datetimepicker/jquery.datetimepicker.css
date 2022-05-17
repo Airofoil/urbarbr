@@ -513,11 +513,13 @@
 	color: white;
 }
 
-.xdsoft_datetimepicker .xdsoft_calendar td:not(.xdsoft_disabled):hover > div,
-.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box > div > div:hover {
-	background: var(--urbarbr-softblue);
-	border-color: var(--urbarbr-softblue);
-	color: white;
+@media (hover: hover) and (pointer: fine) {
+	.xdsoft_datetimepicker .xdsoft_calendar td:not(.xdsoft_disabled):hover > div,
+	.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box > div > div:hover {
+		background: var(--urbarbr-softblue);
+		border-color: var(--urbarbr-softblue);
+		color: white;
+	}
 }
 
 .xdsoft_calendar tbody,
