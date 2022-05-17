@@ -243,7 +243,7 @@ jQuery(document).ready(function ($){
               console.log(response);
               if(slotsFound==0){
                   console.log("No Slots Found");
-                  var buttonHtml="<p>There are no barbers available at this time</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
+                  var buttonHtml="<p>There are no barbers available at this time</p><a href='https://urbarbr/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
                   $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
                   $('.wd-loop-footer.products-footer').append(buttonHtml)
               } else {
