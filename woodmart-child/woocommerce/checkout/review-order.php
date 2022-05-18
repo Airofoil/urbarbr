@@ -57,6 +57,32 @@ foreach(WC()->cart->get_cart() as $cart_item_key => $item_values){
 						<?php
 					}
 				?>
+				<tr class="cart_item">
+					<td>Service Fee</td>
+					<td class="product-total">
+						<span class="woocommerce-Price-amount amount">
+							<bdi>
+								<span class="woocommerce-Price-currencySymbol">
+									$
+								</span>
+								15.00
+							</bdi>
+						</span>
+					</td>
+				</tr>
+				<tr class="cart_item">
+					<td>Booking Fee</td>
+					<td class="product-total">
+						<span class="woocommerce-Price-amount amount">
+							<bdi>
+								<span class="woocommerce-Price-currencySymbol">
+									$
+								</span>
+								1.00
+							</bdi>
+						</span>
+					</td>
+				</tr>
 				<!-- <tr class="<?php 
 					// echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); 
 					?>">

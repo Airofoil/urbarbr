@@ -1306,3 +1306,10 @@ function calculate_buffer_time_filter($buffertime,$latitude,$longitude,$booking_
 
 	return $buffertime;
 }
+
+function calculate_totals($wc_price){
+	// Adds the fixed costs to the total
+	// 15 dollars for service fee, $1 for booking fee
+	$new_total = $wc_price+16;
+	return wc_price($new_total);
+} 
