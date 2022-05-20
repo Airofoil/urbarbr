@@ -199,62 +199,64 @@ jQuery(document).ready(function ($){
         document.cookie = "lastSearch="+JSON.stringify(searchData);
     });
 	
-	if($('.product-grid-item[data-mindate]').length){
-        $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
-        var products='';
-        var minDate='';
-        var maxDate='';
-        var formattedDate='';
-        $( ".product-grid-item" ).each(function( index ) {
-            products +=$(this).data('id');
-            products +=",";
-            minDate = $(this).data('mindate');
-            maxDate = $(this).data('maxdate');
-            formattedDate = $(this).data('formatteddate');
-
-        });
-        products = products.replace(/,*$/, "");
-		console.log(products);
-
-        $.ajax({
-            url: "/wp-json/wc-bookings/v1/products/slots",
-            type: "get",
-            data: { 
-              min_date: minDate, 
-              max_date: maxDate, 
-              product_ids: products
-            },
-            success: function(response) {
-			  var formattedDateTime = new Date(formattedDate).getTime();
-              var slotsFound=0;
-			  for(var [key,slotinfo] of Object.entries(response.records)){
-                if(slotinfo.available == 1){
-                  var startDateTime = new Date(slotinfo.date).getTime();
-                  var endDateTime = startDateTime + slotinfo.duration*1000;
-                  var minimumStartTime = new Date();
-                  minimumStartTime.setHours(minimumStartTime.getHours() + 1);
-                  minimumStartTime=minimumStartTime.getTime();
-                  if(formattedDateTime >= startDateTime && formattedDateTime <=endDateTime && formattedDateTime > minimumStartTime){
-                      $('[data-id='+slotinfo.product_id+']').show();
-                      slotsFound +=1;
-                  }
-				}
-              }
-              console.log(response);
-              if(slotsFound==0){
-                  console.log("No Slots Found");
-                  var buttonHtml="<p>There are no barbers available at this time</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
-                  $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
-                  $('.wd-loop-footer.products-footer').append(buttonHtml)
-              } else {
-                $('.wd-loop-footer.products-footer a.wd-products-load-more').show();
-              }
-            },
-            error: function(xhr) {
-              //Do Something to handle error
-            }
-          });
-    }
+	//setTimeout(() => {
+        if($('.product-grid-item[data-mindate]').length){
+            $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
+            var products = '';
+            var minDate = '';
+            var maxDate = '';
+            var formattedDate = '';
+            $(".product-grid-item").each(function (index) {
+                products += $(this).data('id');
+                products += ",";
+                minDate = $(this).data('mindate');
+                maxDate = $(this).data('maxdate');
+                formattedDate = $(this).data('formatteddate');
+            
+            });
+            products = products.replace(/,*$/, "");
+            console.log(products);
+            
+            $.ajax({
+                url: "/wp-json/wc-bookings/v1/products/slots",
+                type: "get",
+                data: {
+                    min_date: minDate,
+                    max_date: maxDate,
+                    product_ids: products
+                },
+                success: function (response) {
+                    var formattedDateTime = new Date(formattedDate).getTime();
+                    var slotsFound = 0;
+                    for (var [key, slotinfo] of Object.entries(response.records)) {
+                        if (slotinfo.available == 1) {
+                            var startDateTime = new Date(slotinfo.date).getTime();
+                            var endDateTime = startDateTime + slotinfo.duration * 1000;
+                            var minimumStartTime = new Date();
+                            minimumStartTime.setHours(minimumStartTime.getHours() + 1);
+                            minimumStartTime = minimumStartTime.getTime();
+                            if (formattedDateTime >= startDateTime && formattedDateTime <= endDateTime && formattedDateTime > minimumStartTime) {
+                                $('[data-id=' + slotinfo.product_id + ']').show();
+                                slotsFound += 1;
+                            }
+                        }
+                    }
+                    console.log(response);
+                    if (slotsFound == 0) {
+                        console.log("No Slots Found");
+                        var buttonHtml = "<p>There are no barbers available at this time</p><a href='/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
+                        $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
+                        $('.wd-loop-footer.products-footer').append(buttonHtml)
+                    } else {
+                        $('.wd-loop-footer.products-footer a.wd-products-load-more').show();
+                    }
+                },
+                error: function (xhr) {
+                    //Do Something to handle error
+                }
+            });
+        }
+    //}, 5000);
 	/*@@else {
 		console.log("No nearby Barbers found");
 		var buttonHtml="<p>There are no barbers available at this location</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"

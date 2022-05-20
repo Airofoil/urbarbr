@@ -1272,6 +1272,10 @@ function save_post_wc_booking( $post_id, \WP_Post $post, $update ) {
 			$location_latitutde = $coord[0];
 			$location_longtitude = $coord[1];
 		}
+		// else {
+		// 	echo 'testprint';
+		// 	var_dump($coord);
+		// }
 	}
 
 	if($location_latitutde){
