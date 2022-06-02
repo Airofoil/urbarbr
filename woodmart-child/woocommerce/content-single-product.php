@@ -171,6 +171,36 @@ if ( $full_height_sidebar && $page_layout != 'full-width' ) {
                             <h4 class="subtitle">About the Barber</h4>
                             <?php woocommerce_template_single_excerpt(); ?>
 
+
+							<?php echo '::';
+							//wc_bookings_get_time_slots_html();
+							//$available_blocks = wc_bookings_get_time_slots( $product, $blocks, $intervals, $resource_id, $from, $to ); 
+							//wc_bookings_get_time_slots_html( $product );
+							//time = date('Y-m-d', strtotime('2022-10-11'));
+							//$blocks = $product->get_blocks_in_range_for_day( $time, $time, '10350' );
+							//$available_blocks = wc_bookings_get_time_slots( $product, $blocks, array(), 0, $time, $time );
+							//print_r($blocks);
+							/*$result   = array();
+							$bookings = WC_Bookings_Controller::get_all_existing_bookings( $product, date('Y-m-d', strtotime('2022-10-11')), date('Y-m-d', strtotime('2022-12-13')) );
+							$booked_hours = array();
+
+							if ( count( $bookings ) ) {
+								// print_r( date( 'd.m.Y H:i:s', $bookings[0]->start ) );
+								// print_r( date( 'd.m.Y H:i:s', $bookings[0]->end ) );
+								foreach ( $bookings as $booking ) {
+									$start_hour = date( 'G', $booking->start );
+									$end_hour   = date( 'G', $booking->end );
+									// var_dump( $start_hour );
+									// var_dump( $end_hour );
+									for ( $i = $start_hour; $i < $end_hour; $i++ ) {
+										array_push( $booked_hours, $i );
+									}
+								}
+							}
+							print_r($booked_hours);*/
+							echo '::'; ?>
+
+
                             <?php //--woocommerce_template_single_meta(); ?>
                             
                             <?php woocommerce_template_single_sharing(); //--Disabled in Woodmart settings ?>

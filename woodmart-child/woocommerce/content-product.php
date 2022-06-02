@@ -219,17 +219,103 @@ if ($_GET) {
 					}
 			}
 		}
-	} elseif (in_array($searching_service, array("all", "default")) && $location_qualified) {
+	} elseif (in_array($searching_service, array("all", "default")) && $location_qualified) { // If searched service is "all" or "default"
 		$qualified = true;
 	}
-
-	if (false && $searching_date && $searching_time) {
+	
+	if ($searching_date) { // && $searching_time
 
 		$qualified = false;
 
+		$availability = get_post_meta( $product_id, '_wc_booking_availability', true );
+		/* Example _wc_booking_availability meta:
+		array(7) {
+			[0]=> array(5) {
+				["type"]=> string(6) "time:6"  // 6 is a Saturday
+				["bookable"]=> string(3) "yes" 
+				["priority"]=> int(10) 
+				["from"]=> string(5) "12:00" 
+				["to"]=> string(5) "16:00"
+			}
+			[1]=> array(5) {
+				["type"]=> string(6) "custom" 
+				["bookable"]=> string(2) "no" 
+				["priority"]=> int(9) 
+				["from"]=> string(10) "2022-03-17" 
+				["to"]=> string(10) "2022-03-17"
+			}
+			[2]=> array(5) {
+				["type"]=> string(10) "time:range"  // "Time range (all week)"
+				["bookable"]=> string(3) "yes" 
+				["priority"]=> int(1) 
+				["from"]=> string(5) "08:00" 
+				["to"]=> string(5) "23:00" 
+				["from_date"]=> string(10) "2022-05-01" 
+				["to_date"]=> string(10) "2022-12-31"
+			}
+			[3]=> array(5) {
+				["type"]=> string(6) "time:2"  // Tuesday
+				["bookable"]=> string(3) "yes" 
+				["priority"]=> int(10) 
+				["from"]=> string(5) "09:00" 
+				["to"]=> string(5) "17:00"
+			}
+		}
+		*/
+		echo 'availability rules: ' . count($availability);
+		if (count($availability)) echo ' (';
+		$search_date = date('Y-m-d', strtotime($searching_date));
+
+
+		foreach ($availability as $key => $row) {
+			if ($row['bookable'] == "yes") { /* Find an availability slot */
+				echo $row['type'];
+				if ($key !== array_key_last($availability)) echo ', ';
+				
+				//echo 'date: ' . date('w', $date);
+				// (substr($row[type], 0, 5) == 'time:' && substr($row[type], 5) == date('w', $date)) // If searched day is set as an available day
+				// || ($row[type] == 'months' && (date('n', $date) >= $row[from] && date('n', $date) < $row[to])) // If searched month falls in available month slots
+				// || ($row[type] == 'time:range' && ($date >= strtotime($row[from_date]))
+
+				//echo '<br>' . $search_date . ' | ' . date('Y-m-d', strtotime($row['from_date'])) . boolval($search_date >= date('Y-m-d', strtotime($row['from_date'])));
+				//echo '<br>from date: ' . $row['from_date'];
+				//echo '<br>to date: ' . $row['to_date'];
+
+				if ($row['type'] == "time:range"
+					&& $search_date >= date('Y-m-d', strtotime($row['from_date']))
+					&& $search_date < date('Y-m-d', strtotime($row['to_date']))
+				) {
+					// time checks in here ...
+					$qualified = true;
+					echo '<br>--time-range qualified';
+				}
+				elseif ($row['type'] == 'months' && (date('n', strtotime($searching_date)) >= $row['from'] && date('n', strtotime($searching_date)) < $row['to'])) { // If searched month falls in available month slots
+					$qualified = true;
+					echo '<br>--month qualified';
+				}
+				elseif (substr($row['type'], 0, 5) == 'time:' && substr($row['type'], 5) == date('w', strtotime($searching_date))) { // If searched day is set as an available day
+					$qualified = true;
+					echo '<br>--weekday qualified';
+				}
+			}
+			// // Print out the availability values:
+			// foreach ($row as $key => $val) {
+			// 	echo $key . ': ' . $val;
+			// }
+		}
+		
+
+
+
+
+
+
+
+
+		/*
 		$min_date = date('Y-m-d', strtotime($searching_date));
 		$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
-		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
+		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*@@/
 		$search_date_formatted = date("Y-m-d H:i", strtotime($searching_date . $searching_time));
 
 		// echo '<pre>'; print_r($search_date_formatted);  echo '</pre>';
@@ -238,23 +324,45 @@ if ($_GET) {
 		
 		// $url = get_site_url() . '/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
 
-		/* curl function not working on local, that needs to crawl staging/live site product data. Comment the above line and uncomment the below line to fetch from staging site */
+		/* curl function not working on local, that needs to crawl staging/live site product data. Comment the above line and uncomment the below line to fetch from staging site *@@/
 		$url = 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
 
 		$curl = curl_init($url);
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FAILONERROR, true); // Required for HTTP error codes to be reported via our call to curl_error($ch)
 
 		$resp = curl_exec($curl);
-		try {
-			$resources = json_decode($resp, true);
-		} catch (JsonException $e) {
-			//--echo '[05] Error: ' . $e;
-			throw new EncryptException('[09] Could not encrypt the data.', 0, $e);
+
+		if (curl_errno($curl)) {
+			$err = curl_error($curl);
 		}
 		curl_close($curl);
+		
+		if (isset($err)) {
+			echo $err;
+			return;
+		}
 
-		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
+		/* JSON flags: (used below)
+			JSON_PARTIAL_OUTPUT_ON_ERROR: Substitute some unencodable values instead of failing.
+			JSON_NUMERIC_CHECK: Encodes numeric strings as numbers.
+		*@@/
+
+		if (isset($resp) && !empty($resp)) {
+			try {
+				$resources = json_decode($resp, true, JSON_PARTIAL_OUTPUT_ON_ERROR+JSON_NUMERIC_CHECK);
+			} catch (JsonException $e) {
+				echo '[04] Error: ' . $e;
+				return;
+			}
+			if (FALSE === $resources) {
+				echo '[05] Error: ' . json_last_error() . ': ' . json_last_error_msg();
+				return;
+			}
+		} else echo '[06] Error: response was not set or empty: `' . $resp . '`';
+
+		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*@@/
 		// $search_date_formatted = date("Y-m-d H:i", strtotime($searching_date));
 		if (isset($resources) && !empty($resources['records'])) {
 			$slots_info = $resources['records'];
@@ -272,6 +380,7 @@ if ($_GET) {
 				}
 			}
 		}
+		*/
 	}
 }
 
@@ -281,17 +390,21 @@ if ($_GET) {
 	$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
 	/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
 	$search_date_formatted = date("Y-m-d H:i", strtotime($searching_date . $searching_time));
+	
+	//-var_dump(get_post_meta( $product_id, '_wc_booking_availability', true ));
 	?>
 	<div style="display:none;" 
 		<?php wc_product_class( $classes, $product ); ?> 
 		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>" 
-		data-mindate ="<?php echo $min_date;?>"
+		<?php /* data-mindate ="<?php echo $min_date;?>"
 		data-maxdate ="<?php echo $max_date;?>"
-		data-formattedDate ="<?php echo $search_date_formatted;?>"
+		data-formattedDate ="<?php echo $search_date_formatted;?>" */ ?>
 		data-id="<?php echo esc_attr( $product->get_id() ); ?>">
 			<?php wc_get_template_part( 'content', 'product-' . $hover ); ?>
 	</div>
-<?php }else if($qualified) {?>
+<?php }else if($qualified) {
+	//-var_dump(get_post_meta( $product_id, '_wc_booking_availability', true ));
+	?>
 	<div 
 		<?php wc_product_class( $classes, $product ); ?> 
 		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>" 

@@ -365,11 +365,11 @@ function wc_registration_form_function() {
 		</form>
 	</div>
 	<?php
-	  
+	
 	return ob_get_clean();
-	 
- }
- add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
+	
+}
+add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
 
 /**
 * @snippet       Hide Edit Address Tab @ My Account
