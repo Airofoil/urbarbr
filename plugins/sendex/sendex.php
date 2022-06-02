@@ -16,11 +16,18 @@ use Twilio\TwiML\MessagingResponse;
 // Use the REST API Client to make requests to the Twilio REST API
 use Twilio\Rest\Client;
 
+// Replace the following three lines with paid twilio account credentials & phone number when go live
+$sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
+$token = '194e0e9736a16a88eeb62cb72291ef20';
+$twilio_number = "+18606891709";
+
 function sendex_publish_post($mobile, $name, $time) { 
+
+    global $sid, $token, $twilio_number;
     
     // Your Account SID and Auth Token from twilio.com/console
-    $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
-    $token = '194e0e9736a16a88eeb62cb72291ef20';
+    // $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
+    // $token = '194e0e9736a16a88eeb62cb72291ef20';
     $client = new Client($sid, $token);
                         
     // Use the client to do fun stuff like send text messages!
@@ -29,7 +36,7 @@ function sendex_publish_post($mobile, $name, $time) {
         $mobile,
         [
             // A Twilio phone number you purchased at twilio.com/console
-            'from' => '+18606891709',
+            'from' => $twilio_number,
             // the body of the text message you'd like to send
             'body' => 'Hi, '. $name .', you have an appointment tomorrow at '.$time.'.
 If you need to reach your Barber you can reply directly to this SMS and we will make sure they get it!
@@ -41,9 +48,11 @@ Your Barber can also reach out to you in the same way.
 
 function reminder_barber($mobile, $barberName, $time, $customerName, $orderId) { 
     
+    global $sid, $token, $twilio_number;
+
     // Your Account SID and Auth Token from twilio.com/console
-    $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
-    $token = '194e0e9736a16a88eeb62cb72291ef20';
+    // $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
+    // $token = '194e0e9736a16a88eeb62cb72291ef20';
     $client = new Client($sid, $token);
                         
     // Use the client to do fun stuff like send text messages!
@@ -52,7 +61,8 @@ function reminder_barber($mobile, $barberName, $time, $customerName, $orderId) {
         $mobile,
         [
             // A Twilio phone number you purchased at twilio.com/console
-            'from' => '+18606891709',
+            // 'from' => '+18606891709',
+            'from' => $twilio_number,
             // the body of the text message you'd like to send
             'body' => 'Hi, '. $barberName .', you have an appointment tomorrow at '.$time.' with '.$customerName. ' (#'.$orderId.').
 If you need to reach your Customer you can reply directly to this SMS and we will make sure they get it!
@@ -63,9 +73,12 @@ Your Barber can also reach out to you in the same way. You need to specify a cus
 }
 
 function complete_appointment_customer($mobile, $name, $barberName) {
+
+    global $sid, $token, $twilio_number;
+
     // Your Account SID and Auth Token from twilio.com/console
-    $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
-    $token = '194e0e9736a16a88eeb62cb72291ef20';
+    // $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
+    // $token = '194e0e9736a16a88eeb62cb72291ef20';
     $client = new Client($sid, $token);
                         
     // Use the client to do fun stuff like send text messages!
@@ -74,7 +87,8 @@ function complete_appointment_customer($mobile, $name, $barberName) {
         $mobile,
         [
             // A Twilio phone number you purchased at twilio.com/console
-            'from' => '+18606891709',
+            // 'from' => '+18606891709',
+            'from' => $twilio_number,
             // the body of the text message you'd like to send
             'body' => 'Hi '.$name.', 
 Your appointment with '.$barberName.' should now be complete. If you have any further questions or issues please reach out directly to UrBarbr and we will help get them resolved. Replies to this message will no longer be forwarded to your Barber but may be logged for quality and assurance purposes 
@@ -84,9 +98,12 @@ Your appointment with '.$barberName.' should now be complete. If you have any fu
 }
 
 function complete_appointment_barber($mobile, $name, $customerName, $orderId) {
+
+    global $sid, $token, $twilio_number;
+
     // Your Account SID and Auth Token from twilio.com/console
-    $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
-    $token = '194e0e9736a16a88eeb62cb72291ef20';
+    // $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
+    // $token = '194e0e9736a16a88eeb62cb72291ef20';
     $client = new Client($sid, $token);
                         
     // Use the client to do fun stuff like send text messages!
@@ -95,7 +112,8 @@ function complete_appointment_barber($mobile, $name, $customerName, $orderId) {
         $mobile,
         [
             // A Twilio phone number you purchased at twilio.com/console
-            'from' => '+18606891709',
+            // 'from' => '+18606891709',
+            'from' => $twilio_number,
             // the body of the text message you'd like to send
             'body' => 'Hi '.$name.', 
 Your appointment with '.$customerName.' (#'.$orderId.') should now be complete. If you have any further questions or issues please reach out directly to UrBarbr and we will help get them resolved. Replies to this message will no longer be forwarded to your Customer but may be logged for quality and assurance purposes 
@@ -105,10 +123,12 @@ Your appointment with '.$customerName.' (#'.$orderId.') should now be complete. 
 }
 
 function just_made_booking($mobile, $name, $time) { 
+
+    global $sid, $token, $twilio_number;
     
     // Your Account SID and Auth Token from twilio.com/console
-    $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
-    $token = '194e0e9736a16a88eeb62cb72291ef20';
+    // $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
+    // $token = '194e0e9736a16a88eeb62cb72291ef20';
     $client = new Client($sid, $token);
                         
     // Use the client to do fun stuff like send text messages!
@@ -117,7 +137,8 @@ function just_made_booking($mobile, $name, $time) {
         $mobile,
         [
             // A Twilio phone number you purchased at twilio.com/console
-            'from' => '+18606891709',
+            // 'from' => '+18606891709',
+            'from' => $twilio_number,
             // the body of the text message you'd like to send
             'body' => 'Hi, '. $name .', you have an appointment at '.$time.' within 24 hours.
 If you need to reach your Barber you can reply directly to this SMS and we will make sure they get it!
@@ -129,9 +150,11 @@ Your Barber can also reach out to you in the same way.
 
 function just_made_booking_barber($mobile, $barberName, $time, $customerName, $orderId) { 
     
+    global $sid, $token, $twilio_number;
+
     // Your Account SID and Auth Token from twilio.com/console
-    $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
-    $token = '194e0e9736a16a88eeb62cb72291ef20';
+    // $sid = 'AC48d70c672e1844c4bb6dd44a89bbf83c';
+    // $token = '194e0e9736a16a88eeb62cb72291ef20';
     $client = new Client($sid, $token);
                         
     // Use the client to do fun stuff like send text messages!
@@ -140,7 +163,8 @@ function just_made_booking_barber($mobile, $barberName, $time, $customerName, $o
         $mobile,
         [
             // A Twilio phone number you purchased at twilio.com/console
-            'from' => '+18606891709',
+            // 'from' => '+18606891709',
+            'from' => $twilio_number,
             // the body of the text message you'd like to send
             'body' => 'Hi, '. $barberName .', you have an appointment at '.$time.' within 24 hours with '.$customerName. ' (#'.$orderId.').
 If you need to reach your Customer you can reply directly to this SMS and we will make sure they get it!
@@ -160,7 +184,7 @@ function test($now, $start) {
     // Use the client to do fun stuff like send text messages!
     $client->messages->create(
         // the number you'd like to send the message to
-        '+61420603110',
+        '+61450810124',
         [
             // A Twilio phone number you purchased at twilio.com/console
             'from' => '+18606891709',
