@@ -232,7 +232,11 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 						document.addEventListener('DOMContentLoaded', function() {
 							$ = jQuery;
 
-							//$('body').on('click', '.pac-container .pac-item', setTimeout(() => locationBox.blur(), 50));
+							// $('body').on('click', '.pac-container .pac-item', function() {
+							// 	console.log('clicked pac location');
+							// 	locationBox.trigger('blur');
+							// });
+							$('body').on('click touchstart', '.pac-item', setTimeout(() => document.getElementById('your-location-search').blur(), 50));
 
 							if ($('#your-location-search').val() && $('#your-location-search').val().length > 3) $('#your-location-search').addClass('entered');
 							if ($('#booking-date-search').val() && $('#booking-date-search').val().length > 3) $('#booking-date-search').addClass('entered');

@@ -178,7 +178,7 @@ body .searchform input.invalid {
 	position: absolute;
 	display: none;
 	width: 42px;
-	height: calc(100% - 2px);
+	height: 44px;
 	right: 1px;
 	top: 1px;
 	padding: 0;
@@ -642,7 +642,7 @@ background-color: rgba(101,101,101,1);
 	/*---max-width: 100px;
 	aspect-ratio: 1 / 1; */
 	width: 100%;
-	max-height: 250px;
+	/*--max-height: 250px; */
 	overflow: hidden;
 	margin-bottom: 20px;
 	border-radius: 4px;
@@ -657,7 +657,8 @@ background-color: rgba(101,101,101,1);
 }
 
 .archive .product-grid-item .product-element-top .product-image-link img {
-	aspect-ratio: 1 / 1.5;
+	/*-aspect-ratio: 1 / 1.5; */
+	aspect-ratio: 1 / 1;
 	object-fit: cover;
 }
 
@@ -2847,4 +2848,17 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 	text-align: center;
 	transform: none;
 }
-  
+
+/* The barber distance display on search results */
+.product-grid-item .distance {
+	float: right;
+	padding: 0 15px;
+	font-weight: 500;
+	line-height: 44px;
+}
+.product-grid-item .distance::before {
+    /*-content: '\f547'; /* Ruler icon */
+    content: '\f3c5'; /* Location pin icon */
+	margin-right: 6px;
+    font-family: 'FontAwesome';
+}
