@@ -77,12 +77,9 @@ jQuery(document).ready(function ($){
             }
         }
 
-		if (!$('.searchform.woodmart-ajax-search input:not(.entered):not([type="hidden"])').length) {
-			$('.searchform .searchsubmit').addClass('entered');
+		if (!$('.searchform.woodmart-ajax-search input:not(.entered):not([type="hidden"])').length || ($('#booking-date-search').val() && $('#your-location-search').val())) {
+			$('.searchform .searchsubmit').prop('disabled','').addClass('entered');
 		}
-        if ($('#booking-date-search').hasClass('entered') && $('#your-location-search').hasClass('entered')) {
-            $('.searchform .searchsubmit').prop('disabled','').addClass('entered');
-        }
 	});
 
     $('body').on('click', function() {
@@ -136,7 +133,7 @@ jQuery(document).ready(function ($){
     });
 
     $('body.home .searchsubmit.btn').on('click', function(event){
-        if ( $(".home .filter-option").text() == "" || $(".home .filter-option").text() == "Select a service") {
+        if ( !$('.booking-services-search').val() ) {
             // $(".booking-services-search button.btn").css('border-color', 'red!important');
             // $(".booking-services-search button.btn").css('border-width', '1px!important');
             // $(".booking-services-search button.btn").css('height', 'auto');
@@ -154,7 +151,7 @@ jQuery(document).ready(function ($){
 
         // alert($('#booking-date-search.entered').length);
 
-        if( !$('#booking-date-search.entered').length ) {
+        if( !$('#booking-date-search').val() ) {
             $('#booking-date-search').addClass('error-date-select-field');
             if(!$('#error-search-date-select').length) {
                 $( '<div class="search-error-message" id="error-search-date-select">select date & time</div>' ).insertAfter( "#booking-date-search" );
@@ -170,7 +167,7 @@ jQuery(document).ready(function ($){
             $("#error-search-date-select-mobile").fadeOut();
         }
 
-        if( !$('#your-location-search.entered').length ) {
+        if( !$('#your-location-search').val() ) {
             $('#your-location-search').addClass('error-date-select-field');
             if(!$('#error-search-location').length) {
                 $( '<div class="search-error-message" id="error-search-location">enter your address</div>' ).insertAfter( ".your-location-search .dropdown-menu" );
@@ -200,23 +197,32 @@ jQuery(document).ready(function ($){
     });
 	
 	//setTimeout(() => {
-        if($('.product-grid-item[data-mindate]').length){
-            $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
+    if ($('.product-grid-item').length) {
+        
+        var barberList = $('.products.elements-grid');
+        var barbers = barberList.children('.product-grid-item');
+
+        if($('.product-grid-item[data-mindate]').length){ // If there is a min-date set, filter the products by their available date and time slots
+            
+            $('.wd-loop-footer.products-footer a.wd-products-load-more').hide(); // Hide the 'Load more' button
             var products = '';
             var minDate = '';
             var maxDate = '';
             var formattedDate = '';
-            $(".product-grid-item").each(function (index) {
+
+            barbers.each(function () {
                 products += $(this).data('id');
                 products += ",";
                 minDate = $(this).data('mindate');
                 maxDate = $(this).data('maxdate');
-                formattedDate = $(this).data('formatteddate');
-            
+                formattedDate = $(this).data('formatteddate'); console.log('formattedDate:',formattedDate);
+
+                if ($(this).data('distance')) $(this).find('.jac-products-header-top-left').append(`<div class="distance" style="float:unset;padding:0;">${$(this).data('distance')} km</div>`); // Add the distance field on the tile
             });
-            products = products.replace(/,*$/, "");
-            console.log(products);
+
+            products = products.replace(/,*$/, ""); console.log(products);
             
+            console.log('Finding available slots...');
             $.ajax({
                 url: "/wp-json/wc-bookings/v1/products/slots",
                 type: "get",
@@ -225,44 +231,80 @@ jQuery(document).ready(function ($){
                     max_date: maxDate,
                     product_ids: products
                 },
-                success: function (response) {
-                    var formattedDateTime = new Date(formattedDate).getTime();
+                success: function (response) { console.log('  success:',response);
+                    var formattedDateTime = new Date(formattedDate.replace(' ','T')).getTime();
+                    var paramTime = new URLSearchParams(window.location.search).get('booking-time');
                     var slotsFound = 0;
-                    for (var [key, slotinfo] of Object.entries(response.records)) {
-                        if (slotinfo.available == 1) {
-                            var startDateTime = new Date(slotinfo.date).getTime();
-                            var endDateTime = startDateTime + slotinfo.duration * 1000;
-                            var minimumStartTime = new Date();
-                            minimumStartTime.setHours(minimumStartTime.getHours() + 1);
-                            minimumStartTime = minimumStartTime.getTime();
-                            if (formattedDateTime >= startDateTime && formattedDateTime <= endDateTime && formattedDateTime > minimumStartTime) {
-                                $('[data-id=' + slotinfo.product_id + ']').show();
+
+                    for (i in response.records) { //-console.log(response.records[i].product_id, $('[data-id=' + response.records[i].product_id + ']').find('.jac-barber-name').text().trim(), response.records[i]);
+                        if (response.records[i].available == 1) {
+                            if (formattedDate.slice(formattedDate.length - 5) == "00:00" && !paramTime) { // If the booking time is not provided, or the default 00:00 ...
+                                console.log('No time provided, showing product',response.records[i].product_id)
+                                $('[data-id=' + response.records[i].product_id + ']').show(); // Show the product
                                 slotsFound += 1;
+                            }
+                            else { // ... Otherwise, check if the booking time fits the slot
+                                var startDateTime = new Date(response.records[i].date).getTime();
+                                var endDateTime = startDateTime + response.records[i].duration * 60 * 1000;
+                                var minimumStartTime = new Date();
+                                minimumStartTime.setHours(minimumStartTime.getHours() + 1); // The current datetime, preventing slots in the past from being selectable
+                                minimumStartTime = minimumStartTime.getTime();
+                                //-console.log('    ',formattedDateTime >= startDateTime, formattedDateTime <= endDateTime, formattedDateTime > minimumStartTime,formattedDateTime,startDateTime,formattedDateTime,endDateTime,formattedDateTime,minimumStartTime)
+                                if (formattedDateTime >= startDateTime && formattedDateTime < endDateTime && formattedDateTime > minimumStartTime) {
+                                    $('[data-id=' + response.records[i].product_id + ']').show(); // Show that product, since it has a matching time slot available
+                                    slotsFound += 1;
+                                    //-console.log('Match:',new Date(formattedDateTime),new Date(startDateTime),new Date(endDateTime),new Date(minimumStartTime),$('[data-id=' + response.records[i].product_id + ']').find('.jac-barber-name').text().trim())
+                                }
                             }
                         }
                     }
-                    console.log(response);
+
                     if (slotsFound == 0) {
                         console.log("No Slots Found");
                         var buttonHtml = "<p>There are no barbers available at this time</p><a href='/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
-                        $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
-                        $('.wd-loop-footer.products-footer').append(buttonHtml)
+                        $('.wd-loop-footer.products-footer a.wd-products-load-more').hide(); // Hide the load more button
+                        if ($('.wd-loop-footer.products-footer').length) $('.wd-loop-footer.products-footer').append(buttonHtml); // Append the message and button to the footer, if it exists, else before the product grid
+                        else $(buttonHtml).insertBefore($('.products.elements-grid'));
                     } else {
                         $('.wd-loop-footer.products-footer a.wd-products-load-more').show();
                     }
                 },
                 error: function (xhr) {
-                    //Do Something to handle error
+                    console.error(xhr);
                 }
             });
         }
-    //}, 5000);
+
+        if ($('.product-grid-item[data-distance]').length) {
+            var sortList = Array.prototype.sort.bind(barbers); // Bind barbers to the sort method so we don't have to travel up all these properties more than once.
+
+            sortList(function(a, b) {
+                var aDistance = $(a).data('distance'); // Cache distance value from the first element (a) and the next sibling (b)
+                var bDistance = $(b).data('distance');
+
+                if (!aDistance) return 1;
+                if (!bDistance) return -1;
+
+                if (aDistance < bDistance) { //-console.log('placing',$(a).find('.jac-barber-name').text().trim(),'before',$(b).find('.jac-barber-name').text().trim() )
+                    return -1; // Returning -1 will place element `a` before element `b`
+                }
+                if (aDistance > bDistance) { //-console.log('placing',$(b).find('.jac-barber-name').text().trim(),'before',$(a).find('.jac-barber-name').text().trim() )
+                    return 1; // Returning 1 will do the opposite
+                }
+
+                return 0; // Returning 0 leaves them as-is
+            });
+            
+            barberList.append(barbers);
+        }
+    }
 	/*@@else {
 		console.log("No nearby Barbers found");
 		var buttonHtml="<p>There are no barbers available at this location</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
 		$('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
 		$('.wd-loop-footer.products-footer').append(buttonHtml)
 	} */
+    //-if ($('.product-grid-item').length) filterBarbers(); // See above
 
     $("body").on('DOMSubtreeModified', ".wc-bookings-time-block-picker", updateValidEnddate);
     function updateValidEnddate(){

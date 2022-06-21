@@ -117,67 +117,90 @@ if($street != "" && $city != "" && $state != "" && $country != "" && $prefer_dis
 	$bar_long = floatval ($geo_result['longitude']);
 }
 
+
+
+
+
+
+
+
+
 $qualified = true;
+
+$searching_service = null;
+$searching_date = null;
+$searching_time = null;
+$searching_lat_long = null;
+
 if ($_GET) {
-	//--$searching_location = $_GET['your-location'];
+
 	$searching_service = 	!empty($_GET['booking-services']) ? $_GET['booking-services'] : null;
 	$searching_date =    	!empty($_GET['booking-date']) ? $_GET['booking-date'] : null;
 	$searching_time =    	!empty($_GET['booking-time']) ? $_GET['booking-time'] : null;
 	$searching_lat_long = 	!empty($_GET['your-lat-long']) ? $_GET['your-lat-long'] : null;
 	
-	$filtering = false;
-	$location_qualified = true;
 
-	if($searching_service || $searching_date || $searching_lat_long){ //-|| searching_location
-		$filtering = true;
+
+	/*-For printing the service types on the barber card:
+	if ($searching_service && !in_array($searching_service, array("all", "default"))) {
+
+		$service_string = '';
+
+		foreach ($product->get_meta_data() as $index => $data) {
+			if ($data->key == '_product_addons') {
+				if ($data->value && $data->value[0] && $data->value[0]['options']) {
+					foreach ($data->value[0]['options'] as $index => $value) {
+						$service_string .= str_replace(' ','_',trim(strtolower($value['label'])));
+
+						if ($index !== array_key_last($data->value[0]['options'])) $service_string .= ','; // Add a comma
+					}
+				}
+			}
+		}
+	} */
+	if ($searching_service && !in_array($searching_service, array("all", "default"))) { // Check if the looped barber has the Service that has been searched for
+
 		$qualified = false;
-	}else{
+
+		$services = array_map('trim', explode(',', strtolower($searching_service))); // In case multiple services are selected, create a trimmed, lowercase array with them
+		
+		//testing--echo '.1.____' . strtolower($searching_service);
+		//testing--var_dump($services);
+		//testing--echo '____.2.____';
+
+		foreach ($product->get_meta_data() as $index => $data) {
+			if ($data->key == '_product_addons') {
+				if ($data->value && $data->value[0] && $data->value[0]['options'])
+					foreach ($data->value[0]['options'] as $index=>$value) {
+						//testing--echo str_replace(' ','_',trim(strtolower($value['label']))) . ' ? ' . in_array(str_replace(' ','_',trim(strtolower($value['label']))), $services);
+						if (in_array(str_replace(' ','_',trim(strtolower($value['label']))), $services)) {
+							$qualified = true; // The barber has this service listed
+						}
+					}
+			}
+		}
+	} elseif (in_array($searching_service, array("all", "default")) && $location_qualified) { // If searched service is "all" or "default"
 		$qualified = true;
 	}
 
-	/* Replaced with just searching_lat_long (AJAX is in search.php)--if($searching_location) {
 
-		$location_qualified = false;
 
-		$goo_tem_address = str_replace(" ", "+", $searching_location);
-		$goo_address = str_replace(",", "", $goo_tem_address);
+	if ($searching_date) { // If searching on a particular date, set these variables to be displayed in the output
+		
+		$min_date = date('Y-m-d', strtotime($searching_date));
+		$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
+		if ($searching_time) $search_date_formatted = date("Y-m-d H:i", strtotime($searching_date . $searching_time)); // Don't convert search date time because Woo Bookings REST API does not recognize time, but only date
+		else $search_date_formatted = date("Y-m-d H:i", strtotime($searching_date));
 
-		$url = "https://maps.googleapis.com/maps/api/geocode/json?address=$goo_address&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false"; 
-		$google_api_response = wp_remote_get( $url );    
+		//-$availability = get_post_meta( $product_id, '_wc_booking_availability', true );
 
-		$results = json_decode( $google_api_response['body'] ); //grab our results from Google
-		$results = (array) $results; //cast them to an array
-		$status = $results["status"]; //easily use our status
-		$location_all_fields = (array) $results["results"][0];
-		$location_geometry = (array) $location_all_fields["geometry"];
-		$location_lat_long = (array) $location_geometry["location"];
+	}
 
-		if( $status == 'OK'){
-			$latitude = $location_lat_long["lat"];
-			$longitude = $location_lat_long["lng"];
-		}else{
-			$latitude = '';
-			$longitude = '';
-		}
 
-		$return = array(
-			'latitude'  => $latitude,
-			'longitude' => $longitude
-		);
 
-		$search_location_lat = floatval ($return['latitude']);
-		$search_location_long = floatval ($return['longitude']);
+	if ($searching_lat_long) { // If searching with lat & long, calculate and set the distance between the barber and the searched location
 
-		$search_distance_between = distance($search_location_lat, $search_location_long, $bar_lat, $bar_long, "K");
-
-		if($search_distance_between < $prefer_distance) {
-			$location_qualified = true;
-			$qualified = true;
-		}
-	} */
-	if ($searching_lat_long) { //use search input address instead of current location if there is an address in the search field
-
-		$location_qualified = false;
+		$distance_between = '';
 
 		$lat_long_array = explode(',', $searching_lat_long);
 		$location_lat = floatval ($lat_long_array[0]);
@@ -190,225 +213,39 @@ if ($_GET) {
 
 		if (!empty($bar_lat) && !empty($bar_long)) { // If the barber's location is set, and the lat & long are found - JDH
 			$distance_between = distance($location_lat, $location_long, $bar_lat, $bar_long, "K");
-
-			if($distance_between < $prefer_distance) {
-				$location_qualified = true;
-				$qualified = true;
-			}
 		}
 	}
-	
-	if($searching_service && !in_array($searching_service, array("all", "default"))) {
 
-		$qualified = false;
-
-		$services = array_map('trim', explode(',', strtolower($searching_service))); // In case multiple services are selected, create a trimmed, lowercase array with them
-		
-		//testing--echo '.1.____' . strtolower($searching_service);
-		//testing--var_dump($services);
-		//testing--echo '____.2.____';
-
-		foreach ($product->get_meta_data() as $index => $data) {
-			if ($data->key == '_product_addons') {
-				if ($data->value[0] && $data->value[0]['options'])
-					foreach ($data->value[0]['options'] as $index=>$value) {
-						//testing--echo str_replace(' ','_',trim(strtolower($value['label']))) . ' ? ' . in_array(str_replace(' ','_',trim(strtolower($value['label']))), $services);
-						if (in_array(str_replace(' ','_',trim(strtolower($value['label']))), $services) && $location_qualified) {
-							$qualified = true;
-						}
-					}
-			}
-		}
-	} elseif (in_array($searching_service, array("all", "default")) && $location_qualified) { // If searched service is "all" or "default"
-		$qualified = true;
-	}
-	
-	if ($searching_date) { // && $searching_time
-
-		$qualified = false;
-
-		$availability = get_post_meta( $product_id, '_wc_booking_availability', true );
-		/* Example _wc_booking_availability meta:
-		array(7) {
-			[0]=> array(5) {
-				["type"]=> string(6) "time:6"  // 6 is a Saturday
-				["bookable"]=> string(3) "yes" 
-				["priority"]=> int(10) 
-				["from"]=> string(5) "12:00" 
-				["to"]=> string(5) "16:00"
-			}
-			[1]=> array(5) {
-				["type"]=> string(6) "custom" 
-				["bookable"]=> string(2) "no" 
-				["priority"]=> int(9) 
-				["from"]=> string(10) "2022-03-17" 
-				["to"]=> string(10) "2022-03-17"
-			}
-			[2]=> array(5) {
-				["type"]=> string(10) "time:range"  // "Time range (all week)"
-				["bookable"]=> string(3) "yes" 
-				["priority"]=> int(1) 
-				["from"]=> string(5) "08:00" 
-				["to"]=> string(5) "23:00" 
-				["from_date"]=> string(10) "2022-05-01" 
-				["to_date"]=> string(10) "2022-12-31"
-			}
-			[3]=> array(5) {
-				["type"]=> string(6) "time:2"  // Tuesday
-				["bookable"]=> string(3) "yes" 
-				["priority"]=> int(10) 
-				["from"]=> string(5) "09:00" 
-				["to"]=> string(5) "17:00"
-			}
-		}
-		*/
-		echo 'availability rules: ' . count($availability);
-		if (count($availability)) echo ' (';
-		$search_date = date('Y-m-d', strtotime($searching_date));
-
-
-		foreach ($availability as $key => $row) {
-			if ($row['bookable'] == "yes") { /* Find an availability slot */
-				echo $row['type'];
-				if ($key !== array_key_last($availability)) echo ', ';
-				
-				//echo 'date: ' . date('w', $date);
-				// (substr($row[type], 0, 5) == 'time:' && substr($row[type], 5) == date('w', $date)) // If searched day is set as an available day
-				// || ($row[type] == 'months' && (date('n', $date) >= $row[from] && date('n', $date) < $row[to])) // If searched month falls in available month slots
-				// || ($row[type] == 'time:range' && ($date >= strtotime($row[from_date]))
-
-				//echo '<br>' . $search_date . ' | ' . date('Y-m-d', strtotime($row['from_date'])) . boolval($search_date >= date('Y-m-d', strtotime($row['from_date'])));
-				//echo '<br>from date: ' . $row['from_date'];
-				//echo '<br>to date: ' . $row['to_date'];
-
-				if ($row['type'] == "time:range"
-					&& $search_date >= date('Y-m-d', strtotime($row['from_date']))
-					&& $search_date < date('Y-m-d', strtotime($row['to_date']))
-				) {
-					// time checks in here ...
-					$qualified = true;
-					echo '<br>--time-range qualified';
-				}
-				elseif ($row['type'] == 'months' && (date('n', strtotime($searching_date)) >= $row['from'] && date('n', strtotime($searching_date)) < $row['to'])) { // If searched month falls in available month slots
-					$qualified = true;
-					echo '<br>--month qualified';
-				}
-				elseif (substr($row['type'], 0, 5) == 'time:' && substr($row['type'], 5) == date('w', strtotime($searching_date))) { // If searched day is set as an available day
-					$qualified = true;
-					echo '<br>--weekday qualified';
-				}
-			}
-			// // Print out the availability values:
-			// foreach ($row as $key => $val) {
-			// 	echo $key . ': ' . $val;
-			// }
-		}
-		
-
-
-
-
-
-
-
-
-		/*
-		$min_date = date('Y-m-d', strtotime($searching_date));
-		$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
-		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*@@/
-		$search_date_formatted = date("Y-m-d H:i", strtotime($searching_date . $searching_time));
-
-		// echo '<pre>'; print_r($search_date_formatted);  echo '</pre>';
-		// echo '<pre>'; print_r($min_date);  echo '</pre>';
-		// echo '<pre>'; print_r($max_date);  echo '</pre>';
-		
-		// $url = get_site_url() . '/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
-
-		/* curl function not working on local, that needs to crawl staging/live site product data. Comment the above line and uncomment the below line to fetch from staging site *@@/
-		$url = 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/products/slots?min_date=' . $min_date . '&max_date=' . $max_date . '&product_ids=' . $product_id;
-
-		$curl = curl_init($url);
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FAILONERROR, true); // Required for HTTP error codes to be reported via our call to curl_error($ch)
-
-		$resp = curl_exec($curl);
-
-		if (curl_errno($curl)) {
-			$err = curl_error($curl);
-		}
-		curl_close($curl);
-		
-		if (isset($err)) {
-			echo $err;
-			return;
-		}
-
-		/* JSON flags: (used below)
-			JSON_PARTIAL_OUTPUT_ON_ERROR: Substitute some unencodable values instead of failing.
-			JSON_NUMERIC_CHECK: Encodes numeric strings as numbers.
-		*@@/
-
-		if (isset($resp) && !empty($resp)) {
-			try {
-				$resources = json_decode($resp, true, JSON_PARTIAL_OUTPUT_ON_ERROR+JSON_NUMERIC_CHECK);
-			} catch (JsonException $e) {
-				echo '[04] Error: ' . $e;
-				return;
-			}
-			if (FALSE === $resources) {
-				echo '[05] Error: ' . json_last_error() . ': ' . json_last_error_msg();
-				return;
-			}
-		} else echo '[06] Error: response was not set or empty: `' . $resp . '`';
-
-		/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*@@/
-		// $search_date_formatted = date("Y-m-d H:i", strtotime($searching_date));
-		if (isset($resources) && !empty($resources['records'])) {
-			$slots_info = $resources['records'];
-
-			foreach($slots_info as $slot_info) {
-				if ($slot_info['available'] == 1) {
-
-					$start_time = str_replace("T"," ",$slot_info['date']);
-					$end_time = date('Y-m-d H:i', strtotime($start_time) + 3600);
-
-					if($search_date_formatted < $end_time && $start_time <= $search_date_formatted && $location_qualified){
-						$qualified = true;
-						break;
-					}
-				}
-			}
-		}
-		*/
-	}
 }
 
+
+
 ?>
-<?php if($qualified && $searching_date && $searching_time){ 
-	$min_date = date('Y-m-d', strtotime($searching_date));
-	$max_date = date('Y-m-d', strtotime($min_date . ' +1 day'));
-	/* Don't convert search date time because Woo Bookings REST API does not recognize time, but only date*/
-	$search_date_formatted = date("Y-m-d H:i", strtotime($searching_date . $searching_time));
-	
-	//-var_dump(get_post_meta( $product_id, '_wc_booking_availability', true ));
-	?>
-	<div style="display:none;" 
+<?php if ($_GET && $qualified) { //-var_dump(get_post_meta( $product_id, '_wc_booking_availability', true ));	?>
+	<div style="display:none;"
 		<?php wc_product_class( $classes, $product ); ?> 
-		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>" 
-		<?php /* data-mindate ="<?php echo $min_date;?>"
-		data-maxdate ="<?php echo $max_date;?>"
-		data-formattedDate ="<?php echo $search_date_formatted;?>" */ ?>
+		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>"
+		<?php
+		if (!empty($min_date) && !empty($max_date) ) { // Add the min and max date (calculations in child-theme.js)
+			echo ' data-mindate="' . $min_date . '"';
+			echo ' data-maxdate="' . $max_date . '"';
+			echo ' data-formatteddate="' . $search_date_formatted . '"';
+		}
+		if (!empty($distance_between)) 
+			echo ' data-distance="' . round($distance_between, 2) . '"'; 	// Add the barber's distance
+		/*-To print the barber's services on their card:
+		if (!empty($service_string)) 
+			echo ' data-services="' . $service_string . '"'; 	// Add the services the barber provides */
+		?>
 		data-id="<?php echo esc_attr( $product->get_id() ); ?>">
-			<?php wc_get_template_part( 'content', 'product-' . $hover ); ?>
+		
+		<?php wc_get_template_part( 'content', 'product-' . $hover ); ?>
 	</div>
-<?php }else if($qualified) {
-	//-var_dump(get_post_meta( $product_id, '_wc_booking_availability', true ));
-	?>
+<?php } elseif ($qualified) { //-var_dump(get_post_meta( $product_id, '_wc_booking_availability', true )); ?>
 	<div 
 		<?php wc_product_class( $classes, $product ); ?> 
 		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>" 
 		data-id="<?php echo esc_attr( $product->get_id() ); ?>">
-			<?php wc_get_template_part( 'content', 'product-' . $hover ); ?>
+		<?php wc_get_template_part( 'content', 'product-' . $hover ); ?>
 	</div>
 <?php } ?>
