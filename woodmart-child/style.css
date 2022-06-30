@@ -2713,6 +2713,10 @@ body.single-product .wc-bookings-booking-cost {
 		font-size: 22px;
 		font-weight: 700;
 	}
+
+	.woocommerce-checkout #payment ul.payment_methods li .stripe-visa-brand{
+		margin-top: -18px;
+	}
 }
 
 
