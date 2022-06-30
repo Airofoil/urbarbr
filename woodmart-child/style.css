@@ -956,6 +956,11 @@ p.form-row input {
 	height: 33px;
 }
 
+.reg-thrir-row{
+	display: flex;
+    justify-content: flex-end;
+}
+
 .reg-thrir-row input[type="submit"] {
 	float: right;
 	width: 140px;
@@ -2398,6 +2403,10 @@ footer img[src*="logo"], header img[src*="logo"] {
 .tinv-wishlist .social-buttons .social-clipboard,
 .tinv-wishlist .social-buttons .social-whatsapp {
 	display: none !important;
+}
+
+.tinv-wishlist .tinvwl-buttons-group .button i{
+	padding-bottom: 6px;
 }
 
 .woocommerce-form.login .last
