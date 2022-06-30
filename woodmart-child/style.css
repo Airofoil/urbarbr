@@ -967,6 +967,11 @@ p.form-row input {
 	color: #ffffff;
 }
 
+.jac-about-us-fourth-section .wpcf7-response-output{
+	width: 100%;
+    margin-top: 15px;
+}
+
 body .main-page-wrapper {
 	min-height: 75vh;
 }
