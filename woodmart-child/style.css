@@ -953,6 +953,7 @@ p.form-row input {
 .reg-second-row textarea {
 	margin-top: 10px;
 	color: #000000;
+	height: 33px;
 }
 
 .reg-thrir-row input[type="submit"] {
