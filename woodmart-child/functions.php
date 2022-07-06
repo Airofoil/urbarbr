@@ -858,7 +858,8 @@ function cw_function() {
 		for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
 			for ($j=0; $j < count($jsonProduct); $j++) { 
 				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-					if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
+					$dueTime = DAY_IN_SECONDS * 2;
+					if (($jsonBooking[$i]['start'] - $long) > ($dueTime - 30) && ($jsonBooking[$i]['start'] - $long) < ($dueTime + 30)) {
 						//$tmpCustomerFullName = $customers[$i]['billing']['first_name']." ".$customers[$i]['billing']['last_name'];
 						//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
