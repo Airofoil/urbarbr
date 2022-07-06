@@ -858,14 +858,12 @@ function cw_function() {
 		for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
 			for ($j=0; $j < count($jsonProduct); $j++) { 
 				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-					$dueTime = DAY_IN_SECONDS * 2;
-					if (($jsonBooking[$i]['start'] - $long) > ($dueTime - 30) && ($jsonBooking[$i]['start'] - $long) < ($dueTime + 30)) {
-						//$tmpCustomerFullName = $customers[$i]['billing']['first_name']." ".$customers[$i]['billing']['last_name'];
-						//wp_mail( 'ghjgjh0107@gmail.com', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
+					
+					if(($jsonBooking[$i]['start'] - $long) > (DAY_IN_SECONDS - 30) && ($jsonBooking[$i]['start'] - $long) < (DAY_IN_SECONDS + 30)){
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
-					
-					} else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
+					} 
+					else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
 						just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					
