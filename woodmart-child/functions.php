@@ -103,7 +103,7 @@ function urbarber_woocommerce_order_status_completed( $order_id ) {
 		$html_addon .= '<tr><td style="padding: 7px;width:20%; color: #9F9F9F; font-weight: 700; border-bottom: 2px solid #e5e5e5;">Who</td><td style="color: #3c3c3c;padding: 7px;border-bottom: 2px solid #e5e5e5;text-align:right;">' . ($order->get_billing_first_name() . ' ' . $order->get_billing_last_name()) . '</td></tr>';
 		
 		// booking time
-		$html_addon .= '<tr><td style="padding: 7px;width:20%; color: #9F9F9F; font-weight: 700; border-bottom: 2px solid #e5e5e5;">When</td><td style="color: #3c3c3c;padding: 7px;border-bottom: 2px solid #e5e5e5;text-align:right;">' . ($booking->get_start_date( null, null, wc_should_convert_timezone( $booking ) )) . '</td></tr>';
+		$html_addon .= '<tr><td style="padding: 7px;width:20%; color: #9F9F9F; font-weight: 700; border-bottom: 2px solid #e5e5e5;">When</td><td style="color: #3c3c3c;padding: 7px;border-bottom: 2px solid #e5e5e5;text-align:right;">' . ($booking->get_start_date()) . '</td></tr>';
 		
 		// booking address
 		$address = $order->get_billing_address_1() . '<br>';
@@ -1305,7 +1305,9 @@ function calculate_buffer_time_filter($buffertime,$latitude,$longitude,$booking_
 		$distance = distance($latitude,$longitude,$booking_latitude,$booking_longitude,"K");
 		$speed = 50;
 		//calculate time based on distance/speed. convert to how many duration
-		$buffertime = round($distance*(60/$duration) / $speed,0); 
+		$buffertime = ceil($distance*(60/$duration) / $speed); 
+		error_log("distance:".$distance);
+		error_log("buffertime:".$buffertime);
 	}
 
 	$buffertime = intval($buffertime);
@@ -1321,3 +1323,51 @@ function calculate_totals($wc_price){
 	$new_total = $wc_price+16;
 	return wc_price($new_total);
 } 
+
+// First we check to see if acf_add_options_page is a function.
+// If it is not, then we probably do not have ACF Pro installed
+if( function_exists('acf_add_options_page') ) {
+     
+  // Let's add our Options Page
+  acf_add_options_page(array(
+    'page_title'    => 'Twilio Options',
+    'menu_title'    => 'Twilio Options',
+    'menu_slug'     => 'twilio-options',
+    'capability'    => 'edit_posts'
+  ));
+   
+  // If we want to add multiple sections to our Options Page
+  // we can do so with an Options Sub Page.
+  acf_add_options_sub_page(array(
+    'page_title'    => "Credentials",
+    'parent_slug'   => 'twilio-options',  // 'menu_slug' on the parent options page
+    'menu_title'    => "Twilio Credentials",
+    'menu_slug'     => 'twilio-credentials',
+  ));
+   
+  acf_add_options_sub_page(array(
+    'page_title'    => 'Footer Settings',
+    'parent_slug'   => 'twilio-options',
+    'menu_title'    => 'Footer Settings',
+    'menu_slug'     => 'footer-settings',
+  ));
+   
+}
+
+add_action('woocommerce_cart_calculate_fees', function() {
+	if (is_admin() && !defined('DOING_AJAX')) {
+		return;
+	}
+	WC()->cart->add_fee(__('Booking Fee', 'txtdomain'), 1);
+});
+
+add_action( 'woocommerce_review_order_before_payment', 'bbloomer_privacy_message_below_checkout_button' );
+ 
+function bbloomer_privacy_message_below_checkout_button() {
+	if (is_admin() && !defined('DOING_AJAX')) {
+		return;
+	}
+	$percentage = 0.08;
+	$percentage_fee = (WC()->cart->get_cart_contents_total() + 1) * $percentage;
+  	echo '<p style="text-align: right;"><small>8% service fee included: $' . $percentage_fee . '</small></p>';
+}
