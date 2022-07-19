@@ -27,9 +27,9 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <?php /* translators: %s: Customer first name */ ?>
 <p><?php printf( esc_html__( 'Hey %s,', 'woocommerce' ), '<strong>' . esc_html( $order->get_billing_first_name() ) . '</strong>' ); ?></p>
 <?php /* translators: %s: Order number */ ?>
-<p><?php printf( esc_html__( "Your booking #%s has successfully been placed. You can find all the details about your booking below, and we'll send you a booking confirmation email as soon as your barber confirms it.", 'woocommerce' ), esc_html( $order->get_order_number() ) ); ?></p>
+<p><?php printf( esc_html__( "Your booking #%s has been placed successfully. You can find all the details about your booking below, and we'll send you a booking confirmation email as soon as your barber confirms it.", 'woocommerce' ), esc_html( $order->get_order_number() ) ); ?></p>
 
-<p><?php printf( 'Questions? Suggestions? Insightful thoughts? <br><a href="%s">Shoot us an email</a>.', bloginfo('admin_email') ); ?></p>
+<p><?php printf( 'Questions? Suggestions? Insightful thoughts? <br><a href="mailto:%s">Shoot us an email</a>.', get_bloginfo('admin_email') ); ?></p>
 <?php
 
 /*

@@ -1,0 +1,133 @@
+/* This styling is located in /wp-admin/post.php?post=10096&action=edit > Page settings (Custom CSS) */
+
+.individual-service .vc_column-inner {
+    background-color: #f8f9f9 !important;
+    padding-top: 35px;
+    padding-bottom: 100px;
+    border-radius: 3px;
+}
+
+.individual-service .service-title h4 {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color: #292727;
+    opacity: 0.8;
+    margin-bottom: 15px;
+}
+
+.individual-service .service-description {
+    font-weight: 400;
+    /*-font-size: 14px;
+    line-height: 21px; */
+    color: #03090E;
+    opacity: 0.5;
+    margin-bottom: 20px;
+    
+    display: -webkit-box !important;
+    /*@@min-height: 90px;*/
+    /*@@max-height: 90px;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*@@-webkit-line-clamp: 5;*/
+    -webkit-box-orient: vertical;
+    font-size: 12px;
+    line-height: 18px;
+}
+.individual-service .service-description p {
+	margin: 0;
+}
+.individual-service .service-description p:not(:first-child) {
+	text-indent: 5px;
+}
+
+.individual-service .service-find-barber {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FDFDFD;
+}
+
+.service-find-barber-button {
+    background-color: #102c45;
+    border-color: #102c45 !important;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FDFDFD;
+    text-transform: capitalize;
+}
+
+.individual-service .wpb_raw_html {
+    position: absolute;
+    bottom: 0;
+}
+
+.service-from-price {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 95px!important;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    color: #000000;
+}
+
+
+
+
+
+
+
+/* Read more buttons */
+a.read-more::after {
+	content: ' ›';
+	position: absolute;
+	margin: 0 6px;
+	transform: rotate(-90deg);
+}
+.service-description.more + a.read-more::after {
+	transform: rotate(90deg);
+}
+.service-description {
+	overflow: hidden;
+	max-height: 500px;
+	transition: .3s;
+}
+.service-description.more {
+	min-height: 90px;
+	max-height: 90px;
+	-webkit-line-clamp: 5;
+}
+a.read-more {
+	display: block;
+    margin: -20px 0 15px;
+    padding: 5px 0;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: var(--urbarbr-blue) !important;
+    text-transform: uppercase;
+    letter-spacing: .25px;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 767px) { /*475px*/
+    .individual-service {
+        width: 50%;
+    }
+    .individual-service .service-title h4 {
+        font-size: 18px;
+    }
+    .service-find-barber-button {
+        padding: 10px 15px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
