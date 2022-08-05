@@ -87,8 +87,13 @@ input:not([class*="wpcf7"]), select, .btn-group .btn {
 	color: inherit !important;
 	transition: .3s cubic-bezier(.2,.85,.35,1);
 }
-div input:not([class*="wpcf7"]):hover {
-	background: #88A1B855;
+@media (hover: hover) and (pointer: fine) {
+	div input:not([class*="wpcf7"]):hover {
+		background: #88A1B855;
+	}
+	.woocommerce-billing-fields input:hover {
+		background: var(--urbarbr-softwhite);
+	}
 }
 .mc4wp-form input[type="submit"],
 .mc4wp-form input[type="button"] {
@@ -97,9 +102,6 @@ div input:not([class*="wpcf7"]):hover {
 }
 .mc4wp-form input[type="submit"]:hover {
 	background: var(--urbarbr-midblue) !important;
-}
-.woocommerce-billing-fields input:hover {
-	background: var(--urbarbr-softwhite);
 }
 
 body .form-control[readonly] {
@@ -440,6 +442,9 @@ background-color: rgba(101,101,101,1);
 	color: var(--urbarbr-midblue);
 	white-space: nowrap;
 }
+.product-reviews.no-reviews {
+	color: #333;
+}
 .product-reviews > p {
 	max-width: 100%;
 	margin: 0 -6px 0 0;
@@ -453,6 +458,9 @@ background-color: rgba(101,101,101,1);
 	}
 	.product-reviews {
 		font-size: 12px;
+	}
+	.product-reviews .star::before {
+		font-size: 22px;
 	}
 	.product-reviews .count {
 		display: none;
@@ -646,8 +654,12 @@ background-color: rgba(101,101,101,1);
 	width: 100%;
 	/*--max-height: 250px; */
 	overflow: hidden;
-	margin-bottom: 20px;
+	margin-bottom: 16px;
 	border-radius: 4px;
+}
+
+.single-product .product-images {
+	padding-top: 5px;
 }
 
 .btn.wd-load-more.wd-load-more-loader {
@@ -985,7 +997,8 @@ p.form-row input {
 }
 
 body .main-page-wrapper {
-	min-height: 75vh;
+	/*-min-height: 75vh; */
+	min-height: 60vh;
 }
 
 .woocommerce-MyAccount-navigation ul li.is-active > a {
@@ -1099,10 +1112,10 @@ body .wd-header-wishlist .wd-tools-icon:before {
 	font-size: 22px;
 }
 @media (min-width: 768px) {
-	.wd-custom-icon {
+	body.home .wd-custom-icon {
 		filter: brightness(10);
 	}
-	.wd-tools-icon {
+	body.home .wd-tools-icon {
 		color: white;
 	}
 }
@@ -1115,8 +1128,14 @@ body.home .website-wrapper .wd-prefooter {
 	padding-bottom: 0;
 }
 
+/*--.page-id-5288 .main-page-wrapper {*/
+/*-.page-id-5288 .main-page-wrapper .vc_row > .vc_column_container {
+	background-color: rgba(169, 178, 187, 0.1) !important;
+	padding: 30px 0;
+} */
 .page-id-5288 .main-page-wrapper {
 	background-color: rgba(169, 178, 187, 0.1) !important;
+	margin: 110px 0;
 }
 
 .jac-about-us-fourth-section {
@@ -1141,8 +1160,8 @@ body .caret { /* Style the dropdown arrow */
 	top: calc(50% - 4px) !important;
 	right: 15px !important;
 	border: 0;
-	border-right: 2px solid var(--urbarbr-softwhite);
-	border-bottom: 2px solid var(--urbarbr-softwhite);
+	border-right: 2px solid var(--urbarbr-softwhite) !important;
+	border-bottom: 2px solid var(--urbarbr-softwhite) !important; /* !important overrides dropdowns.less when dropdown is set to 'drop up' */
 	border-radius: 1px;
 	transform: rotate(45deg);
 }
@@ -1652,7 +1671,7 @@ text-transform: none !important;
 
 body .wd-nav.wd-style-underline .nav-link-text {
 	font-size: 20px;
-	color: var(--urbarbr-grey);
+	/*-color: var(--urbarbr-grey); */
 	text-transform: none;
 }
 body .wd-nav.wd-style-underline .wd-active .nav-link-text {
@@ -1951,6 +1970,28 @@ body .wc-bookings-date-picker .ui-datepicker .ui-datepicker-next {
 	color: #555 !important;
 	text-transform: none;
 }
+
+[class*="ui-datepicker-"] .ui-icon {
+	content: '';
+	display: block;
+	width: 10px;
+	height: 10px;
+	top: 50% !important;
+	margin-left: -5px !important;
+	margin: 0 5px;
+	background: unset !important;
+	border-bottom: 2px solid var(--urbarbr-midblue);
+	border-right: 2px solid var(--urbarbr-midblue);
+	border-radius: 1px;
+	transform: rotate(-45deg);
+}
+[class*="ui-datepicker-"] .ui-icon.ui-icon-circle-triangle-w {
+	transform: rotate(-225deg);
+}
+[class*="ui-datepicker-"].ui-state-hover:hover {
+	background: unset !important;
+}
+
 .wc-bookings-booking-form .block-picker li a {
 	width: unset !important;
 	height: unset !important;
@@ -2180,6 +2221,7 @@ h5.widget-title + [class*="menu"] {
 		/*150722*/
         width: unset;
         flex: unset;
+		margin-bottom: 15px !important;
 	}
 	.footer-column:last-child {
 		order: 2;
@@ -2223,10 +2265,11 @@ footer .footer-sidebar.widget-area::after {
 	content: '© 2022 UrBarbr';
 	position: absolute;
 	bottom: 0;
-	left: 50%;
-	padding: 10px 0;
+	right: 26px;
+	/*-left: 50%;
+	transform: translateX(-50%); */
+	margin-bottom: 20px;
 	font-size: 12px;
-	transform: translateX(-50%);
 }
 
 
@@ -2342,6 +2385,7 @@ border-color: white !important;
 		width: unset !important;
 		flex: 48%;
 		flex-grow: 1;
+		max-width: calc(100% - 69px);
 	}
 
 	.homepage-title {
@@ -2589,6 +2633,7 @@ color:#FFC702 !important;
 	background-color: #F8F9F9;
 	border-radius: 10px;
 	box-shadow: unset;
+	transition: 1s;
 }
 
 .wd-hover-tiled .product-element-bottom{
@@ -2735,6 +2780,9 @@ body.single-product .wc-bookings-booking-cost {
 
 /**  on mobile version **/
 @media (max-width: 414px){
+	.archive .product-grid-item .product-wrapper{
+		padding: 20px;
+	}
 	/** checkout page **/
 	.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-message{
 		background-color: #365277;
@@ -2937,10 +2985,10 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 
 /* The barber distance display on search results */
 .product-grid-item .distance {
-	float: right;
-	padding: 0 15px;
+	/*-float: right; */
+	margin-top: 12px;
 	font-weight: 500;
-	line-height: 44px;
+	/*-line-height: 44px; */
 }
 .product-grid-item .distance::before {
     /*-content: '\f547'; /* Ruler icon */
@@ -2972,7 +3020,8 @@ body .wc-bookings-date-picker .ui-datepicker td.fully_booked a {
 
 
 .bootstrap-select.btn-group .dropdown-menu.inner {
-	max-height: 250px!important;
+	max-height: 250px !important;
+	scrollbar-width: thin;
 }
 
 .menu-item .wd-social-icons {
@@ -3005,4 +3054,40 @@ body .individual-service .vc_column-inner {
 	padding: 0;
 	border: 0;
 	font-size: 26px;
+}
+
+/* Contact page 'Register for Appointment' form: */
+.wpcf7 .wpcf7-response-output {
+	margin: 15px 0 0 0;
+}
+/*-Hide the form after it is sent:
+.wpcf7-form.sent > [class*="-row"] {
+	display: none;
+} */
+
+
+/* Search form Multi-service select: */
+ul.dropdown-menu li.selected > a {
+    /*-background: var(--urbarbr-midblue);
+    color: var(--urbarbr-softwhite); */
+
+	/*-background: var(--urbarbr-midgrey);
+	color: var(--urbarbr-blue); */
+
+	background: var(--urbarbr-lightgrey);
+	font-weight: 500;
+}
+/*-Tick icons:
+ul.dropdown-menu li.selected > a::after {
+    content: '';
+    width: 14px;
+    height: 24px;
+    float: right;
+	/* Midgrey tick (#8896A2): * /
+    /*-background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDExIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wLjc5ODM2MyA0Ljk2OTE0QzEuMTUzMzQgNC41NDYwNyAxLjc4NDEzIDQuNDkwODggMi4yMDcxOCA0Ljg0NTg4TDMuNzgzMTIgNi4xNjgyNkw4LjU5NDU3IDAuNDM0MTgyQzguOTQ5NTcgMC4wMTExMTA4IDkuNTgwMzIgLTAuMDQ0MDcyNyAxMC4wMDM0IDAuMzEwOTI0QzEwLjQyNjUgMC42NjU5MzIgMTAuNDgxNyAxLjI5NjcgMTAuMTI2NyAxLjcxOTc1TDQuNjcyNDIgOC4yMTk4NkM0LjMxNzQ0IDguNjQyOTEgMy42ODY2NSA4LjY5ODA5IDMuMjYzNiA4LjM0MzExTDAuOTIxNjIgNi4zNzc5N0MwLjQ5ODU3MSA2LjAyMjk5IDAuNDQzMzg2IDUuMzkyMjIgMC43OTgzNjMgNC45NjkxNFoiIGZpbGw9IiM4ODk2QTIiLz4KPC9zdmc+Cg==") no-repeat center/contain; */
+	/* UrBarbr blue tick (#001F35): * /
+	background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDExIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wLjc5ODM2MyA0Ljk2OTE0QzEuMTUzMzQgNC41NDYwNyAxLjc4NDEzIDQuNDkwODggMi4yMDcxOCA0Ljg0NTg4TDMuNzgzMTIgNi4xNjgyNkw4LjU5NDU3IDAuNDM0MTgyQzguOTQ5NTcgMC4wMTExMTA4IDkuNTgwMzIgLTAuMDQ0MDcyNyAxMC4wMDM0IDAuMzEwOTI0QzEwLjQyNjUgMC42NjU5MzIgMTAuNDgxNyAxLjI5NjcgMTAuMTI2NyAxLjcxOTc1TDQuNjcyNDIgOC4yMTk4NkM0LjMxNzQ0IDguNjQyOSAzLjY4NjY1IDguNjk4MDkgMy4yNjM2IDguMzQzMTFMMC45MjE2MiA2LjM3Nzk3QzAuNDk4NTcxIDYuMDIyOTkgMC40NDMzODYgNS4zOTIyMiAwLjc5ODM2MyA0Ljk2OTE0WiIgZmlsbD0iIzAwMUYzNSIvPgo8L3N2Zz4K") no-repeat center/contain;
+} */
+ul.dropdown-menu li.selected > a .glyphicon.check-mark {
+    display: none !important;
 }

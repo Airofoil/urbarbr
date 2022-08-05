@@ -1,4 +1,4 @@
-/* This styling is located in /wp-admin/post.php?post=10096&action=edit > Page settings (Custom CSS) */
+/**** This file is not used and the equivalent CSS is located in Services page at /wp-admin/post.php?post=10096&action=edit > Page settings (Custom CSS) */
 
 .individual-service .vc_column-inner {
     background-color: #f8f9f9 !important;
@@ -11,7 +11,7 @@
     font-weight: 600;
     font-size: 20px;
     line-height: 20px;
-    text-transform: capitalize;
+    /*-text-transform: capitalize; */
     color: #292727;
     opacity: 0.8;
     margin-bottom: 15px;

@@ -301,7 +301,7 @@
 	/* height: 100%;--breaks for Chrome/Webkit */
 	margin: 2px;
 	border-radius: 4px;
-	line-height: 38px;
+	line-height: 37px;
 }
 
 .xdsoft_datetimepicker .xdsoft_calendar td:not(.xdsoft_disabled) > div {

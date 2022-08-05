@@ -56,86 +56,82 @@ add_action( 'wp_enqueue_scripts', 'my_theme_scripts' );
 
 function urbarber_woocommerce_order_status_completed( $order_id ) {
 	
-	$to = 'jhan@jamesanthonyconsulting.com.au'; //test account
+    $to = 'jhan@jamesanthonyconsulting.com.au'; //test account
 	$fromEmail = 'webmaster-external@jamesanthonyconsulting.com.au';
-  	$subject = "You have been requested for order #" .$order_id. ". ";
+  	$subject = "Test booking request for order #" .$order_id. ". ";
   	$headers = 'From: '. $fromEmail . "\r\n" .'Reply-To: ' . $fromEmail . "\r\n";
 	
 	// Get an instance of the WC_Order object
 	$order = wc_get_order( $order_id );
-	$html = "<div style='padding:20px;background:#f8f8f8;text-align: center;'>";
-	$html .= "<img style='width:20%;max-width:150px;min-width:150px;' src='https://staging-urbarbr.kinsta.cloud/wp-content/uploads/2022/06/partner_logo.png'>";
-	$html .= '<div style="background:#fff; margin: auto;padding: 30px 30px 100px;margin-top: 10px;width:50%;max-width: 500px;min-width:400px;text-align: center;border: 1px solid #e4e4e4;">';
 	
-	// Content start
-	$html .= '<h2 style="font-size: 27px;font-weight: normal; color: #303030; line-height: 150%;margin-top:10px;">You have been requested</h2><br><br>';
+	$html = "<strong>Total cost:</strong> $" . $order->get_total();
+	$html .= '<br><br>';
+	
+	$html .= "8% service fee will be taken by UrBarbr: $" . ($order->get_total() * 0.08);
+	$html .= '<br><br>';
+	
+	$html .= '<strong>Address: </strong>';
+	$html .= $order->get_billing_address_1() . ' ';
+	$html .= $order->get_billing_address_2(). ' ';
+	$html .= $order->get_billing_city(). ' ';
+	$html .= $order->get_billing_state(). ' ';
+	$html .= $order->get_billing_postcode(). ' ';
+	$html .= $order->get_billing_country(). ' ';
+	$html .= '<br><br>';
 	
 	$data_array = array();
 	
 	foreach ( $order->get_items() as $item_id => $item ) { 
-		$services = array();
+		$strings = array();
 		$attachments = array();
 		
 		$product_id = $item['product_id'];
-		$product_name = $item->get_name();
-
-		$image = wp_get_attachment_image_src( get_post_thumbnail_id( $product_id ), 'single-post-thumbnail', array(80, 80) );
-
-		//$product = wc_get_product( $product_id );
+		
+// 		$product = wc_get_product( $product_id );
 		$product = $item->get_product();
 		$barber_email = get_field( "barber_email",$item['product_id'] );
 		
-		$booking_ids = WC_Booking_Data_Store::get_booking_ids_from_order_item_id( $item_id );
-		$booking = new WC_Booking( $booking_ids[0] );
-		$generate = new WC_Bookings_ICS_Exporter;
-		$attachments[] = $generate->get_booking_ics( $booking );	
-
 		foreach ( $item->get_formatted_meta_data() as $meta_id => $meta ) {
+			$strings[] = $meta->key . ' ' . $meta->value;
+		}
+		wp_mail($to, $subject, '0', $headers);
+		$html_addon = '';
+		
+		$html_addon .= '<strong>Customer name:</strong> '. $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
+		$html_addon .= '<br><br>';		
+																		
+		if(count($strings)>0){
+			$html_addon .= '<strong>Service: </strong>';
+			$html_addon .= implode( ',', $strings );
+			$html_addon .= '<br><br>';
+		}	
+		
+		$booking_ids = WC_Booking_Data_Store::get_booking_ids_from_order_item_id( $item_id );
+		foreach ( $booking_ids as $booking_id ) {
+			$booking = new WC_Booking( $booking_id );
 			
-			preg_match('/\d+\.?\d*/', $meta->key, $matches);
-			$services[] = [$matches[0],$meta->value];
-
+			$html_addon .= '<strong>Booking status:</strong> '. wc_bookings_get_status_label( $booking->get_status());
+			$html_addon .= '<br><br>';
+			
+			$product_id = $booking->get_product_id();
+			$booking_product = get_wc_product_booking( $product_id );
+			
+			$resource = $booking_product->get_resource( $booking->get_resource_id() );	
+			$html_addon .= '<strong>Barber name:</strong> ' . (is_object( $resource ) ? $resource->get_title() : '');
+			$html_addon .= '<br><br>';
+			
+			$html_addon .= '<strong>Booking person:</strong> '. ($booking->has_persons() ? array_sum( $booking->get_persons() ) : 0);
+			$html_addon .= '<br><br>';
+			
+			$booking_time = esc_html( sprintf( __( 'The booking will take place on %1$s.', 'woocommerce-bookings' ), $booking->get_start_date() ) );
+			$html_addon .= $booking_time;
+			$html_addon .= '<br><br>';
+// 			$html_addon .= '<strong>Time zone: </strong>'. wc_booking_get_timezone_string();
+// 			$html_addon .= '<br><br>';
+			
+			$generate = new WC_Bookings_ICS_Exporter;
+			$attachments[] = $generate->get_booking_ics( $booking );	
 		}
-		
-		$html_addon = '<table style="width: 100%; text-align: left; font-size: 14px;">';
-		
-		// customer name
-		$html_addon .= '<tr><td style="padding: 7px;width:20%; color: #9F9F9F; font-weight: 700; border-bottom: 2px solid #e5e5e5;">Who</td><td style="color: #3c3c3c;padding: 7px;border-bottom: 2px solid #e5e5e5;text-align:right;">' . ($order->get_billing_first_name() . ' ' . $order->get_billing_last_name()) . '</td></tr>';
-		
-		// booking time
-		$html_addon .= '<tr><td style="padding: 7px;width:20%; color: #9F9F9F; font-weight: 700; border-bottom: 2px solid #e5e5e5;">When</td><td style="color: #3c3c3c;padding: 7px;border-bottom: 2px solid #e5e5e5;text-align:right;">' . ($booking->get_start_date()) . '</td></tr>';
-		
-		// booking address
-		$address = $order->get_billing_address_1() . '<br>';
-		$address .= $order->get_billing_address_2() . "" . (($order->get_billing_address_2() && $order->get_billing_address_2()!= "")?", ":"");
-		$address .= $order->get_billing_city(). '<br>';
-		$address .= $order->get_billing_state(). ' ';
-		$address .= $order->get_billing_postcode();
-		$html_addon .= '<tr><td style="padding: 7px;width:20%; color: #9F9F9F;vertical-align:initial; font-weight: 700;border-bottom: 2px solid #e5e5e5;">Where</td><td style="color: #3c3c3c;padding: 7px;border-bottom: 2px solid #e5e5e5;text-align:right;">' . $address . '</td></tr>';
-		
-		// end custom info table
-		$html_addon .= '</table><table style="width: 100%; text-align: left; font-size: 14px;">';
-
-		//  service table
-		$html_addon .= '<tr><td style="padding: 7px;border-bottom: 2px solid #e5e5e5;width:70%"><strong>Service</strong></td><td style="border-bottom: 2px solid #e5e5e5;padding: 7px;"><strong>Qty</strong></td><td style="border-bottom: 2px solid #e5e5e5;padding: 7px;text-align:right"><strong>Price</strong></td></tr>';
-		$html_addon .= '<tr><td style="padding:10px 0;vertical-align: middle;"><img style="margin-right:10px;width: 80px;height:80px;object-fit: cover; border-radius: 10px;vertical-align: middle;" src="' . $image[0] . '" width="32"; height="32";><span style="font-style: normal; font-weight: 400; color: #9F9F9F; vertical-align: middle;">'. $product_name .'</span></td><td></td><td></td></tr>';
-		
-		foreach($services as $key=>$service){
-			if($key == (count($services)-1)){
-				$html_addon .= '<tr><td style="padding: 7px 7px 20px;width:70%;border-bottom: 2px solid #e5e5e5;"><strong>'.$service[1].'</strong></td><td style="border-bottom: 2px solid #e5e5e5;padding:7px 7px 20px;color:#3c3c3c">1</td><td style="text-align:right;border-bottom: 2px solid #e5e5e5;padding: 7px 7px 20px;color:#3c3c3c">$'.$service[0].'</td></tr>';
-			}else{
-				$html_addon .= '<tr><td style="padding: 7px;width:70%"><strong>'.$service[1].'</strong></td><td style="padding: 7px;color:#3c3c3c">1</td><td style="text-align:right;padding: 7px;color:#3c3c3c">$'.$service[0].'</td></tr>';
-			}
-		}
-		
-		
-		// service table end
-		$html_addon .= '</table>';
-		$html_addon .= "<div style='float:right;font-size:90%;color:darkgrey;margin-top:15px'>8% service fee will be taken by UrBarbr: $" . ($order->get_total() * 0.08) . "</div>";
-
-		// Content end
-		$html_addon .= '</div></div>';
-
 		if (array_key_exists($barber_email, $data_array)){
 		 	$new_html = $data_array[$barber_email][0] . '<br><br>' . $html_addon;
 			array_push($data_array[$barber_email][1], $attachments);
@@ -369,11 +365,11 @@ function wc_registration_form_function() {
 		</form>
 	</div>
 	<?php
-	
+	  
 	return ob_get_clean();
-	
-}
-add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
+	 
+ }
+ add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
 
 /**
 * @snippet       Hide Edit Address Tab @ My Account
@@ -662,11 +658,7 @@ function my_custom_js_css() {
 					// closeOnDateSelect: false,
 					onClose: function(ct,$i){ console.log("cancelling close"); return false; /* Cancel the default close - this is since touching in the timepicker will close the datepicker */ },
 					onShow: function(){ console.log("opening");
-						setTimeout(() => {
-							window.addEventListener("click", listener, false);
-							$(".periodpicker_hourspicker_box").trigger("mousedown");
-							$(".periodpicker_hourspicker_box").trigger("mouseup");
-						}, 100);
+						setTimeout(() => window.addEventListener("click", listener, false), 100);
 					}
 				});
 				$("#booking-time").TimePickerAlone({
@@ -677,7 +669,7 @@ function my_custom_js_css() {
 					seconds: false,
 					ampm: true,
 					steps: [1,5,30,1],
-					onHide: function ($input) { console.log("time selected:",$input.val());
+					onHide: function ($input) { console.log($input.val())
 						return $input.val() === "12:34:00";
 					}
 				});
@@ -761,12 +753,15 @@ function bbloomer_checkout_step3( $cart ) {
 
 add_action( 'check_booking_time', 'cw_function' );
 function cw_function() {
+	$barber_site_url = get_site_url();
+	$woo_consumer_key = 'ck_d3fd616341a66cb5b3317222fa8644da7baabb12';
+	$woo_consumer_secret = 'cs_ca52545fab1c0799d44744592dfea0a3bd653ff4';
 	$chBooking = curl_init();
     $headers = array(
 		'Accept: application/json',
 		'Content-Type: application/json',
     );
-	$urlBooking= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/bookings?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlBooking= $barber_site_url . '/wp-json/wc-bookings/v1/bookings?per_page=100&consumer_key=' . $woo_consumer_key . '&consumer_secret=' . $woo_consumer_secret;
 	curl_setopt($chBooking, CURLOPT_URL, $urlBooking);
 	curl_setopt($chBooking, CURLOPT_RETURNTRANSFER, 1);
 	$outputBooking = curl_exec($chBooking);
@@ -778,7 +773,7 @@ function cw_function() {
 	curl_close($chBooking);
 	
 	$chOrder = curl_init();
-	$urlOrder= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/orders?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlOrder= $barber_site_url . '/wp-json/wc/v3/orders?per_page=100&consumer_key=' . $woo_consumer_key . '&consumer_secret=' . $woo_consumer_secret;
 	curl_setopt($chOrder, CURLOPT_URL, $urlOrder);
 	curl_setopt($chOrder, CURLOPT_RETURNTRANSFER, 1);
 	$outputOrder = curl_exec($chOrder);
@@ -790,7 +785,7 @@ function cw_function() {
 	curl_close($chOrder);
 
 	$chProduct = curl_init();
-	$urlProduct= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/products/?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlProduct= $barber_site_url . '/wp-json/wc/v3/products/?per_page=100&consumer_key=' . $woo_consumer_key . '&consumer_secret=' . $woo_consumer_secret;
 	curl_setopt($chProduct, CURLOPT_URL, $urlProduct);
 	curl_setopt($chProduct, CURLOPT_RETURNTRANSFER, 1);
 	$outputProduct = curl_exec($chProduct);
@@ -823,6 +818,7 @@ function cw_function() {
 	$long = strtotime($date);
 
 	$start = $jsonBooking[0]['start'];
+// 	wp_mail( 'jguo@jamesanthonyconsulting.com.au', "Does start miss?", $start );
 	if (is_countable($jsonBooking)) {
 		for ($i=0; $i < count($jsonBooking); $i++) { //1hr = 3600
 			if (($jsonBooking[$i]['start'] < $long && $jsonBooking[$i]['end'] < $long) || $jsonBooking[$i]['status'] === 'cancelled' || $jsonBooking[$i]['status'] === 'unpaid') {
@@ -835,9 +831,14 @@ function cw_function() {
 	$customers = array();
 	if (is_countable($jsonBooking) && is_countable($jsonOrder)) {
 		for ($i=0; $i < count($jsonBooking); $i++) {
-			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
-			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
-			$jsonBooking[$i]['date_created'] = $jsonBooking[$i]['date_created'] - 37800;
+//  			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
+//  			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
+//  			$jsonBooking[$i]['date_created'] = $jsonBooking[$i]['date_created'] - 37800;
+
+			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 34200;
+			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 34200;
+			$jsonBooking[$i]['date_created'] = $jsonBooking[$i]['date_created'] - 34200;
+			
 			for ($j=0; $j < count($jsonOrder); $j++) { 
 				if ($jsonBooking[$i]['order_id'] === $jsonOrder[$j]['id']) {
 					array_push($customers, $jsonOrder[$j]);
@@ -859,23 +860,27 @@ function cw_function() {
 	}
 
 	if (is_countable($jsonBooking)) {
+// 		wp_mail( 'jguo@jamesanthonyconsulting.com.au', "JSONBooking is Countable", $customers[0]['billing']['phone'] );
 		for ($i=0; $i < count($jsonBooking); $i++) {  //SMS reminder 24 hours before a booking time
 			for ($j=0; $j < count($jsonProduct); $j++) { 
 				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-					
-					if(($jsonBooking[$i]['start'] - $long) > (DAY_IN_SECONDS - 30) && ($jsonBooking[$i]['start'] - $long) < (DAY_IN_SECONDS + 30)){
+					if (($jsonBooking[$i]['start'] - $long) > 86370 && ($jsonBooking[$i]['start'] - $long) < 86430) {
+						//$tmpCustomerFullName = $customers[$i]['billing']['first_name']." ".$customers[$i]['billing']['last_name'];
+						wp_mail( 'jguo@jamesanthonyconsulting.com.au', $customers[$i]['billing']['first_name'], $customers[$i]['billing']['phone'] );
+						wp_mail( 'jguo@jamesanthonyconsulting.com.au', $customers[$i]['billing']['first_name'], $barberList[$jsonProduct[$j]['name']] . " " . $jsonProduct[$j]['name'] . " " . date('g:i A', $jsonBooking[$i]['start']) . " " . $customers[$i]['billing']['first_name'] . " " . $jsonBooking[$i]['order_id'] );
+// 						sendex_test("testing new twilio account!!!!!!!!!");
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
-					} 
-					else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
-						just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
-						just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+					
+					} else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
+						//just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
+						//just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					
 					} else if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
 						if ((($jsonBooking[$i]['start'] + 3600) - $long) > -30 && (($jsonBooking[$i]['start'] + 3600) - $long) < 30) {
 							//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
-							complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], $jsonProduct[$j]['name']);
-							complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
+							//complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], $jsonProduct[$j]['name']);
+							//complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 						}
 					}
 				}
@@ -894,7 +899,9 @@ function cw_function() {
 			}
 		}*/
 	}
-	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
+// 	wp_mail( 'jguo@jamesanthonyconsulting.com.au', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
+// 	wp_mail( 'jguo@jamesanthonyconsulting.com.au', $customers[0]['billing']['first_name'], "Booking Start Time: " . $jsonBooking[0]['start'] . " Current time: " . $long . " Time left: " . $jsonBooking[0]['start'] - $long );
+// 	wp_mail( 'jguo@jamesanthonyconsulting.com.au', "URLs_Check", "URL_Booking: " . $urlBooking . " URL_Order: " . $urlOrder . " URL_Product: " . $urlProduct );
 }
 
 /*---TEMP-REMOVED-function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
@@ -1308,9 +1315,7 @@ function calculate_buffer_time_filter($buffertime,$latitude,$longitude,$booking_
 		$distance = distance($latitude,$longitude,$booking_latitude,$booking_longitude,"K");
 		$speed = 50;
 		//calculate time based on distance/speed. convert to how many duration
-		$buffertime = ceil($distance*(60/$duration) / $speed); 
-		error_log("distance:".$distance);
-		error_log("buffertime:".$buffertime);
+		$buffertime = round($distance*(60/$duration) / $speed,0); 
 	}
 
 	$buffertime = intval($buffertime);
@@ -1320,57 +1325,32 @@ function calculate_buffer_time_filter($buffertime,$latitude,$longitude,$booking_
 	return $buffertime;
 }
 
-function calculate_totals($wc_price){
-	// Adds the fixed costs to the total
-	// 15 dollars for service fee, $1 for booking fee
-	$new_total = $wc_price+16;
-	return wc_price($new_total);
-} 
+add_filter('woocommerce_checkout_fields', 'njengah_override_checkout_fields');
 
-// First we check to see if acf_add_options_page is a function.
-// If it is not, then we probably do not have ACF Pro installed
-if( function_exists('acf_add_options_page') ) {
-     
-  // Let's add our Options Page
-  acf_add_options_page(array(
-    'page_title'    => 'Twilio Options',
-    'menu_title'    => 'Twilio Options',
-    'menu_slug'     => 'twilio-options',
-    'capability'    => 'edit_posts'
-  ));
-   
-  // If we want to add multiple sections to our Options Page
-  // we can do so with an Options Sub Page.
-  acf_add_options_sub_page(array(
-    'page_title'    => "Credentials",
-    'parent_slug'   => 'twilio-options',  // 'menu_slug' on the parent options page
-    'menu_title'    => "Twilio Credentials",
-    'menu_slug'     => 'twilio-credentials',
-  ));
-   
-  acf_add_options_sub_page(array(
-    'page_title'    => 'Footer Settings',
-    'parent_slug'   => 'twilio-options',
-    'menu_title'    => 'Footer Settings',
-    'menu_slug'     => 'footer-settings',
-  ));
-   
-}
+function njengah_override_checkout_fields($fields)
 
-add_action('woocommerce_cart_calculate_fees', function() {
-	if (is_admin() && !defined('DOING_AJAX')) {
-		return;
-	}
-	WC()->cart->add_fee(__('Booking Fee', 'txtdomain'), 1);
-});
+ {
 
-add_action( 'woocommerce_review_order_before_payment', 'bbloomer_privacy_message_below_checkout_button' );
- 
-function bbloomer_privacy_message_below_checkout_button() {
-	if (is_admin() && !defined('DOING_AJAX')) {
-		return;
-	}
-	$percentage = 0.08;
-	$percentage_fee = (WC()->cart->get_cart_contents_total() + 1) * $percentage;
-  	echo '<p style="text-align: right;"><small>8% service fee included: $' . $percentage_fee . '</small></p>';
-}
+//  unset($fields['billing']['billing_address_2']);
+
+ $fields['billing']['billing_company']['placeholder'] = 'Business Name';
+
+ $fields['billing']['billing_company']['label'] = 'Business Name';
+
+ $fields['billing']['billing_first_name']['placeholder'] = 'First Name';
+
+ $fields['shipping']['shipping_first_name']['placeholder'] = 'First Name';
+
+ $fields['shipping']['shipping_last_name']['placeholder'] = 'Last Name';
+
+ $fields['shipping']['shipping_company']['placeholder'] = 'Company Name';
+
+ $fields['billing']['billing_last_name']['placeholder'] = 'Last Name';
+
+ $fields['billing']['billing_email']['placeholder'] = 'Email Address ';
+
+ $fields['billing']['billing_phone']['placeholder'] = 'Phone ';
+
+ return $fields;
+
+ }
