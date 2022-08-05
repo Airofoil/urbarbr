@@ -60,13 +60,15 @@
 			</div> -->
 			<div class="jac-products-header-top">
 				<div class="jac-products-header-top-left">
-					<h5 class="jac-barber-name">
-						<?php  if(!$display_addon || !$show_brife_product_tile){
-							echo $product_title;
-						}else{
-							echo $service_label;
-						} ?>
-					</h5>
+					<a href="<?php echo esc_url( get_permalink() ); ?>">
+						<h5 class="jac-barber-name">
+							<?php  if(!$display_addon || !$show_brife_product_tile){
+								echo $product_title;
+							}else{
+								echo $service_label;
+							} ?>
+						</h5>
+					</a>
 					<?php if(!$display_addon || !$show_brife_product_tile){}else{
 						echo '<p class="short_description">' . $product_title . '</p>';
 					} ?>
@@ -80,7 +82,7 @@
 					<?php /*-woocommerce_template_single_rating(); * ///--Disabled in WooCommerce > Settings > Products ?>
 					<a href="<?php echo get_permalink() ?>#reviews" class="star" rel="nofollow"><span></span><?php echo $product->get_average_rating(); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?> Reviews)</a> */?>
 
-					<div class="product-reviews">
+					<div class="product-reviews<?php if ($review_count <= 0) { ?> no-reviews<?php } ?>">
 						<?php if ($review_count > 0) { ?>
 						<p class="star"><?php echo substr($product->get_average_rating(), 0, 3); ?> (<?php printf( _n( '%s',$review_count,'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?><span class="count"> Reviews</span>)</p>
 						<?php } else { ?>
@@ -115,9 +117,9 @@
 			<?php } ?>
 			
 			<?php if(!$show_brife_product_tile){ ?>
-					<div class="jac-products-header-top-right">
-						<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-primary">Visit Barber</a>
-					</div>
+				<div class="jac-products-header-top-right">
+					<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-primary">Visit Barber</a>
+				</div>
 			<?php } ?>
 		</div>
 		

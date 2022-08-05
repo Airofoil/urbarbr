@@ -172,7 +172,7 @@ if ( $full_height_sidebar && $page_layout != 'full-width' ) {
                             <?php woocommerce_template_single_excerpt(); ?>
 
 
-							<?php echo '::';
+							<?php //echo '::';
 							//wc_bookings_get_time_slots_html();
 							//$available_blocks = wc_bookings_get_time_slots( $product, $blocks, $intervals, $resource_id, $from, $to ); 
 							//wc_bookings_get_time_slots_html( $product );
@@ -198,7 +198,7 @@ if ( $full_height_sidebar && $page_layout != 'full-width' ) {
 								}
 							}
 							print_r($booked_hours);*/
-							echo '::'; ?>
+							//echo '::'; ?>
 
 
                             <?php //--woocommerce_template_single_meta(); ?>

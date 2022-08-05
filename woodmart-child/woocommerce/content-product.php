@@ -221,7 +221,7 @@ if ($_GET) {
 
 
 ?>
-<?php if ($_GET && $qualified) { //-var_dump(get_post_meta( $product_id, '_wc_booking_availability', true ));	?>
+<?php if ($_GET && $qualified) { //echo $location_lat . "2:" . $location_long . "3:" . $bar_lat . "4:" . $bar_long . "5:" . distance($location_lat, $location_long, $bar_lat, $bar_long, "K");	?>
 	<div style="display:none;"
 		<?php wc_product_class( $classes, $product ); ?> 
 		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>"
@@ -231,7 +231,7 @@ if ($_GET) {
 			echo ' data-maxdate="' . $max_date . '"';
 			echo ' data-formatteddate="' . $search_date_formatted . '"';
 		}
-		if (!empty($distance_between)) 
+		if (isset($distance_between)) 
 			echo ' data-distance="' . round($distance_between, 2) . '"'; 	// Add the barber's distance
 		/*-To print the barber's services on their card:
 		if (!empty($service_string)) 

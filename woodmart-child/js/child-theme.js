@@ -217,7 +217,7 @@ jQuery(document).ready(function ($){
                 maxDate = $(this).data('maxdate');
                 formattedDate = $(this).data('formatteddate'); console.log('formattedDate:',formattedDate);
 
-                if ($(this).data('distance')) $(this).find('.jac-products-header-top-left').append(`<div class="distance" style="float:unset;padding:0;">${$(this).data('distance')} km</div>`); // Add the distance field on the tile
+                if ($(this).data('distance') !== undefined) $(this).find('.jac-products-header-top-left').append(`<div class="distance">${$(this).data('distance') > 0 ? $(this).data('distance') : '0.01'} km</div>`); // Add the distance field on the tile
             });
 
             products = products.replace(/,*$/, ""); console.log(products);
@@ -274,6 +274,9 @@ jQuery(document).ready(function ($){
                 }
             });
         }
+        else { /* If there is no date data to filter through, just show the barbers */
+            barbers.show();
+        }
 
         if ($('.product-grid-item[data-distance]').length) {
             var sortList = Array.prototype.sort.bind(barbers); // Bind barbers to the sort method so we don't have to travel up all these properties more than once.
@@ -282,8 +285,8 @@ jQuery(document).ready(function ($){
                 var aDistance = $(a).data('distance'); // Cache distance value from the first element (a) and the next sibling (b)
                 var bDistance = $(b).data('distance');
 
-                if (!aDistance) return 1;
-                if (!bDistance) return -1;
+                if (aDistance === undefined) return 1;
+                if (bDistance === undefined) return -1;
 
                 if (aDistance < bDistance) { //-console.log('placing',$(a).find('.jac-barber-name').text().trim(),'before',$(b).find('.jac-barber-name').text().trim() )
                     return -1; // Returning -1 will place element `a` before element `b`
@@ -307,7 +310,7 @@ jQuery(document).ready(function ($){
     //-if ($('.product-grid-item').length) filterBarbers(); // See above
 
     $("body").on('DOMSubtreeModified', ".wc-bookings-time-block-picker", updateValidEnddate);
-    function updateValidEnddate(){
+    function updateValidEnddate(){ console.log('Updating time slots for buffer time');
         $('#wc-bookings-form-end-time option[value!=0]').hide();
         //service*duration + buffer time.
         var allowedBlock = $('.wc-pao-addon-checkbox:checked').length * 3;
@@ -426,7 +429,6 @@ jQuery(document).ready(function ($){
                 setDateTime();
             }
         }
-
     }
 
 });
