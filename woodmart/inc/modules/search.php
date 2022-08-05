@@ -149,10 +149,10 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 		?>
 			<div class="wd-search-<?php echo esc_attr( $type ); ?><?php echo esc_attr( $wrapper_classes ); ?>">
 				<?php if ( $type == 'full-screen' ): ?>
-					<span class="wd-close-search wd-action-btn wd-style-icon wd-cross-icon<?php echo woodmart_get_old_classes( ' woodmart-close-search' ); ?>"><a aria-label="<?php esc_attr_e( 'Close search form', 'woodmart' ); ?>"></a></span>
+				<span class="wd-close-search wd-action-btn wd-style-icon wd-cross-icon<?php echo woodmart_get_old_classes( ' woodmart-close-search' ); ?>"><a aria-label="<?php esc_attr_e( 'Close search form', 'woodmart' ); ?>"></a></span>
 				<?php endif ?>
 				<form role="search" method="get" class="searchform <?php echo esc_attr( $class ); ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>" <?php echo ! empty( $data ) ? $data : ''; ?>>
-					<!-- 		TEST DATA			 -->
+					<!-- TEST DATA -->
 					<?php if ($post_type == 'product') { 
 						global $wpdb;	
 						$global_services = array();
@@ -166,24 +166,27 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 								}
 						}
 						$global_services = array_unique($global_services);
+						sort($global_services);
 					?>
-					<select class="form-select form-select-sm booking-services-search selectpicker" name="booking-services" aria-label=".form-select-sm">
+					<select class="form-select form-select-sm booking-services-search selectpicker" name="booking-services" aria-label=".form-select-sm"><?php /* .multiple-select multiple="" */ ?>
 					<?php if(isset($_POST['service_value']) && $_POST['service_value']) { ?>
-							<option value="default" disabled>Select a service</option>
-							<?php foreach($global_services as $service) {
-								if($service == $_POST['service_value'])	{ ?>
-									<option selected value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
-								<?php } else { ?>
-									<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
-								<?php }
-							} ?>
-						<?php } else { ?>
-							<option value="default" selected disabled>Select a service</option>
+						<option value="default" disabled>Select a service</option>
+						<?php 
+						sort($global_services); /* Sort the services alphabetically */
+						foreach($global_services as $service) {
+							if($service == $_POST['service_value'])	{ ?>
+								<option selected value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
+							<?php } else { ?>
+								<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
+							<?php }
+						} ?>
+					<?php } else { ?>
+						<option value="default" selected disabled>Select a service</option>
 
-							<?php foreach($global_services as $service){?>
-							<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
-							<?php } ?>
+						<?php foreach($global_services as $service){?>
+						<option value="<?php echo str_replace(' ','_',$service); ?>"><?php echo $service; ?></option>
 						<?php } ?>
+					<?php } ?>
 					</select>
 					<?php } else { ?>
 					<input type="text" class="s" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo get_search_query(); ?>" name="s" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>" title="<?php echo esc_attr( $placeholder ); ?>">
@@ -200,7 +203,15 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 					</div>
 					<?php } ?>
 					
-					
+					<?php /* Multi-select dropdown example (use 'multiple' attribute):
+					<select class="select" data-mdb-placeholder="Example placeholder" multiple>
+						<option value="1">One</option>
+						<option value="2">Two</option>
+						<option value="3">Three</option>
+						<option value="4">Four</option>
+						<option value="5">Five</option>
+					</select>
+					*/ ?>
 					
 					<?php if ($post_type == 'product') { ?>
 					<div class="your-location-search" class="input-group">
