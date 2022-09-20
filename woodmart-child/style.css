@@ -1,8 +1,8 @@
-/*
+//*
 Theme Name:   Woodmart Child
 Description:  Woodmart Child Theme for UrBarbr
 Template:     woodmart
-Version:      1.0.0
+Version:      1.0.1
 */
 
 /* start here */
@@ -64,7 +64,7 @@ body a {
 	color: var(--urbarbr-midblue);
 }
 
-label {
+body label {
 	font-weight: 600;
 }
 
@@ -72,14 +72,16 @@ input, select, textarea {
 	border-radius: 4px;
 }
 
-input[type="checkbox"]:first-child {
+input[type="checkbox"]:first-child,
+input[type="radio"]:first-child {
 	position: relative;
 	top: -1px;
-	margin: 0 5px 0 0;
+	/*~margin: 0 5px 0 0; */
+	margin: 11px 5px 10px 0;
 }
 
 input:not([class*="wpcf7"]), select, .btn-group .btn {
-	background: var(--urbarbr-softwhite);
+	background-color: var(--urbarbr-softwhite);
 	border: .5px solid #001F35 !important;
 	border-radius: 4px !important;
 	font-size: 15px;
@@ -88,11 +90,11 @@ input:not([class*="wpcf7"]), select, .btn-group .btn {
 	transition: .3s cubic-bezier(.2,.85,.35,1);
 }
 @media (hover: hover) and (pointer: fine) {
-	div input:not([class*="wpcf7"]):hover {
-		background: #88A1B855;
+	div input:not([type="radio"]):not([class*="wpcf7"]):not(.input-text):hover {
+		background-color: #88A1B855;
 	}
 	.woocommerce-billing-fields input:hover {
-		background: var(--urbarbr-softwhite);
+		background-color: var(--urbarbr-softwhite);
 	}
 }
 .mc4wp-form input[type="submit"],
@@ -101,11 +103,11 @@ input:not([class*="wpcf7"]), select, .btn-group .btn {
 	text-transform: unset !important;
 }
 .mc4wp-form input[type="submit"]:hover {
-	background: var(--urbarbr-midblue) !important;
+	background-color: var(--urbarbr-midblue) !important;
 }
 
 body .form-control[readonly] {
-	background: var(--urbarbr-softwhite);
+	background-color: var(--urbarbr-softwhite);
 }
 
 body .btn, button, .button {
@@ -129,28 +131,28 @@ body [type="button"]:hover {
 }
 
 .btn.btn-default:hover {
-	background: var(--urbarbr-midblue);
+	background-color: var(--urbarbr-midblue);
 }
 .btn.btn-default:active,
 .btn.btn-default:focus {
-	background: var(--urbarbr-midblue);
+	background-color: var(--urbarbr-midblue);
 }
 
 .btn.btn-color-default {
 	/*--background: var(--urbarbr-midblue);
 	color: white; */
-	background: var(--urbarbr-softwhite);
+	background-color: var(--urbarbr-softwhite);
 	border: 1px solid var(--urbarbr-midblue) !important;
 	color: var(--urbarbr-midblue);
 }
 .btn.btn-color-default:hover {
 	/*--background: var(--urbarbr-softblue);
 	color: white; */
-	background: var(--urbarbr-midblue);
+	background-color: var(--urbarbr-midblue);
 	color: white;
 }
 .btn.btn-default {
-	background: #28415899;
+	background-color: #28415899;
 	color: var(--urbarbr-white) !important;
 }
 @media (min-width: 476px) {
@@ -737,6 +739,7 @@ background-color: rgba(101,101,101,1);
 	border-radius: 3px;
 	text-transform: capitalize;
 	float: right;
+	margin-bottom: 30px;
 }
 
 body:not(.home) .whb-color-light .wd-tools-element {
@@ -780,15 +783,21 @@ color: #ffffff;
 
 .woocommerce-billing-fields p.form-row {
 	display: flex;
-	align-items: end;
+	align-items: center;
 }
 
-.woocommerce-billing-fields p.form-row label {
-	margin-bottom: 0;
-	width: 35%;
+/*-.woocommerce-billing-fields p.form-row > label { */
+.form-row > label {
+    margin: 8px 0;
 }
 
-.woocommerce-billing-fields p.form-row span {
+
+/*Changed from default width:35%*/
+.woocommerce-billing-fields .form-row > label {
+	width: 36%;
+}
+
+.woocommerce-billing-fields p.form-row > span {
 	width: 65%;
 }
 
@@ -820,7 +829,7 @@ label.woocommerce-form__label {
 	font-weight: 400;
 	color: var(--urbarbr-blue);
 }
-p.form-row input {
+p.form-row input:not([type="checkbox"]) {
 	display: block;
 	width: 100%;
 	max-width: unset !important;
@@ -985,6 +994,7 @@ p.form-row input {
 	width: 140px;
 	background: #102c45;
 	border-radius: 3px;
+	margin-top: 10px;
 }
 
 .reg-thrir-row input[type="submit"]:hover {
@@ -1076,6 +1086,27 @@ max-width: unset !important;
 	}
 }
 
+/* For the /my-account login page */
+@media (max-width: 374px) {
+	.lost_password.form-item-right {
+		float: left;
+		margin: 10px 0 0 0;
+	}
+	.woocommerce-form-login__submit.form-item-right,
+	a.form-item-left[href*="registration-form"] {
+		display: block;
+		width: 100% !important;
+		float: unset;
+		text-align: center;
+	}
+	.woocommerce-form-login__submit.form-item-right {
+		margin-bottom: 20px;
+	}
+}
+.woocommerce-form-login__submit.form-item-right {
+	padding: 10px 25px;
+}
+
 a.form-item-left {
 	margin: 10px 0;
 }
@@ -1112,10 +1143,12 @@ body .wd-header-wishlist .wd-tools-icon:before {
 	font-size: 22px;
 }
 @media (min-width: 768px) {
-	body.home .wd-custom-icon {
+	body.home .wd-custom-icon,
+	body.woocommerce-lost-password .wd-custom-icon {
 		filter: brightness(10);
 	}
-	body.home .wd-tools-icon {
+	body.home .wd-tools-icon,
+	body.woocommerce-lost-password .wd-tools-icon {
 		color: white;
 	}
 }
@@ -1133,9 +1166,26 @@ body.home .website-wrapper .wd-prefooter {
 	background-color: rgba(169, 178, 187, 0.1) !important;
 	padding: 30px 0;
 } */
-.page-id-5288 .main-page-wrapper {
+/*.page-id-5288 .main-page-wrapper {
 	background-color: rgba(169, 178, 187, 0.1) !important;
 	margin: 110px 0;
+} */
+
+@media (min-width: 476px){.page-id-5288 .main-page-wrapper {
+	background-color: rgba(169, 178, 187, 0.1) !important;
+	margin: 110px 0}
+}
+	
+@media (max-width: 475px){
+	.page-id-5288 .main-page-wrapper {
+	background-color: rgba(169, 178, 187, 0.1) !important;
+	margin-top: 70px;
+	margin-bottom: -10px;
+	}
+}
+
+.wd-prefooter {
+	margin-bottom: -40px
 }
 
 .jac-about-us-fourth-section {
@@ -1217,9 +1267,13 @@ content: '\f3c5';
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNy42IDIgNCA1LjYgNCAxMEM0IDE1LjQgMTEgMjEuNSAxMS4zIDIxLjhDMTEuNSAyMS45IDExLjggMjIgMTIgMjJDMTIuMiAyMiAxMi41IDIxLjkgMTIuNyAyMS44QzEzIDIxLjUgMjAgMTUuNCAyMCAxMEMyMCA1LjYgMTYuNCAyIDEyIDJaTTEyIDE5LjdDOS45IDE3LjcgNiAxMy40IDYgMTBDNiA2LjcgOC43IDQgMTIgNEMxNS4zIDQgMTggNi43IDE4IDEwQzE4IDEzLjMgMTQuMSAxNy43IDEyIDE5LjdaTTEyIDZDOS44IDYgOCA3LjggOCAxMEM4IDEyLjIgOS44IDE0IDEyIDE0QzE0LjIgMTQgMTYgMTIuMiAxNiAxMEMxNiA3LjggMTQuMiA2IDEyIDZaTTEyIDEyQzEwLjkgMTIgMTAgMTEuMSAxMCAxMEMxMCA4LjkgMTAuOSA4IDEyIDhDMTMuMSA4IDE0IDguOSAxNCAxMEMxNCAxMS4xIDEzLjEgMTIgMTIgMTJaIiBmaWxsPSIjRkZGRkZGIi8+Cjwvc3ZnPgo=");
 	/*-background-image: url('./svgs/location-white.svg'); */
 }
-#your-location-search.loading {
-	background-image: url("data:image/svg+xml;base64,PHN2ZyB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQogICAgPHN0eWxlPg0KICAgICAgICBzdmcgew0KICAgICAgICAgICAgd2lkdGg6IDMwcHg7DQogICAgICAgICAgICBhbmltYXRpb246IGxvYWRpbmcgM3MgbGluZWFyIGluZmluaXRlOw0KICAgICAgICAgICAgLXdlYmtpdC10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1vei10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1zLXRyYW5zZm9ybS1vcmlnaW46IGNlbnRlciBjZW50ZXI7DQogICAgICAgICAgICAtby10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgdHJhbnNmb3JtLW9yaWdpbjogY2VudGVyIGNlbnRlcjsNCiAgICAgICAgfQ0KICAgICAgICBjaXJjbGUgew0KICAgICAgICAgICAgY29sb3I6IHdoaXRlOw0KICAgICAgICAgICAgYW5pbWF0aW9uOiBsb2FkaW5nLWNpcmNsZSAycyBsaW5lYXIgaW5maW5pdGU7DQogICAgICAgICAgICBzdHJva2U6IGN1cnJlbnRDb2xvcjsNCiAgICAgICAgICAgIGZpbGw6IHRyYW5zcGFyZW50Ow0KICAgICAgICAgICAgLXdlYmtpdC10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1vei10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1zLXRyYW5zZm9ybS1vcmlnaW46IGNlbnRlciBjZW50ZXI7DQogICAgICAgICAgICAtby10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgdHJhbnNmb3JtLW9yaWdpbjogY2VudGVyIGNlbnRlcjsNCiAgICAgICAgfQ0KICAgICAgICBAa2V5ZnJhbWVzIGxvYWRpbmcgew0KICAgICAgICAgICAgMCUgew0KICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDApOw0KICAgICAgICAgICAgfQ0KDQogICAgICAgICAgICAxMDAlIHsNCiAgICAgICAgICAgICAgICB0cmFuc2Zvcm06IHJvdGF0ZSgzNjBkZWcpOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgICAgIEBrZXlmcmFtZXMgbG9hZGluZy1jaXJjbGUgew0KICAgICAgICAgICAgMCUgew0KICAgICAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAwDQogICAgICAgICAgICB9DQoNCiAgICAgICAgICAgIDEwMCUgew0KICAgICAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAtNjAwOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgPC9zdHlsZT4NCiAgICA8Y2lyY2xlIGN4PSI3NSIgY3k9Ijc1IiByPSI2MCIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0cm9rZS1kYXNoYXJyYXk9IjMwMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMTQiIC8+DQogICAgPHN0eWxlIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT4NCjwvc3ZnPg==");
+/*-#your-location-search */
+button.loading,
+input.loading {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQogICAgPHN0eWxlPg0KICAgICAgICBzdmcgew0KICAgICAgICAgICAgd2lkdGg6IDMwcHg7DQogICAgICAgICAgICBhbmltYXRpb246IGxvYWRpbmcgM3MgbGluZWFyIGluZmluaXRlOw0KICAgICAgICAgICAgLXdlYmtpdC10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1vei10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1zLXRyYW5zZm9ybS1vcmlnaW46IGNlbnRlciBjZW50ZXI7DQogICAgICAgICAgICAtby10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgdHJhbnNmb3JtLW9yaWdpbjogY2VudGVyIGNlbnRlcjsNCiAgICAgICAgfQ0KICAgICAgICBjaXJjbGUgew0KICAgICAgICAgICAgY29sb3I6IHdoaXRlOw0KICAgICAgICAgICAgYW5pbWF0aW9uOiBsb2FkaW5nLWNpcmNsZSAycyBsaW5lYXIgaW5maW5pdGU7DQogICAgICAgICAgICBzdHJva2U6IGN1cnJlbnRDb2xvcjsNCiAgICAgICAgICAgIGZpbGw6IHRyYW5zcGFyZW50Ow0KICAgICAgICAgICAgLXdlYmtpdC10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1vei10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgLW1zLXRyYW5zZm9ybS1vcmlnaW46IGNlbnRlciBjZW50ZXI7DQogICAgICAgICAgICAtby10cmFuc2Zvcm0tb3JpZ2luOiBjZW50ZXIgY2VudGVyOw0KICAgICAgICAgICAgdHJhbnNmb3JtLW9yaWdpbjogY2VudGVyIGNlbnRlcjsNCiAgICAgICAgfQ0KICAgICAgICBAa2V5ZnJhbWVzIGxvYWRpbmcgew0KICAgICAgICAgICAgMCUgew0KICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDApOw0KICAgICAgICAgICAgfQ0KDQogICAgICAgICAgICAxMDAlIHsNCiAgICAgICAgICAgICAgICB0cmFuc2Zvcm06IHJvdGF0ZSgzNjBkZWcpOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgICAgIEBrZXlmcmFtZXMgbG9hZGluZy1jaXJjbGUgew0KICAgICAgICAgICAgMCUgew0KICAgICAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAwDQogICAgICAgICAgICB9DQoNCiAgICAgICAgICAgIDEwMCUgew0KICAgICAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAtNjAwOw0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgPC9zdHlsZT4NCiAgICA8Y2lyY2xlIGN4PSI3NSIgY3k9Ijc1IiByPSI2MCIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0cm9rZS1kYXNoYXJyYXk9IjMwMCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMTQiIC8+DQogICAgPHN0eWxlIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT4NCjwvc3ZnPg==") !important;
 	background-size: 22px;
+	background-repeat: no-repeat;
+	background-position: 12px;
 }
 #your-location-search:not(:empty) ~ ul.dropdown-menu {
 	display: none !important;
@@ -1549,21 +1603,35 @@ display: none;
 } */
 
 .woocommerce-notices-wrapper {
-	max-width: 420px;
+	/*-max-width: 420px; */
 	margin: 15px auto;
 }
 .woocommerce-notices-wrapper > * {
 	border-radius: 6px;
 	opacity: .9;
 }
-.woocommerce-notices-wrapper .woocommerce-error {
+
+body .woocommerce-error {
 	background: #FBBC05;
+	border-radius: 6px;
+    font-weight: 400;
 	color: black;
+}
+.woocommerce-notices-wrapper .woocommerce-error > li {
+    max-width: 100%;
+    margin: 0;
 }
 
 .tinv-wishlist .woocommerce-error li {
 	margin-left: 65px;
 }
+
+.checkout.woocommerce-checkout.row > .woocommerce-NoticeGroup {
+	flex: 100%;
+}
+/*??.woocommerce-NoticeGroup .woocommerce-error {
+	margin: 0 15px;
+} */
 /*@@@
 @media screen and (orientation: portrait) {
 .home .whb-main-header .whb-general-header {
@@ -1574,10 +1642,25 @@ background-color: rgb(16, 44, 69, 0.3) !important;
 .home .searchform .searchsubmit:before {
 	display: none;
 }
+
+.wc-bookings-booking-form-button.single_add_to_cart_button {
+    transition: .3s;
+}
 .wc-bookings-booking-form-button.single_add_to_cart_button.no-service-disable {
+    margin-bottom: 20px;
 	pointer-events: none;
 	background: rgb(40, 65, 88, 0.5);
 }
+.wc-bookings-booking-form-button.single_add_to_cart_button.no-service-disable::before {
+    content: 'Please select a service';
+    position: absolute;
+    display: block;
+    bottom: -25px;
+    left: 0;
+    font-size: 12px;
+    color: #E88;
+}
+
 /*@@@ @media (max-width: 991px){
 .whb-column.whb-mobile-center.whb-hidden-lg .site-logo img{
 filter: invert(1);
@@ -1630,6 +1713,7 @@ background:#fff;
 		padding-top: 120px !important; /* 24vw */
 		background-image: url(/wp-content/uploads/2022/02/barberChairCenteredBGSpecular_mobile.jpg) !important;
 		background-position: top !important;
+		margin-bottom: 40px !important; /* For front page footer fix */
 	}
 	.vc_custom_1639719072359 > .vc_column_container {
 		align-items: flex-start !important;
@@ -1830,6 +1914,11 @@ display: none;
 	background-color: unset;
 	background-image: linear-gradient(#fff 80px, #fff5 100%);
 }
+.bootstrap-select + .bootstrap-select.placeholder { /* Hide the duplicate '.placeholder' box once loaded in */
+	display: none !important;
+	background: unset !important;
+}
+
 body .dropdown-menu li {
 	margin: 0;
 }
@@ -1926,13 +2015,13 @@ footer .widget {
 }
 .product-addon-totals {
 	padding: 0 15px;
-	border: 1px solid var(--urbarbr-midgrey) !important;
-	border-radius: 15px;
+	border: 1px solid var(--urbarbr-grey) !important;
+	border-radius: 12px;
 }
 .wc-bookings-booking-form .block-picker {
 	/*--display: flex;
 	flex-wrap: wrap; */
-	margin: 0 -5px;
+	/*-margin: 0 -5px; */
 }
 body .wc-bookings-booking-form .block-picker li {
 	/*--min-width: unset;
@@ -1942,9 +2031,37 @@ body .wc-bookings-booking-form .block-picker li {
 	flex-grow: unset; */
 	padding: 5px;
 }
-body .wc-bookings-date-picker {
-	padding: 5px;
+.block-picker.wc-bookings-time-block-picker {
+	margin-bottom: 20px;
 }
+.block-picker.wc-bookings-time-block-picker select {
+	border-color: var(--urbarbr-grey) !important;
+}
+
+.wc-bookings-booking-form .wc-bookings-date-picker {
+	/*-padding: 5px; */
+	margin-top: -10px;
+	border: 1px solid var(--urbarbr-grey);
+	border-radius: 12px;
+}
+.wc-bookings-booking-form .wc-bookings-date-picker .picker.hasDatepicker {
+	margin-bottom: 0;
+}
+.wc-bookings-booking-form .wc-bookings-date-picker .ui-widget-content {
+	border-radius: 0;
+	box-shadow: unset;
+}
+.wc-bookings-booking-form .wc-bookings-date-picker .ui-datepicker td.ui-datepicker-other-month {
+	background: var(--urbarbr-lightgrey);
+}
+
+#wc-bookings-form-end-time {
+	padding: 0;
+	background: 0;
+	border-color: transparent !important;
+	pointer-events: none;
+}
+
 .wc-bookings-date-picker .ui-datepicker td {
 	padding: 3px !important;
 	border-width: 1 0;
@@ -1958,6 +2075,16 @@ body .wc-bookings-date-picker {
 }
 .wc-bookings-date-picker .ui-datepicker td.bookable a {
 	background-color: var(--urbarbr-softblue) !important;
+}
+.wc-bookings-date-picker .ui-datepicker td.partial_booked a::before { /* White dot to indicate a booking on the date selector */
+	content: '·';
+	position: absolute;
+	display: block;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	font-weight: bold;
+	text-align: center;
 }
 body .wc-bookings-date-picker .ui-datepicker .ui-datepicker-prev,
 body .wc-bookings-date-picker .ui-datepicker .ui-datepicker-next {
@@ -2062,14 +2189,14 @@ a.tinvwl_add_to_wishlist_button.tinvwl-icon-heart {
 	border-radius: 10px;
 }
 .wc-pao-addons-container .form-row.form-row-wide > label {
-	margin: 25px 0;
+	margin-top: 20px;
 	padding: 25px;
 	background: #FFF;
 	border-radius: 10px;
 }
-.wc-pao-addons-container .form-row.form-row-wide:last-child > label {
+/*-.wc-pao-addons-container .form-row.form-row-wide:last-child > label {
 	margin: 0;
-}
+} */
 .wc-pao-addons-container .form-row.form-row-wide input[type="checkbox"] {
 	display: none;
 	/*-width: 20px;
@@ -2097,9 +2224,8 @@ background: red;
 body .wc-pao-addon .wc-pao-addon-name {
 	font-size: 28px;
 	font-weight: 600;
+	text-transform: capitalize;
 }
-
-
 
 .timezone-details {
 	display: none;
@@ -2168,18 +2294,19 @@ h5.widget-title + [class*="menu"] {
 /*150722*/
 @media (min-width: 365px) and (max-width: 1024px) {
 	h5.widget-title+[class*="menu"]>ul {
-		display: flex;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
 	}
 	.widget_nav_menu ul li {
-		margin: 0 20px 0 0;
+		margin: 0 -25px 0 0;
 		padding: 10px 0;
 		line-height: 12px;
 	}
 }
-#block-25 {
+/*--#block-25 {
     display: block;
     text-align: right;
-}
+} */
 #block-18::after {
 	content: unset;
 }
@@ -2212,6 +2339,7 @@ h5.widget-title + [class*="menu"] {
         display: flex;/*150722*/
 		/*-padding: 30px 20px 0; */
 		padding: 25px;
+		margin-bottom: -40px;
 	}
 	.footer-column {
 		/*150722max-width: 33%; */
@@ -2230,11 +2358,19 @@ h5.widget-title + [class*="menu"] {
         flex: 1;
         text-align: right;
 	}
+
 	.footer-column:last-child #block-18,
 	.footer-column:last-child #block-27 { /* Hide the 'Follow us' title */
 		display: none;
 	}
-	.footer-column:first-child {
+	.footer-column.footer-column-4 > .footer-widget:first-child { /* Hide the 'Follow us' title */
+		display: none;
+	}
+	.footer-column.footer-column-4 > .footer-widget:last-child {
+		margin-top: 4px;
+	}
+
+	.footer-column.footer-column-1:first-child {
 		display: none;
 		max-width: unset;
 		order: 6;
@@ -2265,10 +2401,10 @@ footer .footer-sidebar.widget-area::after {
 	content: '© 2022 UrBarbr';
 	position: absolute;
 	bottom: 0;
-	right: 26px;
+	right: 30px;
 	/*-left: 50%;
 	transform: translateX(-50%); */
-	margin-bottom: 20px;
+	margin-bottom: 35px;
 	font-size: 12px;
 }
 
@@ -2530,6 +2666,11 @@ div.form-row.last > :last-child {
 	margin-top: 30px;
 }
 
+.form-row.woocommerce-invalid input {
+	border-color: indianred !important;
+	background: #FFEBEB8F;
+	padding-left: 12px;
+}
 
 
 
@@ -2771,6 +2912,14 @@ body.single-product .wc-bookings-booking-cost {
 	margin-top: 20px;
 	padding: 20px 15px;
 }
+.wc-stripe-elements-field.StripeElement {
+    padding: 11px;
+}
+.wc-stripe-elements-field.invalid {
+    border-color: indianred;
+    background: #FFEBEB8F;
+}
+
 .woocommerce-billing-fields p.form-row label,
 .woocommerce-additional-fields p.form-row label {
 	color: #000000;
@@ -3090,4 +3239,60 @@ ul.dropdown-menu li.selected > a::after {
 } */
 ul.dropdown-menu li.selected > a .glyphicon.check-mark {
     display: none !important;
+}
+
+
+/* Make status text more visible on the password reset page /my-account/lost-password/?reset-link-sent=true */
+.woocommerce-message {
+	margin-top: 15px;
+}
+body.woocommerce-lost-password .main-page-wrapper > .container,
+.woocommerce-ResetPassword {
+    color: #444;
+    text-shadow: 0 0 12px white;
+}
+.woocommerce-password-strength {
+    padding: 4px 0;
+}
+.woocommerce-password-strength.short { color: maroon; }
+.woocommerce-password-strength.bad { color: indianred; }
+.woocommerce-password-strength.good { color: darkseagreen; }
+.woocommerce-password-strength.strong { color: limegreen; }
+
+.wd-notice a,
+div.wpcf7-response-output a,
+.mc4wp-alert a,
+.woocommerce-error a,
+.woocommerce-message a,
+.woocommerce-info a { /* Override the white link error colours to midgrey */
+    color: var(--urbarbr-midgrey);
+}
+
+.whb-header .searchform > * {
+	margin-top: 20px !important;
+}
+
+
+
+
+
+
+/* Payment card layout fix in the Checkout page 
+ * AA - 19/09/2022 */
+@media (max-width: 414px)
+{
+	.woocommerce-checkout #payment ul.payment_methods li .stripe-credit-card-brand
+	{
+    top: 45%;
+	}
+	
+	.wc-stripe-elements-field.StripeElement 
+	{
+    padding: 18px 0px 6px 0px;
+	}
+	
+	.woocommerce-checkout #payment ul.payment_methods li .stripe-visa-brand 
+	{
+    margin-top: -12px;
+	}
 }

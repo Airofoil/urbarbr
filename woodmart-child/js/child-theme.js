@@ -69,6 +69,7 @@ jQuery(document).ready(function ($){
                         }
                         if (data["results"][0]) {
                             $(location).removeClass('invalid');
+							$(location).addClass('entered');
                             document.getElementById('location_coords').value = data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng;
                             document.cookie = `location_lat_long=${data["results"][0].geometry.location.lat + ',' + data["results"][0].geometry.location.lng}; path=/`;
                         }
@@ -240,7 +241,9 @@ jQuery(document).ready(function ($){
                         if (response.records[i].available == 1) {
                             if (formattedDate.slice(formattedDate.length - 5) == "00:00" && !paramTime) { // If the booking time is not provided, or the default 00:00 ...
                                 console.log('No time provided, showing product',response.records[i].product_id)
-                                $('[data-id=' + response.records[i].product_id + ']').show(); // Show the product
+                                $('[data-id=' + response.records[i].product_id + ']').css({'display':'block', 'opacity':'1'});
+                                console.log('A',i, i*150, $('[data-id=' + response.records[i].product_id + ']'));
+                                //@@setTimeout(() => $('[data-id=' + response.records[i].product_id + ']').css('opacity','1'), i * 150); // Show the product
                                 slotsFound += 1;
                             }
                             else { // ... Otherwise, check if the booking time fits the slot
@@ -251,7 +254,10 @@ jQuery(document).ready(function ($){
                                 minimumStartTime = minimumStartTime.getTime();
                                 //-console.log('    ',formattedDateTime >= startDateTime, formattedDateTime <= endDateTime, formattedDateTime > minimumStartTime,formattedDateTime,startDateTime,formattedDateTime,endDateTime,formattedDateTime,minimumStartTime)
                                 if (formattedDateTime >= startDateTime && formattedDateTime < endDateTime && formattedDateTime > minimumStartTime) {
-                                    $('[data-id=' + response.records[i].product_id + ']').show(); // Show that product, since it has a matching time slot available
+                                    $('[data-id=' + response.records[i].product_id + ']').fadeIn();
+                                    //@@setTimeout(() => $('[data-id=' + response.records[i].product_id + ']').css('opacity','1'), i * 150)
+                                    //@@console.log('B',i, i*150, $('[data-id=' + response.records[i].product_id + ']'));
+                                    //@@setTimeout(() => $('[data-id=' + response.records[i].product_id + ']').css('opacity','1'), i * 150); // Show that product, since it has a matching time slot available
                                     slotsFound += 1;
                                     //-console.log('Match:',new Date(formattedDateTime),new Date(startDateTime),new Date(endDateTime),new Date(minimumStartTime),$('[data-id=' + response.records[i].product_id + ']').find('.jac-barber-name').text().trim())
                                 }
@@ -273,9 +279,17 @@ jQuery(document).ready(function ($){
                     console.error(xhr);
                 }
             });
+
+            $('.product-grid-item').each(function(i, p) {
+                setTimeout(() => $(p).css('opacity', '1'), i * 150);
+            });
         }
         else { /* If there is no date data to filter through, just show the barbers */
-            barbers.show();
+            console.log('Showing barbers.');
+            barbers.css('display','block');
+            barbers.each(function(i, b) { console.log('C', i * 150);
+                setTimeout(() => $(b).css('opacity', '1'), i * 150);
+            });
         }
 
         if ($('.product-grid-item[data-distance]').length) {
@@ -309,17 +323,18 @@ jQuery(document).ready(function ($){
 	} */
     //-if ($('.product-grid-item').length) filterBarbers(); // See above
 
-    $("body").on('DOMSubtreeModified', ".wc-bookings-time-block-picker", updateValidEnddate);
-    function updateValidEnddate(){ console.log('Updating time slots for buffer time');
+    $('body').on('DOMSubtreeModified', '.wc-bookings-time-block-picker', updateValidEnddate);
+    function updateValidEnddate() { console.log('Updating valid end-time');
         $('#wc-bookings-form-end-time option[value!=0]').hide();
         //service*duration + buffer time.
         var allowedBlock = $('.wc-pao-addon-checkbox:checked').length * 3;
-        if($('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').length){
+        if ($('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').length) {
             $('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').show();
             $('#wc-bookings-form-end-time option[value="'+allowedBlock+'"]').prop('selected','true');
             $('.wc-bookings-booking-form-button').removeClass('disabled');
             $('.wc_bookings_field_duration').val(allowedBlock);
-        }else{
+        }
+        else {
             $('#wc-bookings-form-end-time option[value="0"]').show();
             $('#wc-bookings-form-end-time option[value="0"]').prop('selected','true');
         }
@@ -347,6 +362,9 @@ jQuery(document).ready(function ($){
         var servicesCount = $('.wc-pao-addon-checkbox:checked').length;
         Cookies.set("servicesCount", servicesCount);
         $('.selection-start-date.ui-datepicker-current-day').trigger('click');
+        
+        //-console.log('typeof setDateTime:', typeof setDateTime);
+        if (typeof setDateTime == 'function') setDateTime(true);
     })
 
     $('input[placeholder*="posts"]').each(function() { // Change any 'posts' input placeholders to 'barbers'
@@ -364,72 +382,144 @@ jQuery(document).ready(function ($){
         });
     }
 
-    if ($('body').hasClass('single-product')) {
-        if(typeof(Cookies.get('lastSearch'))=='string'){
-            var searchValues = JSON.parse(Cookies.get('lastSearch'));
-            if(searchValues.service){
-                //$(".wc-pao-addon-container .wc-pao-addon-checkbox[value='"+searchValues.service+"']").click();
-                $(".wc-pao-addon-container .wc-pao-addon-wrap:contains('"+searchValues.service+"') .wc-pao-addon-checkbox").click();
+    let setDateTime = {};
+
+    if ($('body').hasClass('single-product') && typeof (Cookies.get('lastSearch')) == 'string') {
+
+        /* Parse the user's last search from the cookie */
+        const searchValues = JSON.parse(Cookies.get('lastSearch'));
+
+        /* 
+        * Click and preselect the barber's service that was chosen in the search
+        * (there is another version in functions.php too - see 'preselect'):
+        */
+        if (searchValues.service) {
+            $('.wc-pao-addon-container .wc-pao-addon-wrap:contains("' + searchValues.service + '") .wc-pao-addon-checkbox').click();
+        }
+
+        /* If a date was searched */
+        if (searchValues.date) {
+            var dateHasBeenSet = false;
+            var timeHasBeenSet = false;
+
+            let dates = searchValues.date.split('-');
+            let month = parseInt(dates[1]) - 1;
+            let day = parseInt(dates[2]);
+
+            /*--let times=searchValues.time.split(":");
+            let pastNoon="am";
+            if(times[0]>=12){
+                pastNoon="pm"; 
             }
-            if(searchValues.date){
-                var dateSet=false;
-                var timeSet=false;
-
-                let dates= searchValues.date.split("-");
-                let month=parseInt(dates[1])-1;
-                let day=parseInt(dates[2]);
-                searchValues = JSON.parse(Cookies.get('lastSearch'));
-                let times=searchValues.time.split(":");
-                let pastNoon="am";
-                if(times[0]>=12){
-                    pastNoon="pm";
-                    
-                }
-                if(times[0]>12){
-                    times[0]-=12;
-                }
-                let timeValue=times[0]+":"+times[1]+" "+pastNoon;
-
-                let timerId = "";
-
-                function setDateTime() {
-                    if(dateSet==false){
-                        if($(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").length > 0){
-                            $(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").parent().trigger("click");
-                            
-                            dateSet=true;
-                            $(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").parent().trigger("input");
-                            $(".wc-bookings-date-picker .bookable[data-month='"+month+"'] a[data-date='"+day+"']").parent().trigger("change");
-                        }
-                    }
-
-                    if(timeSet==false){
-                        if($("#wc-bookings-form-start-time").length > 0){
-                            /*$("#wc-bookings-form-start-time option[selected='selected']").prop("selected", false);
-                            $("#wc-bookings-form-start-time option:contains('"+timeValue+"')").prop('selected', 'selected');
-
-                            $("#wc-bookings-form-start-time option:contains('"+timeValue+"')").change();
-
-                            $("#wc-bookings-form-start-time").val($("#wc-bookings-form-start-time option:contains('"+timeValue+"')").val()).change();
-                            $(".wc-bookings-time-block-picker").trigger("DOMSubtreeModified");
-                            $('#wc-bookings-form-start-time').change();
-                            $('#wc-bookings-form-start-time').trigger('change');
-                            console.log("Ran change commands");*/
-                            
-                            timeSet=true;
-                        }
-                    }
-                    if(dateSet == true && timeSet == true){
-                        clearTimeout(timerId);
-                    } else {
-                        timerId=setTimeout(setDateTime, 1000);
-                    }
-                    
-                }
-                setDateTime();
+            if(times[0]>12){
+                times[0]-=12;
             }
+            let timeValue=times[0]+":"+times[1]+" "+pastNoon; */
+
+            let timerId = {};
+
+            /* Pre-select the date and time */
+            setDateTime = function(reset=false) {
+                /* If 'true' is provided, set the date and time again */
+                if (reset) {
+                    //-dateHasBeenSet = false;
+                    timeHasBeenSet = false;
+                }
+
+                if (dateHasBeenSet === false) {
+                    let dayCell = $('.wc-bookings-date-picker .bookable[data-month="' + month + '"] a[data-date="' + day + '"]');
+
+                    if (dayCell.length > 0) {
+                        dayCell.parent().trigger('click');
+
+                        dateHasBeenSet = true;
+                        dayCell.parent().trigger('input');
+                        dayCell.parent().trigger('change');
+                    }
+                }
+
+                //-console.log('reset:', reset, '|', 'timeHasBeenSet:', timeHasBeenSet);
+                if ($('#wc-bookings-form-start-time').length>0 && !$('#wc-bookings-form-start-time').val() || $('#wc-bookings-form-start-time').val() == '0') {
+                    let startTime = searchValues.time;
+                    let startTimeVal = startTime.replace(/\D/g, '').slice(0, 4);
+                    let currentVal = $('#wc-bookings-form-start-time').val();
+
+                    //-console.log(50,$('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]'));
+                    //$('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').click().prop('selected','true').parent().trigger('change');
+					if($('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').length >0){
+						$('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').prop('selected','true').parent().change();
+						$('[name="start_time"]').change();
+						
+						//just copy the code from change method to run it manually
+						var id        = $('.wc-bookings-start-time-container' ).data( 'productId' );
+						var blocks    = $('.wc-bookings-start-time-container' ).data( 'blocks' );
+						var fieldset     = $( '#wc-bookings-booking-form' );
+						var resource_id = fieldset.find( '#wc_bookings_field_resource' ).val();
+
+						var formField = $('#wc-bookings-form-start-time').parents( '.form-field' ).eq( 0 );
+						var value = $('[name="start_time"]').val();
+						var xhr = $.ajax( {
+							type: 		'POST',
+							url: 		booking_form_params.ajax_url,
+							data: 		{
+								action: 'wc_bookings_get_end_time_html',
+								security: booking_form_params.nonce.get_end_time_html,
+								start_date_time: value,
+								product_id: id,
+								blocks: blocks,
+								resource_id: resource_id,
+							},
+							success: function( response ) {
+								$( '.wc-bookings-end-time-container' ).replaceWith( response );
+								//offset_block_times_for_end_time( date_str );
+								formField.find( 'input.required_for_calculation' ).val( value );
+							},
+							dataType: 	"html"
+						} );
+						
+					}
+                    
+                    //$('.wc-bookings-start-time-container').find('select').trigger('change');
+
+                    if ($('#wc-bookings-form-start-time').val() !== currentVal) {
+                        console.log(55,'Successfully set the time', $('#wc-bookings-form-start-time').val());
+                        timeHasBeenSet = true;
+
+						if(false){
+                        /* Do an AJAX request, to retrieve the End-time box */
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", 'https://staging-urbarbr.kinsta.cloud/wp-admin/admin-ajax.php');
+                        
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                        
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState === 4 && xhr.status === 200) {
+                                //-console.log(xhr.status, xhr.responseText);
+                                $('.wc-bookings-end-time-container').html(xhr.responseText); /* Place the End-time HTML in the end-time container */
+                            }
+                        };
+                        
+                        /* Required data for the 'wc_bookings_get_end_time_html' action in WooCommerce */
+                        var data = 'action=wc_bookings_get_end_time_html' +
+                            '&security=' + booking_form_params.nonce.get_end_time_html + //9c600412f8' + /* wp_nonce security value (may break lol...) */     $('#jac-booking-container > form.cart.row').data('nonce') + 
+                            '&start_date_time=' + $('#wc-bookings-form-start-time').val() +
+                            '&product_id=' + $('.wc-bookings-start-time-container').data('product-id') +
+                            '&blocks[]=' + $('.wc-bookings-start-time-container').data('blocks').toString().replaceAll(',', '&blocks[]=');
+                        
+                        xhr.send(data);
+						}
+                    }
+                    
+                    //updateValidEnddate()
+                }
+                if (dateHasBeenSet == true && timeHasBeenSet == true) {
+                    clearTimeout(timerId);
+                } else {
+                    timerId = setTimeout(setDateTime, 500);
+                }
+            }
+            setDateTime();
         }
     }
 
 });
-

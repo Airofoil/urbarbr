@@ -39,16 +39,16 @@ add_action( 'rest_api_init', function() {
 
 
 function woodmart_child_enqueue_styles() {
-	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css') );
+	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css?ver=6.0.0', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css?ver=6.0.0') );
 }
 add_action( 'wp_enqueue_scripts', 'woodmart_child_enqueue_styles', 10010 );
 
 function my_theme_scripts() {
-	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js');
+	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js?ver=6.0.0');
 
 	if(wp_script_is('wc-bookings-user-my-account')){
 		global $wp_scripts; 
-    	$wp_scripts->registered[ 'wc-bookings-user-my-account' ]->src = esc_url( get_stylesheet_directory_uri() )  . '/js/user-my-account.js';
+    	$wp_scripts->registered[ 'wc-bookings-user-my-account' ]->src = esc_url( get_stylesheet_directory_uri() )  . '/js/user-my-account.js?ver=6.0.0';
 	}
 	
 }
@@ -291,6 +291,21 @@ function select_services() {
 	<?php 
 }
 
+
+/* Validate the Woocommerce mobile number field in the checkout (10 digit number) */
+add_action('woocommerce_checkout_process', 'njengah_custom_checkout_field_process');
+
+  function njengah_custom_checkout_field_process() {
+    global $woocommerce;
+
+    // Check if set, if its not set add an error. This one is only requite for companies
+    if (!(preg_match('/(?:\+?61)?(?:\(0\)[23478]|\(?0?[23478]\)?)\d{8}/', $_POST['billing_phone']))) {
+        wc_add_notice( "<b>Phone Number</b> '" . $_POST['billing_phone'] . "' is not a valid phone number"  ,'error' );
+    }
+
+}
+
+
 /*--Not used(?) using 'Edit Author Slug' plugin instead--Change the base Author url from '/author/' to '/profile/' - JDH * /
 add_action('init', 'cng_author_base');
 function cng_author_base() {
@@ -373,6 +388,28 @@ function wc_registration_form_function() {
 	return ob_get_clean();
 	
 }
+
+/*
+ * Making the user type in stronger password
+ */
+
+add_filter( 'woocommerce_get_script_data', 'password_strength_meter_settings', 20, 2 );
+
+function password_strength_meter_settings( $params, $handle  ) {
+
+	if( $handle === 'wc-password-strength-meter' ) {
+		$params = array_merge( $params, array(
+			'min_password_strength' => 4,
+			'i18n_password_error' => 'Make more stronger',
+			'i18n_password_hint' => 'Please make your password at least 12 characters long and use a mix of UPPER and lowercase letters, numbers, and symbols (e.g.,  ! " ? $ % ^ & ).'
+		) );
+	}
+	return $params;
+
+}
+
+
+
 add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
 
 /**
