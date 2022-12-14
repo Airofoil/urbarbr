@@ -265,15 +265,13 @@ function woo_custom_order_button_text() {
     return __( 'Pay Now', 'woocommerce' ); 
 }
 
-/* 
- * This code is for pre-selecting the service on barber pages
- * (there is another version that works in child-theme.js too - see 'preselect'):
- */
 add_action( 'template_redirect', 'select_services' );
 function select_services() {
-	if (!is_product()) { // Make sure the request is for a user-facing product page
+	// Make sure the request is for a user-facing product page
+	if (!is_product()) {
 		return false;
 	}
+	
 	?>
 	<script>
 		document.addEventListener("DOMContentLoaded", function(event) {
@@ -293,7 +291,6 @@ function select_services() {
 	<?php 
 }
 
-
 /* Validate the Woocommerce mobile number field in the checkout (10 digit number) */
 add_action('woocommerce_checkout_process', 'njengah_custom_checkout_field_process');
 
@@ -301,12 +298,11 @@ add_action('woocommerce_checkout_process', 'njengah_custom_checkout_field_proces
     global $woocommerce;
 
     // Check if set, if its not set add an error. This one is only requite for companies
-    if (!(preg_match('/^[0-9]{8,10}$/D', $_POST['billing_phone']))) {
+    if (!(preg_match('/(?:\+?61)?(?:\(0\)[23478]|\(?0?[23478]\)?)\d{8}/', $_POST['billing_phone']))) {
         wc_add_notice( "<b>Phone Number</b> '" . $_POST['billing_phone'] . "' is not a valid phone number"  ,'error' );
     }
 
 }
-
 
 /*--Not used(?) using 'Edit Author Slug' plugin instead--Change the base Author url from '/author/' to '/profile/' - JDH * /
 add_action('init', 'cng_author_base');
@@ -391,6 +387,7 @@ function wc_registration_form_function() {
 	
 }
 
+
 /*
  * Making the user type in stronger password
  */
@@ -409,7 +406,6 @@ function password_strength_meter_settings( $params, $handle  ) {
 	return $params;
 
 }
-
 
 
 add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
@@ -798,14 +794,28 @@ function bbloomer_checkout_step3( $cart ) {
 	} 
 }
 
+add_action('rest_api_init', 'add_routes');
+function add_routes()
+{
+	register_rest_route('/v1', '/cw_function', array(
+		'methods' => 'GET',
+		'callback' => 'cw_function',
+	));
+}
+
 add_action( 'check_booking_time', 'cw_function' );
-function cw_function() {
+function cw_function($req) {
+	$code = $req->get_param('code');
+	if($code!="kaksje12uaj"){
+		echo "unauthenticated request\n";
+		return false;
+	}
 	$chBooking = curl_init();
     $headers = array(
 		'Accept: application/json',
 		'Content-Type: application/json',
     );
-	$urlBooking= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/bookings?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlBooking= 'https://www.urbarbr.com.au/wp-json/wc-bookings/v1/bookings?per_page=100&consumer_key=ck_d3fd616341a66cb5b3317222fa8644da7baabb12&consumer_secret=cs_ca52545fab1c0799d44744592dfea0a3bd653ff4';
 	curl_setopt($chBooking, CURLOPT_URL, $urlBooking);
 	curl_setopt($chBooking, CURLOPT_RETURNTRANSFER, 1);
 	$outputBooking = curl_exec($chBooking);
@@ -817,7 +827,7 @@ function cw_function() {
 	curl_close($chBooking);
 	
 	$chOrder = curl_init();
-	$urlOrder= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/orders?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlOrder= 'https://www.urbarbr.com.au/wp-json/wc/v3/orders?per_page=100&consumer_key=ck_d3fd616341a66cb5b3317222fa8644da7baabb12&consumer_secret=cs_ca52545fab1c0799d44744592dfea0a3bd653ff4';
 	curl_setopt($chOrder, CURLOPT_URL, $urlOrder);
 	curl_setopt($chOrder, CURLOPT_RETURNTRANSFER, 1);
 	$outputOrder = curl_exec($chOrder);
@@ -829,7 +839,7 @@ function cw_function() {
 	curl_close($chOrder);
 
 	$chProduct = curl_init();
-	$urlProduct= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/products/?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlProduct= 'https://www.urbarbr.com.au/wp-json/wc/v3/products/?per_page=100&consumer_key=ck_d3fd616341a66cb5b3317222fa8644da7baabb12&consumer_secret=cs_ca52545fab1c0799d44744592dfea0a3bd653ff4';
 	curl_setopt($chProduct, CURLOPT_URL, $urlProduct);
 	curl_setopt($chProduct, CURLOPT_RETURNTRANSFER, 1);
 	$outputProduct = curl_exec($chProduct);
@@ -874,9 +884,9 @@ function cw_function() {
 	$customers = array();
 	if (is_countable($jsonBooking) && is_countable($jsonOrder)) {
 		for ($i=0; $i < count($jsonBooking); $i++) {
-			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
-			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
-			$jsonBooking[$i]['date_created'] = $jsonBooking[$i]['date_created'] - 37800;
+			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800; //34200 or 37800
+			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800; //34200 or 37800
+			$jsonBooking[$i]['date_created'] = $jsonBooking[$i]['date_created'] - 37800; //34200 or 37800
 			for ($j=0; $j < count($jsonOrder); $j++) { 
 				if ($jsonBooking[$i]['order_id'] === $jsonOrder[$j]['id']) {
 					array_push($customers, $jsonOrder[$j]);
@@ -902,16 +912,18 @@ function cw_function() {
 			for ($j=0; $j < count($jsonProduct); $j++) { 
 				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
 					
-					if(($jsonBooking[$i]['start'] - $long) > (DAY_IN_SECONDS - 30) && ($jsonBooking[$i]['start'] - $long) < (DAY_IN_SECONDS + 30)){
+// 					if(($jsonBooking[$i]['start'] - $long) > (DAY_IN_SECONDS - 30) && ($jsonBooking[$i]['start'] - $long) < (DAY_IN_SECONDS + 30)){
+					if(($jsonBooking[$i]['start'] - $long) > (DAY_IN_SECONDS - 150) && ($jsonBooking[$i]['start'] - $long) < (DAY_IN_SECONDS + 150)){
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					} 
-					else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
+// 					else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
+					else if (($long - $jsonBooking[$i]['date_created']) > 360 && ($long - $jsonBooking[$i]['date_created']) < 420) {
 						just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					
 					} else if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-						if ((($jsonBooking[$i]['start'] + 3600) - $long) > -30 && (($jsonBooking[$i]['start'] + 3600) - $long) < 30) {
+						if ((($jsonBooking[$i]['start'] + 3600) - $long) > -150 && (($jsonBooking[$i]['start'] + 3600) - $long) < 150) {
 							//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
 							complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], $jsonProduct[$j]['name']);
 							complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
@@ -933,6 +945,9 @@ function cw_function() {
 			}
 		}*/
 	}
+	echo date('d-m-y h:i:s');
+	echo "| cw_function running successfully\n";
+
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
 

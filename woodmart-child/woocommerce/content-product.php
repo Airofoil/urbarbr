@@ -222,7 +222,7 @@ if ($_GET) {
 
 ?>
 <?php if ($_GET && $qualified) { //echo $location_lat . "2:" . $location_long . "3:" . $bar_lat . "4:" . $bar_long . "5:" . distance($location_lat, $location_long, $bar_lat, $bar_long, "K");	?>
-	<div style="display:none;"
+	<div style="display:none; opacity:0; transition:opacity 3s;"
 		<?php wc_product_class( $classes, $product ); ?> 
 		data-loop="<?php echo esc_attr( $woocommerce_loop ); ?>"
 		<?php

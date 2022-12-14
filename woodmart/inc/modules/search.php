@@ -188,6 +188,9 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 						<?php } ?>
 					<?php } ?>
 					</select>
+					<div class="btn-group bootstrap-select placeholder">
+						<button type="button" class="btn dropdown-toggle btn-default loading"></button>
+					</div>
 					<?php } else { ?>
 					<input type="text" class="s" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="<?php echo get_search_query(); ?>" name="s" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>" title="<?php echo esc_attr( $placeholder ); ?>">
 					<?php } ?>

@@ -111,6 +111,21 @@
 <?php woodmart_enqueue_inline_style( 'sticky-loader' ); ?>
 <div class="wd-sticky-loader"><span class="wd-loader"></span></div>
 
+<style>
+	/* For each barber box, initially set its opacity so it can fade in from the 'Show more' function */
+	.product-grid-item {
+		opacity: 0;
+		transition: 1s;
+	}
+</style>
+<noscript>
+	<style>
+		.product-grid-item {
+			opacity: 1;
+		}
+	</style>
+</noscript>
+
 <?php do_action( 'woodmart_woocommerce_main_loop' ); ?>
 
 <?php
@@ -141,6 +156,17 @@
 		woodmart_page_bottom_part();
 	}
 ?>
+
+<script>
+	// console.log('hi');
+	// $('.product-grid-item').each(function(i, p) {
+	// 	console.log(i, p, 'hi');
+	// 	setTimeout(() => {
+	// 		console.log(' ',i, p, 'hi');
+	// 		$(p).find('.product-wrapper').css('opacity', '1');
+	// 	}, i * 150);
+	// });
+</script>
 <style>
 	.woocommerce-breadcrumb .breadcrumb-link-last{
 		display:none;

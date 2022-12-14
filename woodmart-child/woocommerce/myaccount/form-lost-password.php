@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'woocommerce_before_lost_password_form' );
 ?>
 	<div class="registration-wrapper" >
-	<h2 style="text-align: center;" >Recover Password</h2>
+	<h2 style="text-align: center;">Recover Password</h2>
 
 		<form method="post" class="woocommerce-ResetPassword lost_reset_password">
 
@@ -35,7 +35,7 @@ do_action( 'woocommerce_before_lost_password_form' );
 
 			<p class="woocommerce-form-row form-row">
 				<input type="hidden" name="wc_reset_password" value="true" />
-				<button type="submit"  style ="width: 38%; border-radius: 3px" class="woocommerce-Button button form-item-right" value="<?php esc_attr_e( 'Reset password', 'woocommerce' ); ?>"><?php esc_html_e( 'Send OTP', 'woocommerce' ); ?></button>
+				<button type="submit"  style ="width: max-content; border-radius: 3px" class="woocommerce-Button button form-item-right" value="<?php esc_attr_e( 'Reset password', 'woocommerce' ); ?>">Send reset link</button><?php /* esc_html_e( 'Send OTP', 'woocommerce' ); */ ?>
 				<a class ="form-item-left" style="text-decoration: underline;" href="/my-account">Try to log in</a>
 			</p>
 
