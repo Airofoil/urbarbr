@@ -100,7 +100,7 @@ if( ! $is_slider ){
 woodmart_enqueue_product_loop_styles( $hover );
 
 
-
+if (!is_wc_booking_product($product)) return; // Skip if the product is not a bookable product
 
 
 $product_id = $product->get_id();

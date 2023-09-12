@@ -266,17 +266,23 @@ jQuery(document).ready(function ($){
                     }
 
                     if (slotsFound == 0) {
-                        console.log("No Slots Found");
-                        var buttonHtml = "<p>There are no barbers available at this time</p><a href='/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
+                        console.log('No Slots Found');
+                        var buttonHtml = "<p>There are no barbers available at this time in your area. Try a different time, or see all barbers below.</p><a href='/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>";
                         $('.wd-loop-footer.products-footer a.wd-products-load-more').hide(); // Hide the load more button
                         if ($('.wd-loop-footer.products-footer').length) $('.wd-loop-footer.products-footer').append(buttonHtml); // Append the message and button to the footer, if it exists, else before the product grid
                         else $(buttonHtml).insertBefore($('.products.elements-grid'));
                     } else {
+                        $('.site-content.description-area-after').append(`<div class="term-description"><p>UrBarbr partners in your area</p></div>`);
                         $('.wd-loop-footer.products-footer a.wd-products-load-more').show();
                     }
                 },
                 error: function (xhr) {
                     console.error(xhr);
+                    console.log('Couldn\'t fetch available barbers');
+                    var buttonHtml = "<p>There was an issue fetching barbers near you. Try again, or see all barbers below.</p><a href='/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>";
+                    $('.wd-loop-footer.products-footer a.wd-products-load-more').hide(); // Hide the load more button
+                    if ($('.wd-loop-footer.products-footer').length) $('.wd-loop-footer.products-footer').append(buttonHtml); // Append the message and button to the footer, if it exists, else before the product grid
+                    else $(buttonHtml).insertBefore($('.products.elements-grid'));
                 }
             });
 
@@ -369,6 +375,12 @@ jQuery(document).ready(function ($){
 
     $('input[placeholder*="posts"]').each(function() { // Change any 'posts' input placeholders to 'barbers'
         $(this).attr('placeholder',$(this).attr('placeholder').replace('posts', 'barbers'));
+    });
+
+    $('h3').each(function() {
+        if ($(this).text().includes('order')) {
+            $(this).text($(this).text().replaceAll('order','booking'));
+        }
     });
 
     $('.create-account-button').attr('href',window.location.origin + '/registration-form');
@@ -523,18 +535,23 @@ jQuery(document).ready(function ($){
         }
     }
 
-    /* Password preview toggle button */
+    /* Password preview toggle button - JDH */
     if ($('input[type="password"]').length) {
         $('input[type="password"]').each((i, e) => {
             $(`<i class="fas fa-eye password-preview"></i>`).insertAfter($(e));
-        
+
+            $(e).parent().on('click touchstart', 'i.password-preview', ({ target }) => {
+                $(target).toggleClass('fa-eye-slash').toggleClass('fa-eye').prev().attr('type', ($(target).prev().attr('type') == 'password' ? 'text' : 'password'));
+            });
+
+            /*-For hold to preview password:
             $(e).parent().on('mousedown touchstart', 'i.password-preview', ({ target }) => {
                 $(target).addClass('fa-eye-slash').removeClass('fa-eye').prev().attr('type', 'text');
             });
         
             $(e).parent().on('mouseup touchend', 'i.password-preview', ({ target }) => {
                 $(target).addClass('fa-eye').removeClass('fa-eye-slash').prev().attr('type', 'password');
-            });
+            }); */
         });
     }
 

@@ -39,16 +39,16 @@ add_action( 'rest_api_init', function() {
 
 
 function woodmart_child_enqueue_styles() {
-	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css?ver=6.0.0', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css?ver=6.0.0') );
+	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css?ver=6.0.5', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css?ver=6.0.5') );
 }
 add_action( 'wp_enqueue_scripts', 'woodmart_child_enqueue_styles', 10010 );
 
 function my_theme_scripts() {
-	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js?ver=6.0.0');
+	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js?ver=6.0.5');
 
 	if(wp_script_is('wc-bookings-user-my-account')){
 		global $wp_scripts; 
-    	$wp_scripts->registered[ 'wc-bookings-user-my-account' ]->src = esc_url( get_stylesheet_directory_uri() )  . '/js/user-my-account.js?ver=6.0.0';
+    	$wp_scripts->registered[ 'wc-bookings-user-my-account' ]->src = esc_url( get_stylesheet_directory_uri() )  . '/js/user-my-account.js?ver=6.0.5';
 	}
 	
 }
@@ -265,15 +265,13 @@ function woo_custom_order_button_text() {
     return __( 'Pay Now', 'woocommerce' ); 
 }
 
-/* 
- * This code is for pre-selecting the service on barber pages
- * (there is another version that works in child-theme.js too - see 'preselect'):
- */
 add_action( 'template_redirect', 'select_services' );
 function select_services() {
-	if (!is_product()) { // Make sure the request is for a user-facing product page
+	// Make sure the request is for a user-facing product page
+	if (!is_product()) {
 		return false;
 	}
+	
 	?>
 	<script>
 		document.addEventListener("DOMContentLoaded", function(event) {
@@ -293,7 +291,6 @@ function select_services() {
 	<?php 
 }
 
-
 /* Validate the Woocommerce mobile number field in the checkout (10 digit number) */
 add_action('woocommerce_checkout_process', 'njengah_custom_checkout_field_process');
 
@@ -307,7 +304,6 @@ add_action('woocommerce_checkout_process', 'njengah_custom_checkout_field_proces
 
 }
 
-
 /*--Not used(?) using 'Edit Author Slug' plugin instead--Change the base Author url from '/author/' to '/profile/' - JDH * /
 add_action('init', 'cng_author_base');
 function cng_author_base() {
@@ -316,7 +312,7 @@ function cng_author_base() {
     $wp_rewrite->author_base = $author_slug;
 } */
 
-/*@@@@add_action( 'wp_head', 'jdh_head_code' );
+add_action( 'wp_head', 'jdh_head_code' );
 function jdh_head_code() {
 	// Google Universal Analytics: ?>
 	<!-- Google Tag Manager -->
@@ -326,8 +322,26 @@ function jdh_head_code() {
 	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 	})(window,document,'script','dataLayer','GTM-N83WRM8');</script>
 	<!-- End Google Tag Manager -->
+
+	<!-- Meta Pixel Code -->
+	<script>
+	!function(f,b,e,v,n,t,s)
+	{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+	if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+	n.queue=[];t=b.createElement(e);t.async=!0;
+	t.src=v;s=b.getElementsByTagName(e)[0];
+	s.parentNode.insertBefore(t,s)}(window, document,'script',
+	'https://connect.facebook.net/en_US/fbevents.js');
+	fbq('init', '1369792923830219');
+	fbq('track', 'PageView');
+	</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=1369792923830219&ev=PageView&noscript=1"
+	/></noscript>
+	<!-- End Meta Pixel Code -->
 	<?php
-}*/
+}
 
 // REGISTRATION SHORTCODE
 function wc_registration_form_function() {
@@ -343,8 +357,9 @@ function wc_registration_form_function() {
   
 	?>
 	<div class="registration-wrapper">
-		<h2 style="text-align: center;">Become a Member</h2>
-		<!-- ----<p style="text-align: center;">Become a member - don't miss out on deals, offers, discounts and bonus vouchers</p> -->
+		<h1 style="text-align: center;">GET 10% OFF</h1>
+		<h3 style="text-align: center;font-size: 21px !important;">Your first UrBarbr service</h3>
+		<p style="text-align: center;">Book your favourite barber in minutes. Fresh fades from the comfort of your home. No more being stuck in traffic!</p>
 		<form method="post" class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?> >
 	
 			<?php do_action( 'woocommerce_register_form_start' ); ?>
@@ -352,7 +367,7 @@ function wc_registration_form_function() {
 			<?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
 	
 				<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-					<label for="reg_username">Name&nbsp;<span class="required"></span></label>
+					<label for="reg_username">Username&nbsp;<span class="required"></span></label>
 					<input type="text" class="woocommerce-Input woocommerce-Input--text input-text" name="username" id="reg_username" autocomplete="username" value="<?php echo ( ! empty( $_POST['username'] ) ) ? esc_attr( wp_unslash( $_POST['username'] ) ) : ''; ?>" /><?php // @codingStandardsIgnoreLine ?>
 				</p>
 	
@@ -378,8 +393,9 @@ function wc_registration_form_function() {
 	
 			<p class="woocommerce-form-row form-row last">
 				<?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
-				<button type="submit" style="max-width: 110px;" class="form-item-right woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'Sign up', 'woocommerce' ); ?></button>
-				<a class="form-item-left" style="text-decoration: underline;" href="/my-account">Login here</a>
+				<button type="submit" style="/*max-width: 110px;*/width: 100% !important;" class="form-item-right woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>">Secure username<?php /* esc_html_e( 'Sign up', 'woocommerce' ); */ ?></button>
+				<!-- TEMP 9/1/23: Hide Login
+				<a class="form-item-left" style="text-decoration: underline;" href="/my-account">Login here</a> -->
 			</p>
 	
 			<?php do_action( 'woocommerce_register_form_end' ); ?>
@@ -390,6 +406,7 @@ function wc_registration_form_function() {
 	return ob_get_clean();
 	
 }
+
 
 /*
  * Making the user type in stronger password
@@ -409,7 +426,6 @@ function password_strength_meter_settings( $params, $handle  ) {
 	return $params;
 
 }
-
 
 
 add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
@@ -798,14 +814,28 @@ function bbloomer_checkout_step3( $cart ) {
 	} 
 }
 
+add_action('rest_api_init', 'add_routes');
+function add_routes()
+{
+	register_rest_route('/v1', '/cw_function', array(
+		'methods' => 'GET',
+		'callback' => 'cw_function',
+	));
+}
+
 add_action( 'check_booking_time', 'cw_function' );
-function cw_function() {
+function cw_function($req) {
+	$code = $req->get_param('code');
+	if($code!="kaksje12uaj"){
+		echo "unauthenticated request\n";
+		return false;
+	}
 	$chBooking = curl_init();
     $headers = array(
 		'Accept: application/json',
 		'Content-Type: application/json',
     );
-	$urlBooking= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc-bookings/v1/bookings?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlBooking= 'https://www.urbarbr.com.au/wp-json/wc-bookings/v1/bookings?per_page=100&consumer_key=ck_d3fd616341a66cb5b3317222fa8644da7baabb12&consumer_secret=cs_ca52545fab1c0799d44744592dfea0a3bd653ff4';
 	curl_setopt($chBooking, CURLOPT_URL, $urlBooking);
 	curl_setopt($chBooking, CURLOPT_RETURNTRANSFER, 1);
 	$outputBooking = curl_exec($chBooking);
@@ -817,7 +847,7 @@ function cw_function() {
 	curl_close($chBooking);
 	
 	$chOrder = curl_init();
-	$urlOrder= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/orders?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlOrder= 'https://www.urbarbr.com.au/wp-json/wc/v3/orders?per_page=100&consumer_key=ck_d3fd616341a66cb5b3317222fa8644da7baabb12&consumer_secret=cs_ca52545fab1c0799d44744592dfea0a3bd653ff4';
 	curl_setopt($chOrder, CURLOPT_URL, $urlOrder);
 	curl_setopt($chOrder, CURLOPT_RETURNTRANSFER, 1);
 	$outputOrder = curl_exec($chOrder);
@@ -829,7 +859,7 @@ function cw_function() {
 	curl_close($chOrder);
 
 	$chProduct = curl_init();
-	$urlProduct= 'https://staging-urbarbr.kinsta.cloud/wp-json/wc/v3/products/?per_page=100&consumer_key=ck_5a1cb710eb2853f8f109830d2d3346b4fef4fd78&consumer_secret=cs_ec2aa8ae576eec5362416a93c3d57e504baca46d';
+	$urlProduct= 'https://www.urbarbr.com.au/wp-json/wc/v3/products/?per_page=100&consumer_key=ck_d3fd616341a66cb5b3317222fa8644da7baabb12&consumer_secret=cs_ca52545fab1c0799d44744592dfea0a3bd653ff4';
 	curl_setopt($chProduct, CURLOPT_URL, $urlProduct);
 	curl_setopt($chProduct, CURLOPT_RETURNTRANSFER, 1);
 	$outputProduct = curl_exec($chProduct);
@@ -874,9 +904,9 @@ function cw_function() {
 	$customers = array();
 	if (is_countable($jsonBooking) && is_countable($jsonOrder)) {
 		for ($i=0; $i < count($jsonBooking); $i++) {
-			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800;
-			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800;
-			$jsonBooking[$i]['date_created'] = $jsonBooking[$i]['date_created'] - 37800;
+			$jsonBooking[$i]['start'] = $jsonBooking[$i]['start'] - 37800; //34200 or 37800
+			$jsonBooking[$i]['end'] = $jsonBooking[$i]['end'] - 37800; //34200 or 37800
+			$jsonBooking[$i]['date_created'] = $jsonBooking[$i]['date_created'] - 37800; //34200 or 37800
 			for ($j=0; $j < count($jsonOrder); $j++) { 
 				if ($jsonBooking[$i]['order_id'] === $jsonOrder[$j]['id']) {
 					array_push($customers, $jsonOrder[$j]);
@@ -902,16 +932,18 @@ function cw_function() {
 			for ($j=0; $j < count($jsonProduct); $j++) { 
 				if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
 					
-					if(($jsonBooking[$i]['start'] - $long) > (DAY_IN_SECONDS - 30) && ($jsonBooking[$i]['start'] - $long) < (DAY_IN_SECONDS + 30)){
+// 					if(($jsonBooking[$i]['start'] - $long) > (DAY_IN_SECONDS - 30) && ($jsonBooking[$i]['start'] - $long) < (DAY_IN_SECONDS + 30)){
+					if(($jsonBooking[$i]['start'] - $long) > (DAY_IN_SECONDS - 150) && ($jsonBooking[$i]['start'] - $long) < (DAY_IN_SECONDS + 150)){
 						sendex_publish_post($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						reminder_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					} 
-					else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
+// 					else if (($long - $jsonBooking[$i]['date_created']) > 120 && ($long - $jsonBooking[$i]['date_created']) < 180) {
+					else if (($long - $jsonBooking[$i]['date_created']) > 360 && ($long - $jsonBooking[$i]['date_created']) < 420) {
 						just_made_booking($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], date('g:i A', $jsonBooking[$i]['start']));
 						just_made_booking_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], date('g:i A', $jsonBooking[$i]['start']), $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
 					
 					} else if ($jsonBooking[$i]['product_id'] === $jsonProduct[$j]['id']) {
-						if ((($jsonBooking[$i]['start'] + 3600) - $long) > -30 && (($jsonBooking[$i]['start'] + 3600) - $long) < 30) {
+						if ((($jsonBooking[$i]['start'] + 3600) - $long) > -150 && (($jsonBooking[$i]['start'] + 3600) - $long) < 150) {
 							//wp_mail( 'ghjgjh0107@gmail.com', 'complete appointment', $customers[$i]['billing']['phone'] );
 							complete_appointment_customer($customers[$i]['billing']['phone'], $customers[$i]['billing']['first_name'], $jsonProduct[$j]['name']);
 							complete_appointment_barber($barberList[$jsonProduct[$j]['name']], $jsonProduct[$j]['name'], $customers[$i]['billing']['first_name'], $jsonBooking[$i]['order_id']);
@@ -933,6 +965,9 @@ function cw_function() {
 			}
 		}*/
 	}
+	echo date('d-m-y h:i:s');
+	echo "| cw_function running successfully\n";
+
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
 

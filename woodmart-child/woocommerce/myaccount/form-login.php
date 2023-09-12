@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_before_customer_login_form' ); ?>
 	<div class="registration-wrapper" >
 
-		<h2 style="text-align: center;"><?php esc_html_e( 'Log in', 'woocommerce' ); ?></h2>
+		<h1 style="text-align: center;"><?php esc_html_e( 'Log in', 'woocommerce' ); ?></h1>
 		<!-- ----<p style="text-align: center;">Become a member - don't miss out on deals, offers, discounts and bonus vouchers</p> -->
 		<form class="woocommerce-form woocommerce-form-login login" method="post">
 

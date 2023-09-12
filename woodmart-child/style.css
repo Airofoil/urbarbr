@@ -2,7 +2,7 @@
 Theme Name:   Woodmart Child
 Description:  Woodmart Child Theme for UrBarbr
 Template:     woodmart
-Version:      1.0.1
+Version:      1.1.12
 */
 
 /* start here */
@@ -31,12 +31,20 @@ Version:      1.0.1
 	background: var(--urbarbr-lightgrey);
 }
 
-/*--Doesn't work--> :-ms-input-placeholder, /* Internet Explorer 10+ */
 
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+	font-weight: 400;
+	color: var(--urbarbr-blue);
+	opacity: .5;
+}
+:-moz-placeholder, /* Firefox 4 to 18 */
+::-moz-placeholder { /* Firefox 19+ */
+	font-weight: 400;
+	color: var(--urbarbr-blue);
+	opacity: .5;
+}
 ::placeholder, /* General */
 ::-webkit-input-placeholder, /* WebKit */
-:-moz-placeholder, /* Firefox 4 to 18 */
-::-moz-placeholder, /* Firefox 19+ */
 .form-control::placeholder {
 	/*?color: #9a9a9a !important; */
 	/*-color: inherit !important; */
@@ -57,7 +65,7 @@ p {
 	/*-color: #929292; */
 	color: #838b93;
 }
-body.home p {
+body.page-id-8343 p {
 	font-weight: 500;
 }
 
@@ -76,8 +84,8 @@ body h2, .h2 {
 	font-weight: bold;
 	color: var(--urbarbr-blue);
 }
-body h1, .h1 {
-	/*-margin-bottom: -5px !important; */
+body h1, body .h1 {
+	margin-bottom: 15px !important;
 	font-size: 32px;
 	font-weight: 700;
 	line-height: 1.2;
@@ -143,7 +151,7 @@ body .btn, button, .button {
 	padding: 10px 15px;
 	border-radius: 4px !important;
 	font-size: 14px;
-	font-weight: 400;
+	font-weight: 500;
 	line-height: 22px;
 	white-space: nowrap;
 	text-transform: none;
@@ -154,7 +162,7 @@ body button:hover,
 body [type="submit"]:hover,
 body [type="button"]:hover {
 	/*??color: initial; */
-	color: white;
+	/*??color: white; */
 	box-shadow: none;
 	text-decoration: none;
 }
@@ -184,10 +192,22 @@ body [type="button"]:hover {
 	background-color: #28415899;
 	color: var(--urbarbr-white) !important;
 }
+.btn.btn-color-white:hover {
+	background: var(--urbarbr-softblue);
+	box-shadow: unset;
+	color: white;
+}
+
 @media (min-width: 476px) {
 	input:not([class*="wpcf7"]), select, .btn-group .btn {
 		max-width: 250px !important;
 	}
+}
+.btn.btn-lg {
+	width: 100%;
+	max-width: 400px;
+	margin-bottom: 20px;
+	text-transform: uppercase;
 }
 
 .your-location-search.full-width input {
@@ -256,13 +276,22 @@ body .main-page-wrapper {
 	font-weight: 500;
 	font-size: 14px;
 	line-height: 21px;
-	text-transform: capitalize;
-	color: rgb(136, 150, 162) !important;
-    color: var(--urbarbr-lightgrey) !important;/*150722*/
+	/*-text-transform: capitalize; */
+	/*-color: rgb(136, 150, 162) !important; */
+  color: var(--urbarbr-lightgrey);/*150722*/
 }
 
+body .widget_nav_menu ul li.current_page_item > a { /* Override the grey colour for active links */
+  color: var(--urbarbr-lightgrey);
+}
+
+/*-.blue-link a {
+	color: var(--urbarbr-midgrey) !important;
+	font-weight: 600 !important;
+} */
+
 /* Homepage */
-body.home .main-page-wrapper {
+body.page-id-8343 .main-page-wrapper {
 	margin-top: -40px !important;
 }
 
@@ -300,7 +329,7 @@ body.home .main-page-wrapper {
 	text-transform: uppercase;
 	font-size: 16px;
 }
-body.home .vc-hoverbox-wrapper {
+body.page-id-8343 .vc-hoverbox-wrapper {
 	margin-top: -24px;
 }
 
@@ -385,6 +414,9 @@ body.home .vc-hoverbox-wrapper {
 }
 
 /* Contact Form 7 plugin */
+.wpcf7-form {
+	margin-bottom: 15px;
+}
 .wpcf7-form input {
 	font-weight: normal;
 }
@@ -944,39 +976,33 @@ p.form-row input:not([type="checkbox"]) {
 	text-align: left;
 } */
 
-.reg-first-row {
+.registration-row {
 	display: flex;
 	flex-wrap: wrap;
 }
+.registration-row > * {
+	margin-top: 20px;
+	width: 100%;
+}
+.registration-row label {
+	width: 100%;
+}
 
-.reg-first-row .contact-info-left,
-.reg-first-row .contact-info-right {
+.registration-row .col-left,
+.registration-row .col-right {
 	width: 50%;
 }
 
-.reg-first-row .contact-info-left {
+.registration-row .col-left {
 	padding-right: 3%;
 }
 
-.reg-first-row .contact-info-right {
+.registration-row .col-right {
 	padding-left: 3%;
 }
 
-@media (max-width: 639px) {
-	.reg-first-row .contact-info-left,
-	.reg-first-row .contact-info-right {
-		width: 100%;
-		padding: 0;
-	}
-
-	/*-.jac-about-us-fir-section .first-column,
-	.jac-about-us-trd-section .second-column {
-		padding-bottom: 20px;
-	} */
-}
-
-.reg-first-row input,
-.reg-second-row textarea {
+.registration-row input:not([type="submit"]),
+.registration-row textarea {
 	border: unset;
 	border-bottom: 0.5px solid #102c45;
 	border-radius: 0;
@@ -987,12 +1013,14 @@ p.form-row input:not([type="checkbox"]) {
 	color: var(--urbarbr-shade);
 	min-height: unset;
 }
-.reg-first-row input:hover, .reg-second-row textarea:hover,
-.reg-first-row input:focus, .reg-second-row textarea:focus {
+.registration-row input:not([type="submit"]):hover,
+.registration-row input:not([type="submit"]):focus,
+.registration-row textarea:hover,
+.registration-row textarea:focus {
 	border-color: var(--urbarbr-midgrey);
 }
 
-.reg-second-row .message-title {
+.registration-row .message-title {
 	display: block;
 	font-weight: 600;
 	font-size: 16px;
@@ -1002,7 +1030,7 @@ p.form-row input:not([type="checkbox"]) {
 	/*--opacity: 0.8; */
 }
 
-.reg-second-row textarea {
+.registration-row textarea {
 	margin-top: 10px;
 	/*--color: #000000; */
 	min-height: 42px;
@@ -1010,25 +1038,40 @@ p.form-row input:not([type="checkbox"]) {
 	padding: 10px 0;
 	scrollbar-width: thin;
 }
-.reg-second-row textarea::-webkit-scrollbar {
+.registration-row textarea::-webkit-scrollbar {
 	width: 9px;
 }
 
-.reg-thrir-row{
-	display: flex;
-    justify-content: flex-end;
-}
-
-.reg-thrir-row input[type="submit"] {
-	float: right;
-	width: 140px;
-	background: #102c45;
+.registration-row input[type="submit"] {
+	margin-left: auto;
+	width: 100%;
+	max-width: 240px;
+	
+	padding: 10px 15px;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 24px;
+	/*-background: #102c45;
 	border-radius: 3px;
-	margin-top: 10px;
+	margin-top: 10px; */
+}
+.registration-row input[type="submit"]:hover {
+	color: #ffffff;
 }
 
-.reg-thrir-row input[type="submit"]:hover {
-	color: #ffffff;
+@media (max-width: 639px) {
+	.registration-row .col-left,
+	.registration-row .col-right {
+		width: 100%;
+		padding: 0;
+	}
+	.registration-row input[type="submit"] {
+		max-width: unset;
+	}
+	/*-.jac-about-us-fir-section .first-column,
+	.jac-about-us-trd-section .second-column {
+		padding-bottom: 20px;
+	} */
 }
 
 .jac-about-us-fourth-section .wpcf7-response-output{
@@ -1173,11 +1216,15 @@ body .wd-header-wishlist .wd-tools-icon:before {
 	font-size: 22px;
 }
 @media (min-width: 768px) {
-	body.home .wd-custom-icon,
+	body.page-id-9:not(.logged-in) .wd-custom-icon,
+	body.page-id-8830 .wd-custom-icon,
+	body.page-id-8343 .wd-custom-icon,
 	body.woocommerce-lost-password .wd-custom-icon {
 		filter: brightness(10);
 	}
-	body.home .wd-tools-icon,
+	body.page-id-9:not(.logged-in) .wd-tools-icon,
+	body.page-id-8830 .wd-tools-icon,
+	body.page-id-8343 .wd-tools-icon,
 	body.woocommerce-lost-password .wd-tools-icon {
 		color: white;
 	}
@@ -1187,8 +1234,12 @@ body .wd-header-wishlist .wd-tools-icon:before {
 	margin-bottom: 0;
 }
 
-body.home .website-wrapper .wd-prefooter {
+body.page-id-8343 .website-wrapper .wd-prefooter {
 	padding-bottom: 0;
+}
+
+.wd-prefooter {
+	display: none;
 }
 
 /*--.page-id-5288 .main-page-wrapper {*/
@@ -1201,22 +1252,24 @@ body.home .website-wrapper .wd-prefooter {
 	margin: 110px 0;
 } */
 
+/*--Requested remove 28/12/22:
 @media (min-width: 476px){.page-id-5288 .main-page-wrapper {
 	background-color: rgba(169, 178, 187, 0.1) !important;
 	margin: 110px 0}
 }
 	
 @media (max-width: 475px){
-	.page-id-5288 .main-page-wrapper {
-	background-color: rgba(169, 178, 187, 0.1) !important;
-	margin-top: 70px;
-	margin-bottom: -10px;
+	.page-id-5288 .main-page-wrapper { /* Add the soft grey background colour *-/
+		background-color: rgba(169, 178, 187, 0.1) !important;
+		margin-top: 70px;
+		/*??margin-bottom: -10px; *-/
+		padding-top: 0;
 	}
-}
+} */
 
-.wd-prefooter {
-	margin-bottom: -40px
-}
+/*--.wd-prefooter {
+	margin-bottom: -40px;
+} */
 
 /*-.jac-about-us-fourth-section {
 	padding-top: 20px;
@@ -1380,7 +1433,7 @@ input.loading {
 
 
 
-body.home .vc_column-inner {
+body.page-id-8343 .vc_column-inner {
 	padding-top: 0 !important;
 }
 
@@ -1637,6 +1690,29 @@ footer .widget {
 .woocommerce-checkout .woocommerce-error {
 display: none;
 } */
+body .woocommerce-error,
+body .woocommerce-info {
+	background-color: var(--urbarbr-midgrey);
+}
+body .woocommerce-error {
+	border-radius: 6px;
+  font-weight: 400;
+	color: black;
+}
+
+.woocommerce-form-coupon-toggle .woocommerce-info {
+	background-color: unset;
+}
+body .checkout_coupon {
+	margin-bottom:25px;
+	padding:30px;
+	max-width:470px;
+	border:2px dashed var(--brdcolor-gray-300);
+	text-align:center;
+	border: unset;
+	padding: 0;
+	text-align: left;
+} 
 
 .woocommerce-notices-wrapper {
 	/*-max-width: 420px; */
@@ -1646,16 +1722,9 @@ display: none;
 	border-radius: 6px;
 	opacity: .9;
 }
-
-body .woocommerce-error {
-	background: #FBBC05;
-	border-radius: 6px;
-    font-weight: 400;
-	color: black;
-}
 .woocommerce-notices-wrapper .woocommerce-error > li {
-    max-width: 100%;
-    margin: 0;
+	max-width: 100%;
+	margin: 0;
 }
 
 .tinv-wishlist .woocommerce-error li {
@@ -1749,7 +1818,7 @@ background:#fff;
 		padding-top: 120px !important; /* 24vw */
 		background-image: url(/wp-content/uploads/2022/02/barberChairCenteredBGSpecular_mobile.jpg) !important;
 		background-position: top !important;
-		margin-bottom: 40px !important; /* For front page footer fix */
+		/*--margin-bottom: 40px !important; /* For front page footer fix */
 	}
 	.vc_custom_1639719072359 > .vc_column_container {
 		align-items: flex-start !important;
@@ -1794,7 +1863,7 @@ body .wd-nav.wd-style-underline .nav-link-text {
 	/*-color: var(--urbarbr-grey); */
 	text-transform: none;
 }
-body .wd-nav.wd-style-underline .wd-active .nav-link-text {
+body .wd-nav.wd-style-underline .nav-link-text {
 	margin-top: 20px;
 	font-size: 32px;
 	font-weight: bold;
@@ -2379,6 +2448,23 @@ h5.widget-title + [class*="menu"] {
 	color: var(--urbarbr-blue);
 }
 
+footer .footer-sidebar.widget-area {
+	position: relative;
+	padding-top: 25px;
+}
+
+footer .footer-sidebar.widget-area::after {
+	content: '© 2022 UrBarbr';
+	position: absolute;
+	top: 35px;
+	/*-bottom: 0; */
+	right: 25px;
+	/*-left: 50%;
+	transform: translateX(-50%); */
+	/*--margin-bottom: 35px; */
+	font-size: 12px;
+}
+
 @media (max-width: 468px) {
 	/*-h5.widget-title::after {
 		display: none;
@@ -2399,10 +2485,10 @@ h5.widget-title + [class*="menu"] {
 	}
 
 	footer .footer-sidebar.widget-area {
-        display: flex;/*150722*/
+		display: flex;/*150722*/
 		/*-padding: 30px 20px 0; */
 		/*-padding: 25px;
-        margin-bottom: -40px; */
+		margin-bottom: -40px; */
 		padding: 20px 20px 0px 20px;
 	}
 	.footer-column {
@@ -2453,26 +2539,14 @@ h5.widget-title + [class*="menu"] {
 	#block-25 .wd-social-icons {/*150722*/
 		text-align: right;
 	}
-}
 
-@media (max-width: 400px) {
 	.widget_nav_menu ul li a {
 		height: 30px;
 	}
+	footer .footer-sidebar.widget-area::after {
+		top: 77px;
+	}
 }
-
-footer .footer-sidebar.widget-area::after {
-	content: '© 2022 UrBarbr';
-	position: absolute;
-	bottom: 0;
-	right: 30px;
-	/*-left: 50%;
-	transform: translateX(-50%); */
-	margin-bottom: 35px;
-	font-size: 12px;
-}
-
-
 
 
 
@@ -3308,18 +3382,21 @@ ul.dropdown-menu li.selected > a::after {
 	background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDExIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wLjc5ODM2MyA0Ljk2OTE0QzEuMTUzMzQgNC41NDYwNyAxLjc4NDEzIDQuNDkwODggMi4yMDcxOCA0Ljg0NTg4TDMuNzgzMTIgNi4xNjgyNkw4LjU5NDU3IDAuNDM0MTgyQzguOTQ5NTcgMC4wMTExMTA4IDkuNTgwMzIgLTAuMDQ0MDcyNyAxMC4wMDM0IDAuMzEwOTI0QzEwLjQyNjUgMC42NjU5MzIgMTAuNDgxNyAxLjI5NjcgMTAuMTI2NyAxLjcxOTc1TDQuNjcyNDIgOC4yMTk4NkM0LjMxNzQ0IDguNjQyOSAzLjY4NjY1IDguNjk4MDkgMy4yNjM2IDguMzQzMTFMMC45MjE2MiA2LjM3Nzk3QzAuNDk4NTcxIDYuMDIyOTkgMC40NDMzODYgNS4zOTIyMiAwLjc5ODM2MyA0Ljk2OTE0WiIgZmlsbD0iIzAwMUYzNSIvPgo8L3N2Zz4K") no-repeat center/contain;
 } */
 ul.dropdown-menu li.selected > a .glyphicon.check-mark {
-    display: none !important;
+	display: none !important;
 }
-
 
 /* Make status text more visible on the password reset page /my-account/lost-password/?reset-link-sent=true */
 .woocommerce-message {
 	margin-top: 15px;
 }
-body.woocommerce-lost-password .main-page-wrapper > .container,
+/*--body.woocommerce-lost-password .main-page-wrapper > .container,
 .woocommerce-ResetPassword {
-    color: #444;
-    text-shadow: 0 0 12px white;
+	color: #444;
+	text-shadow: 0 0 12px white;
+} */
+body.woocommerce-lost-password .main-page-wrapper p {
+	text-shadow: 1px 0px 0px #FFF8;
+	color: var(--urbarbr-shade);
 }
 .woocommerce-password-strength {
     padding: 4px 0;
@@ -3423,7 +3500,153 @@ div.wpcf7-response-output a,
 .shop-content-area .shop-loop-head {
 	margin-bottom: 0;
 }
+.shop-content-area.description-area-after {
+	display: grid;
+}
+.shop-content-area.description-area-after .products.elements-grid {
+	order: 1;
+}
+.shop-content-area.description-area-after .term-description {
+	margin: -15px 0 30px;
+}
+.wd-nav[class*="wd-style-underline"] .nav-link-text {
+	padding: 0;
+}
 .wd-nav-product-cat .wd-nav-product-cat > li > a {
 	padding-left: 20px;
 	padding-right: 20px;
+}
+
+/*--@@ Temporary:
+.bootstrap-select.btn-group .dropdown-menu.inner > :last-child {
+	display: none;
+} */
+
+.ub-wide-row {
+	padding-left: 15px !important;
+	padding-right: 15px !important;
+}
+.ub-panel {
+	margin: 140px 0 100px 0;
+	justify-content: center;
+}
+.ub-panel > .vc_column-inner {
+	height: 100%;
+	max-width: 340px;
+	margin: 0 30px;
+	padding: 30px;
+	background-color: rgba(0, 31, 53, .95);
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+}
+.ub-panel:nth-child(2n) .vc_column-inner {
+	background-color: rgba(40, 58, 73, .95);
+}
+.ub-row-wide {
+  padding: 15px !important;
+}
+
+.ub-panel p {
+	max-width: 260px;
+	margin-left: auto;
+	margin-right: auto;
+	color: white;
+}
+.ub-panel h2 {
+  margin-top: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.ub-panel h5 {
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.ub-panel h6 {
+	margin: 25px 0 !important;
+	font-weight: 300;
+	letter-spacing: 0.04rem;
+}
+.ub-panel small {
+  font-weight: 300;
+}
+
+.ub-tiles > .ub-tile {
+  width: 50%;
+  float: left;
+  /* padding: 14px; */
+}
+.ub-tiles svg {
+	margin: 10px 0 !important;
+	max-width: 64px;
+	max-height: 64px;
+}
+/*@@*/.wpb_raw_code.wpb_content_element.wpb_raw_html {
+	margin-bottom: 5px;
+}
+.ub-coming-soon-title {
+	align-items: start !important;
+	text-shadow: 0 0 25px white;
+}
+.ub-coming-soon-title > .vc_column-inner {
+	padding-top: 0 !important;
+}
+.ub-coming-soon-title .wpb_single_image img {
+	max-height: 120px;
+	object-fit: contain;
+	width: auto;
+}
+
+body.page-id-11149 .main-page-wrapper {
+	min-height: 100vh !important;
+	margin: 0;
+	padding: 0;
+	background-image: url(https://staging-urbarbr.kinsta.cloud/wp-content/uploads/2021/12/MTUyNTU5NDQ4MzgzMTcwMzIy-copy-1.png?id=8346) !important;
+	background-attachment: fixed;
+	background-position: 67% center !important;
+	background-repeat: no-repeat !important;
+	background-size: cover !important;
+}
+
+@media (max-width: 1416px) {
+	.page-id-11149 .ub-wide-row > .wpb_column {
+		width: 33%;
+	}
+}
+@media (max-width: 1031px) {
+	.page-id-11149 .ub-wide-row > .wpb_column {
+		width: 50%;
+	}
+	.page-id-11149 .ub-wide-row > .wpb_column:first-child {
+		width: 100%;
+	}
+	.ub-panel {
+		margin: 20px 0 -43px 0;
+	}
+	.ub-panel > .vc_column-inner {
+		margin: 0 20px;
+	}
+	.ub-coming-soon-title,
+	.ub-coming-soon-title .wpb_single_image {
+		text-align: center;
+	}
+	.ub-coming-soon-title .wpb_single_image img {
+		max-height: 45px !important;
+	}
+}
+@media (max-width: 723px) {
+	.page-id-11149 .ub-wide-row > .wpb_column {
+		width: 100%;
+	}
+	.ub-panel {
+		margin: 20px 0 20px 0;
+	}
+	.ub-panel > .vc_column-inner {
+		max-width: unset;
+	}
+}
+
+/* TEMP 9/1/23 - Hide the favourites and account icons */
+.wd-header-wishlist, .wd-header-my-account {
+	display: none !important;
 }

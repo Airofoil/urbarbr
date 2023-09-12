@@ -92,7 +92,7 @@ defined( 'ABSPATH' ) || exit;
 													// echo '<pre>'; print_r($email_id);  echo '</pre>';
 													// echo wp_kses_post( wpautop( wptexturize( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) ) ) ); 
 												?>
-												<p style="font-family: 'Inter'; font-style: normal; font-weight: 400; font-size: 15px; color: #9F9F9F;">Need Help? Visit our <a href="" style="color: #365277;">Help Center</a></p>
+												<p style="font-style: normal; font-weight: 400; font-size: 15px; color: #9F9F9F;">Need Help? Visit our <a href="" style="color: #365277;">Help Center</a></p>
 											</td>
 										</tr>
 										<tr>
@@ -104,12 +104,12 @@ defined( 'ABSPATH' ) || exit;
 										</tr>
 										<tr>
 											<td colspan="2" valign="middle" style="text-align: center;">
-												<p style="font-family: 'Poppins'; font-style: normal;font-weight: 400; font-size: 15px; color: #9F9F9F;">Copyright 2022 UrBarbr. All rights reserved. We appreciate you!</p>
+												<p style="font-style: normal;font-weight: 400; font-size: 15px; color: #9F9F9F;">Copyright 2022 UrBarbr. All rights reserved. We appreciate you!</p>
 											</td>
 										</tr>
 										<tr>
 											<td colspan="2" valign="middle" style="text-align: center;">
-												<p style="font-family: 'LIBRARY 3 AM'; font-style: normal; font-weight: 400; font-size: 20px; color: #303030;">UrBarbr</p>
+												<p style="font-style: normal; font-weight: 400; font-size: 20px; color: #303030;">UrBarbr</p>
 											</td>
 										</tr>
 									</table>

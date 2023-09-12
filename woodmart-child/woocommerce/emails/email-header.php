@@ -55,7 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 											</td>
 										<?php } else { ?>
 											<td id="header_wrapper">
-												<h1><?php echo $email_heading; ?></h1>
+												<h1 style="color: #303030!important;"><?php echo $email_heading; ?></h1>
 											</td>
 										<?php } ?>
 										</tr>

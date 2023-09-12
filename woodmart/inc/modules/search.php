@@ -258,6 +258,17 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 							/*-$('#your-location-search, #booking-date-search').on('blur', function() { console.log($(this).val(),$(this).val().length, Boolean($(this).val() && $(this).val().length > 3))
 								if ($(this).val() && $(this).val().length > 3) $(this).addClass('entered');
 							}); */
+
+							$('#your-location-search').unbind('keypress').on('keypress', function(a) { //-console.log(a);
+								$('.pac-container .pac-item').each(function(i, e) {
+									console.log($(e).text(), $(e).text().includes('SA, Australia'));
+									if ($(e).text().includes('SA, Australia')) {
+										setTimeout(() => {
+											$(e).prependTo($(e).parent());
+										}, 300);
+									}
+								})
+							});
 							
 							$(locationBox).on('blur', setTimeout(() => {
 								if (!locationBox.value) {
@@ -288,11 +299,41 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 							}, 60));
 						});
 
+						const client = {
+							iOS() { console.log('iOS device detected');
+								return [
+									'iPad Simulator',
+									'iPhone Simulator',
+									'iPod Simulator',
+									'iPad',
+									'iPhone',
+									'iPod'
+								].includes(navigator.platform)
+								// iPad on iOS 13 detection
+								|| (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+							},
+							Android() { console.log('Android device detected');
+								var ua = navigator.userAgent.toLowerCase();
+								return ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+							}
+						}
+
 						function getLocation() { /* Get the user's location */
 							if (navigator.geolocation) {
 								$(locationBox).addClass('entered loading');
 								navigator.geolocation.getCurrentPosition(showLocation, function(){ /* Error */
 									$('.your-location-search .dropdown-menu li:first-child a').css('color','indianred').text('Please allow location in your browser');
+
+									if (client.iOS()) {
+										alert('Please enable location services for your browser in:\nSettings > Privacy > Location Services');
+									}
+									else if (client.Android()) {
+										alert('Please enable location services for your browser in:\nSettings > Security & Location > Location');
+									}
+									else {
+										alert('Please enable location services for this browser in your device\'s settings');
+									}
+
 									setTimeout(() => $('.your-location-search .dropdown-menu li:first-child a').css('color','').text('Detect my location'), 6000);
 									
 									$(locationBox).removeClass('entered loading');
