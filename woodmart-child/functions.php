@@ -301,7 +301,7 @@ add_action('woocommerce_checkout_process', 'njengah_custom_checkout_field_proces
     global $woocommerce;
 
     // Check if set, if its not set add an error. This one is only requite for companies
-    if (!(preg_match('/^[0-9]{8,10}$/D', $_POST['billing_phone']))) {
+    if (!(preg_match('/(?:\+?61)?(?:\(0\)[23478]|\(?0?[23478]\)?)\d{8}/', $_POST['billing_phone']))) {
         wc_add_notice( "<b>Phone Number</b> '" . $_POST['billing_phone'] . "' is not a valid phone number"  ,'error' );
     }
 

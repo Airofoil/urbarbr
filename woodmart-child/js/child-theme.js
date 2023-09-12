@@ -479,7 +479,7 @@ jQuery(document).ready(function ($){
 						
 					}
 					/** AA 20/09 **/
-                    	$('#wc-bookings-form-start-time').mousedown(function() {if(this.options.length>5){this.size=5;}}).change(function() {this.size=0;}).blur(function() {this.size=0;});
+                    $('#wc-bookings-form-start-time').mousedown(function() {if(this.options.length>5){this.size=5;}}).change(function() {this.size=0;}).blur(function() {this.size=0;});
                     //$('.wc-bookings-start-time-container').find('select').trigger('change');
 
                     if ($('#wc-bookings-form-start-time').val() !== currentVal) {
@@ -523,14 +523,19 @@ jQuery(document).ready(function ($){
         }
     }
 
-    const passwordPreview = $(`<i class="fas fa-eye password-preview"></i>`);
-    $('input[type="password"]').after(passwordPreview);
+    /* Password preview toggle button */
+    if ($('input[type="password"]').length) {
+        $('input[type="password"]').each((i, e) => {
+            $(`<i class="fas fa-eye password-preview"></i>`).insertAfter($(e));
+        
+            $(e).parent().on('mousedown touchstart', 'i.password-preview', ({ target }) => {
+                $(target).addClass('fa-eye-slash').removeClass('fa-eye').prev().attr('type', 'text');
+            });
+        
+            $(e).parent().on('mouseup touchend', 'i.password-preview', ({ target }) => {
+                $(target).addClass('fa-eye').removeClass('fa-eye-slash').prev().attr('type', 'password');
+            });
+        });
+    }
 
-    $(passwordPreview).on('mousedown touchstart', ({ target }) => {
-        $(target).addClass('fa-eye-slash').removeClass('fa-eye').prev().attr('type', 'text');
-    });
-    $(passwordPreview).on('mouseup touchend', ({ target }) => {
-        $(target).addClass('fa-eye').removeClass('fa-eye-slash').prev().attr('type', 'password');
-    });
-    
 });
