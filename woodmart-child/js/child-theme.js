@@ -40,10 +40,11 @@ jQuery(document).ready(function ($){
     });
     
     setTimeout(function() {
-        $("#billing_address_1").attr("placeholder", "Enter and select address")
+        $('#billing_address_1').attr('placeholder', "Enter and select address")
     }, 100);
 
-    $('h5.widget-title').unbind().click(e => $(e.target).toggleClass('open')); /* ++ For the footer toggleable menus */
+    /* Make the footer toggleable menus toggle */
+    $('h5.widget-title').unbind().click(e => $(e.target).toggleClass('open'));
 
     $('.searchform input').on('change blur', function() {
 		if ($(this).is(':valid')) {
@@ -62,6 +63,7 @@ jQuery(document).ready(function ($){
                         return;
                     }
 
+                    /* Search the specified location at Google Maps API, return the location lat and long, and store it as a cookie */
                     $.getJSON(`https://maps.googleapis.com/maps/api/geocode/json?address=${location.value}&key=AIzaSyBrFVuDdduHECkgQNAsFuv0XgBW-3jLw60&sensor=false`, function(data) { console.log(41, data);
                         if (data.status !== 'OK' || !data["results"]) {
                             $(location).addClass('invalid');
@@ -128,12 +130,18 @@ jQuery(document).ready(function ($){
     //     $(".your-location-search .dropdown-menu").addClass("location_drop_down_hide");
     // });
 
-    $('body.home #your-location-search, body.home #booking-date-search, body.home .booking-services-search button').on('click focus', function() {
+    /* NOTE:
+        'body.page-id-8343' is the homepage ("Barbers Anyplace, Anytime")
+        'body.home' does not work as a selector if the homepage has been changed
+    */
+
+    $('body.page-id-8343 #your-location-search, body.page-id-8343 #booking-date-search, body.page-id-8343 .booking-services-search button').on('click focus', function() {
         $(this).removeClass('error-select-button error-date-select-field');
         $(this).parent().find('.search-error-message').fadeOut();
     });
 
-    $('body.home .searchsubmit.btn').on('click', function(event){
+    /* The search form validation */
+    $('body.page-id-8343 .btn.searchsubmit').on('click', function(event){
         if ( !$('.booking-services-search').val() ) {
             // $(".booking-services-search button.btn").css('border-color', 'red!important');
             // $(".booking-services-search button.btn").css('border-width', '1px!important');
@@ -184,17 +192,17 @@ jQuery(document).ready(function ($){
             $("#error-search-location-mobile").fadeOut();
         }
 
-        //write to cookie here
+        // Write the search data to a cookie called 'lastSearch'
         var serviceText = "";
-        if($(".home .filter-option").length>0){
-            serviceText = $(".home .filter-option").text();
+        if($(".searchform .filter-option").length>0){
+            serviceText = $(".searchform .filter-option").text();
         }
         var searchData = {
             "service": serviceText,
             "date": $("#booking-date-search").val(),
             "time": $('#booking-time').val()
         };
-        document.cookie = "lastSearch="+JSON.stringify(searchData);
+        document.cookie = "lastSearch="+JSON.stringify(searchData)+"; path=/";
     });
 	
 	//setTimeout(() => {
@@ -321,12 +329,15 @@ jQuery(document).ready(function ($){
             barberList.append(barbers);
         }
     }
-	/*@@else {
-		console.log("No nearby Barbers found");
-		var buttonHtml="<p>There are no barbers available at this location</p><a href='https://staging-urbarbr.kinsta.cloud/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
-		$('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
-		$('.wd-loop-footer.products-footer').append(buttonHtml)
-	} */
+    setTimeout(() => {
+        console.log(500,$('.product-grid-item'));
+        if (!$('.product-grid-item').length) {
+            console.log("No nearby Barbers found");
+            var buttonHtml="<p>There are no barbers available at this location</p><a href='/product-category/barber/' class='btn wd-load-more'><span class='load-more-lablel'>View All Barbers</span></a>"
+            $('.wd-loop-footer.products-footer a.wd-products-load-more').hide();
+            $('.wd-loop-footer.products-footer').length ? $('.wd-loop-footer.products-footer').append(buttonHtml) : $(buttonHtml).insertAfter($('.products.elements-grid'));
+        }
+    }, 1500);
     //-if ($('.product-grid-item').length) filterBarbers(); // See above
 
     $('body').on('DOMSubtreeModified', '.wc-bookings-time-block-picker', updateValidEnddate);
@@ -361,7 +372,6 @@ jQuery(document).ready(function ($){
                 document.cookie = "lastSearch="+JSON.stringify(searchData)+"; path=/";
             }
         }
-        
     });
 
     $('.wc-pao-addon-checkbox').on('change',function(){
@@ -396,142 +406,154 @@ jQuery(document).ready(function ($){
 
     let setDateTime = {};
 
-    if ($('body').hasClass('single-product') && typeof (Cookies.get('lastSearch')) == 'string') {
-
+    if (typeof (Cookies.get('lastSearch')) == 'string') {
+        
         /* Parse the user's last search from the cookie */
         const searchValues = JSON.parse(Cookies.get('lastSearch'));
-
-        /* 
-        * Click and preselect the barber's service that was chosen in the search
-        * (there is another version in functions.php too - see 'preselect'):
-        */
+        
+        /* Autoselect the previously-searched service and location within the header search: */
         if (searchValues.service) {
-            $('.wc-pao-addon-container .wc-pao-addon-wrap:contains("' + searchValues.service + '") .wc-pao-addon-checkbox').click();
+            $('header .searchform .bootstrap-select.booking-services-search .text:contains("Alternative")').click();
+        }
+        if (typeof (Cookies.get('location_lat_long')) == 'string') {
+            $('header .searchform #location_coords').val(Cookies.get('location_lat_long'));
+            $('header .searchform #your-location-search').addClass('entered');
         }
 
-        /* If a date was searched */
-        if (searchValues.date) {
-            var dateHasBeenSet = false;
-            var timeHasBeenSet = false;
+        if ($('body').hasClass('single-product')) {
 
-            let dates = searchValues.date.split('-');
-            let month = parseInt(dates[1]) - 1;
-            let day = parseInt(dates[2]);
-
-            /*--let times=searchValues.time.split(":");
-            let pastNoon="am";
-            if(times[0]>=12){
-                pastNoon="pm"; 
+            /* 
+            * Click and preselect the barber's service that was chosen in the search
+            * (there is another version in functions.php too - see 'preselect'):
+            */
+            if (searchValues.service) {
+                $('.wc-pao-addon-container .wc-pao-addon-wrap:contains("' + searchValues.service + '") .wc-pao-addon-checkbox').click();
             }
-            if(times[0]>12){
-                times[0]-=12;
-            }
-            let timeValue=times[0]+":"+times[1]+" "+pastNoon; */
 
-            let timerId = {};
+            /* If a date was searched */
+            if (searchValues.date) {
+                var dateHasBeenSet = false;
+                var timeHasBeenSet = false;
 
-            /* Pre-select the date and time */
-            setDateTime = function(reset=false) {
-                /* If 'true' is provided, set the date and time again */
-                if (reset) {
-                    //-dateHasBeenSet = false;
-                    timeHasBeenSet = false;
+                let dates = searchValues.date.split('-');
+                let month = parseInt(dates[1]) - 1;
+                let day = parseInt(dates[2]);
+
+                /*--let times=searchValues.time.split(":");
+                let pastNoon="am";
+                if(times[0]>=12){
+                    pastNoon="pm"; 
                 }
+                if(times[0]>12){
+                    times[0]-=12;
+                }
+                let timeValue=times[0]+":"+times[1]+" "+pastNoon; */
 
-                if (dateHasBeenSet === false) {
-                    let dayCell = $('.wc-bookings-date-picker .bookable[data-month="' + month + '"] a[data-date="' + day + '"]');
+                let timerId = {};
 
-                    if (dayCell.length > 0) {
-                        dayCell.parent().trigger('click');
+                /* Pre-select the date and time */
+                setDateTime = function(reset=false) {
+                    /* If 'true' is provided, set the date and time again */
+                    if (reset) {
+                        //-dateHasBeenSet = false;
+                        timeHasBeenSet = false;
+                    }
 
-                        dateHasBeenSet = true;
-                        dayCell.parent().trigger('input');
-                        dayCell.parent().trigger('change');
+                    if (dateHasBeenSet === false) {
+                        let dayCell = $('.wc-bookings-date-picker .bookable[data-month="' + month + '"] a[data-date="' + day + '"]');
+
+                        if (dayCell.length > 0) {
+                            dayCell.parent().trigger('click');
+
+                            dateHasBeenSet = true;
+                            dayCell.parent().trigger('input');
+                            dayCell.parent().trigger('change');
+                        }
+                    }
+
+                    //-console.log('reset:', reset, '|', 'timeHasBeenSet:', timeHasBeenSet);
+                    if ($('#wc-bookings-form-start-time').length>0 && !$('#wc-bookings-form-start-time').val() || $('#wc-bookings-form-start-time').val() == '0') {
+                        let startTime = searchValues.time;
+                        let startTimeVal = startTime.replace(/\D/g, '').slice(0, 4);
+                        let currentVal = $('#wc-bookings-form-start-time').val();
+
+                        //-console.log(50,$('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]'));
+                        //$('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').click().prop('selected','true').parent().trigger('change');
+                        if($('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').length >0){
+                            $('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').prop('selected','true').parent().change();
+                            $('[name="start_time"]').change();
+                            
+                            //just copy the code from change method to run it manually
+                            var id        = $('.wc-bookings-start-time-container' ).data( 'productId' );
+                            var blocks    = $('.wc-bookings-start-time-container' ).data( 'blocks' );
+                            var fieldset     = $( '#wc-bookings-booking-form' );
+                            var resource_id = fieldset.find( '#wc_bookings_field_resource' ).val();
+
+                            var formField = $('#wc-bookings-form-start-time').parents( '.form-field' ).eq( 0 );
+                            var value = $('[name="start_time"]').val();
+                            var xhr = $.ajax( {
+                                type: 		'POST',
+                                url: 		booking_form_params.ajax_url,
+                                data: 		{
+                                    action: 'wc_bookings_get_end_time_html',
+                                    security: booking_form_params.nonce.get_end_time_html,
+                                    start_date_time: value,
+                                    product_id: id,
+                                    blocks: blocks,
+                                    resource_id: resource_id,
+                                },
+                                success: function( response ) {
+                                    $( '.wc-bookings-end-time-container' ).replaceWith( response );
+                                    //offset_block_times_for_end_time( date_str );
+                                    formField.find( 'input.required_for_calculation' ).val( value );
+                                },
+                                dataType: 	"html"
+                            } );
+                            
+                        }
+                        /** AA 20/09 **/
+                        $('#wc-bookings-form-start-time').mousedown(function() {if(this.options.length>5){this.size=5;}}).change(function() {this.size=0;}).blur(function() {this.size=0;});
+                        //$('.wc-bookings-start-time-container').find('select').trigger('change');
+
+                        if ($('#wc-bookings-form-start-time').val() !== currentVal) {
+                            console.log(55,'Successfully set the time', $('#wc-bookings-form-start-time').val());
+                            timeHasBeenSet = true;
+
+                            /*-Doesn't quite work as intended due to 'wp_nonce' security nonce
+                                // Do an AJAX request, to retrieve the 'End-time' HTML dropdown box, and auto-select
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("POST", 'https://staging-urbarbr.kinsta.cloud/wp-admin/admin-ajax.php'); // <-- staging site URL - change to new
+                            
+                            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                            
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState === 4 && xhr.status === 200) {
+                                    //-console.log(xhr.status, xhr.responseText);
+                                    $('.wc-bookings-end-time-container').html(xhr.responseText); // Place the End-time HTML in the end-time container
+                                }
+                            };
+                            
+                            // Required data for the 'wc_bookings_get_end_time_html' action in WooCommerce
+                            var data = 'action=wc_bookings_get_end_time_html' +
+                                '&security=' + booking_form_params.nonce.get_end_time_html + //9c600412f8' +   wp_nonce security value (may break lol...)     $('#jac-booking-container > form.cart.row').data('nonce') + 
+                                '&start_date_time=' + $('#wc-bookings-form-start-time').val() +
+                                '&product_id=' + $('.wc-bookings-start-time-container').data('product-id') +
+                                '&blocks[]=' + $('.wc-bookings-start-time-container').data('blocks').toString().replaceAll(',', '&blocks[]=');
+                            
+                            xhr.send(data);
+                            */
+                        }
+                        
+                        //updateValidEnddate()
+                    }
+                    if (dateHasBeenSet == true && timeHasBeenSet == true) {
+                        clearTimeout(timerId);
+                    } else {
+                        timerId = setTimeout(setDateTime, 500);
                     }
                 }
-
-                //-console.log('reset:', reset, '|', 'timeHasBeenSet:', timeHasBeenSet);
-                if ($('#wc-bookings-form-start-time').length>0 && !$('#wc-bookings-form-start-time').val() || $('#wc-bookings-form-start-time').val() == '0') {
-                    let startTime = searchValues.time;
-                    let startTimeVal = startTime.replace(/\D/g, '').slice(0, 4);
-                    let currentVal = $('#wc-bookings-form-start-time').val();
-
-                    //-console.log(50,$('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]'));
-                    //$('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').click().prop('selected','true').parent().trigger('change');
-					if($('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').length >0){
-						$('#wc-bookings-form-start-time option[data-block="' + startTimeVal + '"]').prop('selected','true').parent().change();
-						$('[name="start_time"]').change();
-						
-						//just copy the code from change method to run it manually
-						var id        = $('.wc-bookings-start-time-container' ).data( 'productId' );
-						var blocks    = $('.wc-bookings-start-time-container' ).data( 'blocks' );
-						var fieldset     = $( '#wc-bookings-booking-form' );
-						var resource_id = fieldset.find( '#wc_bookings_field_resource' ).val();
-
-						var formField = $('#wc-bookings-form-start-time').parents( '.form-field' ).eq( 0 );
-						var value = $('[name="start_time"]').val();
-						var xhr = $.ajax( {
-							type: 		'POST',
-							url: 		booking_form_params.ajax_url,
-							data: 		{
-								action: 'wc_bookings_get_end_time_html',
-								security: booking_form_params.nonce.get_end_time_html,
-								start_date_time: value,
-								product_id: id,
-								blocks: blocks,
-								resource_id: resource_id,
-							},
-							success: function( response ) {
-								$( '.wc-bookings-end-time-container' ).replaceWith( response );
-								//offset_block_times_for_end_time( date_str );
-								formField.find( 'input.required_for_calculation' ).val( value );
-							},
-							dataType: 	"html"
-						} );
-						
-					}
-					/** AA 20/09 **/
-                    $('#wc-bookings-form-start-time').mousedown(function() {if(this.options.length>5){this.size=5;}}).change(function() {this.size=0;}).blur(function() {this.size=0;});
-                    //$('.wc-bookings-start-time-container').find('select').trigger('change');
-
-                    if ($('#wc-bookings-form-start-time').val() !== currentVal) {
-                        console.log(55,'Successfully set the time', $('#wc-bookings-form-start-time').val());
-                        timeHasBeenSet = true;
-
-						if(false){
-                        /* Do an AJAX request, to retrieve the End-time box */
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("POST", 'https://staging-urbarbr.kinsta.cloud/wp-admin/admin-ajax.php');
-                        
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-                        
-                        xhr.onreadystatechange = function () {
-                            if (xhr.readyState === 4 && xhr.status === 200) {
-                                //-console.log(xhr.status, xhr.responseText);
-                                $('.wc-bookings-end-time-container').html(xhr.responseText); /* Place the End-time HTML in the end-time container */
-                            }
-                        };
-                        
-                        /* Required data for the 'wc_bookings_get_end_time_html' action in WooCommerce */
-                        var data = 'action=wc_bookings_get_end_time_html' +
-                            '&security=' + booking_form_params.nonce.get_end_time_html + //9c600412f8' + /* wp_nonce security value (may break lol...) */     $('#jac-booking-container > form.cart.row').data('nonce') + 
-                            '&start_date_time=' + $('#wc-bookings-form-start-time').val() +
-                            '&product_id=' + $('.wc-bookings-start-time-container').data('product-id') +
-                            '&blocks[]=' + $('.wc-bookings-start-time-container').data('blocks').toString().replaceAll(',', '&blocks[]=');
-                        
-                        xhr.send(data);
-						}
-                    }
-                    
-                    //updateValidEnddate()
-                }
-                if (dateHasBeenSet == true && timeHasBeenSet == true) {
-                    clearTimeout(timerId);
-                } else {
-                    timerId = setTimeout(setDateTime, 500);
-                }
+                setDateTime();
             }
-            setDateTime();
         }
     }
 
