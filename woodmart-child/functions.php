@@ -37,18 +37,17 @@ add_action( 'rest_api_init', function() {
 	add_filter( 'rest_pre_serve_request', initCors);
 }, 15 );*/
 
-
 function woodmart_child_enqueue_styles() {
-	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css?ver=6.0.5', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css?ver=6.0.5') );
+	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'woodmart-style' ), filemtime(get_stylesheet_directory().'/style.css') );
 }
 add_action( 'wp_enqueue_scripts', 'woodmart_child_enqueue_styles', 10010 );
 
 function my_theme_scripts() {
-	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js?ver=6.0.5');
+	wp_enqueue_script( 'child-theme', esc_url( get_stylesheet_directory_uri() ) . '/js/child-theme.js');
 
 	if(wp_script_is('wc-bookings-user-my-account')){
 		global $wp_scripts; 
-    	$wp_scripts->registered[ 'wc-bookings-user-my-account' ]->src = esc_url( get_stylesheet_directory_uri() )  . '/js/user-my-account.js?ver=6.0.5';
+    	$wp_scripts->registered[ 'wc-bookings-user-my-account' ]->src = esc_url( get_stylesheet_directory_uri() )  . '/js/user-my-account.js';
 	}
 	
 }
@@ -228,11 +227,11 @@ function filter_gettext( $translated, $text, $domain  ) {
 }
 add_filter( 'gettext',  'filter_gettext', 10, 3 );
 
-add_filter( 'woocommerce_add_to_cart_validation', 'bbloomer_only_one_in_cart', 9999, 2 );
 function bbloomer_only_one_in_cart( $passed, $added_product_id ) {
    wc_empty_cart();
    return $passed;
 }
+add_filter( 'woocommerce_add_to_cart_validation', 'bbloomer_only_one_in_cart', 9999, 2 );
 
 //add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
 function woo_remove_product_tabs( $tabs ) {
@@ -260,12 +259,12 @@ function new_orders_columns( $columns = array() ) {
 }
 add_filter( 'woocommerce_account_orders_columns', 'new_orders_columns' );
 
-add_filter( 'woocommerce_order_button_text', 'woo_custom_order_button_text' ); 
 function woo_custom_order_button_text() {
     return __( 'Pay Now', 'woocommerce' ); 
 }
+add_filter( 'woocommerce_order_button_text', 'woo_custom_order_button_text' ); 
 
-add_action( 'template_redirect', 'select_services' );
+/* Automatically preselect the Barber's service, if it exists as a URL parameter (/#buzz-cut) */
 function select_services() {
 	// Make sure the request is for a user-facing product page
 	if (!is_product()) {
@@ -290,19 +289,18 @@ function select_services() {
 	</script>
 	<?php 
 }
+add_action( 'template_redirect', 'select_services' );
 
 /* Validate the Woocommerce mobile number field in the checkout (10 digit number) */
-add_action('woocommerce_checkout_process', 'njengah_custom_checkout_field_process');
+function njengah_custom_checkout_field_process() {
+	global $woocommerce;
 
-  function njengah_custom_checkout_field_process() {
-    global $woocommerce;
-
-    // Check if set, if its not set add an error. This one is only requite for companies
-    if (!(preg_match('/(?:\+?61)?(?:\(0\)[23478]|\(?0?[23478]\)?)\d{8}/', $_POST['billing_phone']))) {
-        wc_add_notice( "<b>Phone Number</b> '" . $_POST['billing_phone'] . "' is not a valid phone number"  ,'error' );
-    }
-
+	// Check if set, if its not set add an error. This one is only requite for companies
+	if (!(preg_match('/(?:\+?61)?(?:\(0\)[23478]|\(?0?[23478]\)?)\d{8}/', $_POST['billing_phone']))) {
+			wc_add_notice( "<b>Phone Number</b> '" . $_POST['billing_phone'] . "' is not a valid phone number"  ,'error' );
+	}
 }
+add_action('woocommerce_checkout_process', 'njengah_custom_checkout_field_process');
 
 /*--Not used(?) using 'Edit Author Slug' plugin instead--Change the base Author url from '/author/' to '/profile/' - JDH * /
 add_action('init', 'cng_author_base');
@@ -312,8 +310,8 @@ function cng_author_base() {
     $wp_rewrite->author_base = $author_slug;
 } */
 
-add_action( 'wp_head', 'jdh_head_code' );
-function jdh_head_code() {
+/* Custom <head> code */
+function custom_head_code() {
 	// Google Universal Analytics: ?>
 	<!-- Google Tag Manager -->
 	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -342,9 +340,10 @@ function jdh_head_code() {
 	<!-- End Meta Pixel Code -->
 	<?php
 }
+add_action( 'wp_head', 'custom_head_code' );
 
-// REGISTRATION SHORTCODE
-function wc_registration_form_function() {
+/* Registration page template customisations and tweaks for the registration form at: /registration-form */
+function custom_registration_form() {
 	/* If the user is logged in, redirect them to their account page instead of showing a blank page */
 	if (is_admin() || is_user_logged_in()) {
 		wp_redirect('/my-account');
@@ -404,31 +403,23 @@ function wc_registration_form_function() {
 	<?php
 	
 	return ob_get_clean();
-	
 }
+add_shortcode( 'wc_registration_form', 'custom_registration_form' );
 
-
-/*
- * Making the user type in stronger password
- */
-
-add_filter( 'woocommerce_get_script_data', 'password_strength_meter_settings', 20, 2 );
-
+/* Custom password strength filter, making the user type in a stronger password */
 function password_strength_meter_settings( $params, $handle  ) {
 
 	if( $handle === 'wc-password-strength-meter' ) {
 		$params = array_merge( $params, array(
 			'min_password_strength' => 4,
-			'i18n_password_error' => 'Make more stronger',
-			'i18n_password_hint' => 'Please make your password at least 12 characters long and use a mix of UPPER and lowercase letters, numbers, and symbols (e.g.,  ! " ? $ % ^ & ).'
+			'i18n_password_error' => 'Password not strong enough',
+			'i18n_password_hint' => 'Please make your password at least 12 characters long and use a mix of UPPER and lowercase letters, numbers, and symbols (e.g., ! " ? $ % ^ & ).'
 		) );
 	}
 	return $params;
 
 }
-
-
-add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
+add_filter( 'woocommerce_get_script_data', 'password_strength_meter_settings', 20, 2 );
 
 /**
 * @snippet       Hide Edit Address Tab @ My Account
@@ -437,9 +428,7 @@ add_shortcode( 'wc_registration_form', 'wc_registration_form_function' );
 * @testedwith    WooCommerce 5.0
 * @donate $9     https://businessbloomer.com/bloomer-armada/
 */
- 
-add_filter( 'woocommerce_account_menu_items', 'bbloomer_remove_address_my_account', 9999 );
- 
+
 function bbloomer_remove_address_my_account( $items ) {
 	// unset( $items['dashboard'] );
 	// unset( $items['downloads'] );
@@ -458,6 +447,7 @@ function bbloomer_remove_address_my_account( $items ) {
 
    return $items;
 }
+add_filter( 'woocommerce_account_menu_items', 'bbloomer_remove_address_my_account', 9999 );
 
 /**
 * @snippet       Rename Edit Address Tab @ My Account
@@ -467,14 +457,13 @@ function bbloomer_remove_address_my_account( $items ) {
 * @donate $9     https://businessbloomer.com/bloomer-armada/
 */
  
-// add_filter( 'woocommerce_account_menu_items', 'bbloomer_rename_address_my_account', 9999 );
- 
 // function bbloomer_rename_address_my_account( $items ) {
 // //    $items['edit-account'] = 'My Profile';
 // //    $items['orders'] = 'My Orders';
 //    $items['wishlist'] = 'My Wishlist';
 //    return $items;
 // }
+// add_filter( 'woocommerce_account_menu_items', 'bbloomer_rename_address_my_account', 9999 );
 
 /**
  * @snippet       WooCommerce Add New Tab @ My Account
@@ -489,17 +478,16 @@ function bbloomer_remove_address_my_account( $items ) {
 // Note: Re-save Permalinks or it will give 404 error
   
 function bbloomer_add_my_review_endpoint() {
-    add_rewrite_endpoint( 'my-review', EP_ROOT | EP_PAGES );
+	add_rewrite_endpoint( 'my-review', EP_ROOT | EP_PAGES );
 }
-  
 add_action( 'init', 'bbloomer_add_my_review_endpoint' );
   
 // ------------------
 // 2. Add new query var
   
 function bbloomer_my_review_query_vars( $vars ) {
-    $vars[] = 'my-review';
-    return $vars;
+	$vars[] = 'my-review';
+	return $vars;
 }
   
 add_filter( 'query_vars', 'bbloomer_my_review_query_vars', 0 );
@@ -508,8 +496,8 @@ add_filter( 'query_vars', 'bbloomer_my_review_query_vars', 0 );
 // 3. Insert the new endpoint into the My Account menu
   
 function bbloomer_add_my_review_link_my_account( $items ) {
-    $items['my-review'] = 'My Review';
-    return $items;
+	$items['my-review'] = 'My Review';
+	return $items;
 }
   
 add_filter( 'woocommerce_account_menu_items', 'bbloomer_add_my_review_link_my_account' );
@@ -518,7 +506,7 @@ add_filter( 'woocommerce_account_menu_items', 'bbloomer_add_my_review_link_my_ac
 // 4. Add content to the new tab
   
 function bbloomer_my_review_content() {
-   echo '<h3 class="my-reviews-title">My Reviews</h3>';
+	echo '<h3 class="my-reviews-title">My Reviews</h3>';
 //    echo do_shortcode( ' /* your shortcode here */ ' );
 	// echo '<p>Coming soon</p>';
 	$user_id = get_current_user_id();
@@ -571,15 +559,13 @@ function bbloomer_my_review_content() {
 }
 
 function get_day_name($date) {
-
-    // $date = date('Y/m/d', $timestamp);
-
-    if($date == date('Y/m/d')) {
-      $date = 'Today';
-    } 
-    else if($date == date('Y/m/d',strtotime("-1 days"))) {
-      $date = 'Yesterday';
-    }
+	// $date = date('Y/m/d', $timestamp);
+	if($date == date('Y/m/d')) {
+		$date = 'Today';
+	} 
+	else if($date == date('Y/m/d',strtotime("-1 days"))) {
+		$date = 'Yesterday';
+	}
 	else if($date == date('Y/m/d',strtotime("-2 days"))) {
 		$date = '2 days ago';
 	}
@@ -598,7 +584,7 @@ function get_day_name($date) {
 	else if($date == date('Y/m/d',strtotime("-7 days"))) {
 		$date = '7 days ago';
 	}
-    return $date;
+	return $date;
 }
   
 add_action( 'woocommerce_account_my-review_endpoint', 'bbloomer_my_review_content' );
@@ -638,7 +624,6 @@ add_action( 'woocommerce_account_edit-account_endpoint', 'woocommerce_account_ed
 // 'woocommerce_account_add_payment_method'
 // 'woocommerce_account_edit_account'
 
-add_action( 'woocommerce_before_calculate_totals', 'custom_cart_items_prices', 10, 1 );
 function custom_cart_items_prices( $cart ) {
 
     if ( is_admin() && ! defined( 'DOING_AJAX' ) )
@@ -681,8 +666,9 @@ function custom_cart_items_prices( $cart ) {
             $product->post->post_title = $new_name;
     }
 }
+add_action( 'woocommerce_before_calculate_totals', 'custom_cart_items_prices', 10, 1 );
 
-function my_custom_js_css() {
+function custom_datetimepicker() {
     echo '<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>
@@ -763,6 +749,8 @@ function my_custom_js_css() {
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
 	';
 }
+add_action( 'wp_head', 'custom_datetimepicker' );
+
 /*
 echo '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -774,32 +762,73 @@ echo '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.
 	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.js"></script>
 	<script src="' . get_stylesheet_directory_uri() . '/xdsoft_datetimepicker/jquery.datetimepicker.full.min.js"></script>';
 */
-add_action( 'wp_head', 'my_custom_js_css' );
 
+/* Remove the Moment.js scripts */
 remove_action('wp_head', 'moment-js');
 remove_action('wp_head', 'moment-js-after'); 
 
-/**
- * @snippet       Redirect to Checkout Upon Add to Cart - WooCommerce
- * @how-to        Get CustomizeWoo.com FREE
- * @author        Rodolfo Melogli
- * @compatible    Woo 3.8
- * @donate $9     https://businessbloomer.com/bloomer-armada/
- */
-  
-add_filter( 'woocommerce_add_to_cart_redirect', 'bbloomer_redirect_checkout_add_cart' );
- 
-function bbloomer_redirect_checkout_add_cart() {
-   return wc_get_checkout_url();
+/* Redirect to checkout after add-to-cart */
+function redirect_checkout_add_cart() {
+  return wc_get_checkout_url();
 }
+add_filter( 'woocommerce_add_to_cart_redirect', 'redirect_checkout_add_cart' );
 
-add_filter( 'wc_add_to_cart_message', 'my_add_to_cart_function', 10, 2 ); 
-function my_add_to_cart_function( $message, $product_id ) { 
-    $message = sprintf(esc_html__('%s selected successfully.','woocommerce'), get_the_title( $product_id ) ); 
-    return $message; 
+/* Custom Add-to-Cart success message upon adding Service to cart */
+function custom_addtocart_message( $message, $product_id ) { //-, $booking_id ) {
+
+	// $booking = get_wc_booking( get_the_ID() );
+	
+	// if ( $booking->get_order() ) {
+	// 	$order_date = $booking->get_order()->get_date_created() ? $booking->get_order()->get_date_created()->date( 'Y-m-d H:i:s' ) : '';
+
+	// 	$appointment_time = date_i18n( wc_bookings_date_format(), strtotime( $order_date ) );
+	// } else {
+	// 	$appointment_time = date_i18n( wc_bookings_date_format(), strtotime( $booking->booking_date ) );
+	// }
+
+	global $woocommerce;
+	$cart_items = $woocommerce->cart->get_cart();
+
+	foreach($cart_items as $cart_item_key => $cart_item_value) {
+		$barber_name = $cart_item_value['data']->get_name();
+		$booking_service_data = $cart_item_value['addons'];
+		$booking_date = date('d F', strtotime($cart_item_value['booking']['_date']));
+		$booking_time = $cart_item_value['booking']['time'];
+	}
+	
+	$booking_services = '';
+
+	foreach($booking_service_data as $key => $booking_service) {
+		if ($key === array_key_last($booking_service_data) && $key !== array_key_first($booking_service_data)) $booking_services .= ' and ';
+		elseif ($key !== array_key_first($booking_service_data)) $booking_services .= ', ';
+
+		$booking_services .= '<span style="margin: 4px; font-weight: 500;">' . $booking_service['value'] . '</span>';
+	}
+
+	$message = 'Selected a ' . $booking_services . ' with ' . $barber_name . ' on ' . $booking_date . ' at ' . $booking_time;
+
+	return $message;
 }
+add_filter( 'wc_add_to_cart_message_html', 'custom_addtocart_message', 10, 2 );
 
-add_action( 'woocommerce_checkout_before_order_review_heading', 'bbloomer_checkout_step3' );
+// add_filter( 'wc_add_to_cart_message', 'custom_added_to_cart_msg', 10, 2 );
+// function custom_added_to_cart_msg( $message, $product_id ) { 
+//    // $message = sprintf(esc_html__('%s selected successfully.','woocommerce'), get_the_title( $product_id ) );
+// 		$message = 'Selected';
+// 		if(isset($_COOKIE['lastSearch'])) {
+// 			$last_search = json_decode($_COOKIE['lastSearch']);
+// 			$service_name = $last_search['service'];
+// 			$service_date = $last_search['date'];
+// 			$service_time = $last_search['time'];
+// 		}
+// 		if (!empty($service_name)) {
+// 			$message .= 'a'
+// 			wc_add_to_cart_message
+// 		}
+// 		$message = esc_html__('Selected a ' . $service_name . ' with ' . get_the_title( $product_id ) . ' at ' . $_COOKIE[$cookie_name]);
+//    return $message;
+// }
+
 function bbloomer_checkout_step3( $cart ) {
 
    	global $woocommerce;
@@ -813,17 +842,20 @@ function bbloomer_checkout_step3( $cart ) {
 		echo '<div class="jac-booking-date-time"><div class="booking-date">' . $p_booking_date . '</div><div class="booking-time">' . $p_booking_time . '</div></div>';
 	} 
 }
+add_action( 'woocommerce_checkout_before_order_review_heading', 'bbloomer_checkout_step3' );
 
-add_action('rest_api_init', 'add_routes');
-function add_routes()
-{
+function add_routes() {
 	register_rest_route('/v1', '/cw_function', array(
 		'methods' => 'GET',
 		'callback' => 'cw_function',
 	));
 }
+add_action('rest_api_init', 'add_routes');
 
-add_action( 'check_booking_time', 'cw_function' );
+/* This is a timed function that does the main calculation for triggering booking time emails, reminders, and the Twilio SMS.
+ * It is triggered by:
+ * - The 'check_booking_time' filter
+ * - CRON, on a schedule, at: /wp-admin/tools.php?page=crontrol_admin_manage_page */
 function cw_function($req) {
 	$code = $req->get_param('code');
 	if($code!="kaksje12uaj"){
@@ -970,8 +1002,9 @@ function cw_function($req) {
 
 	//wp_mail( 'ghjgjh0107@gmail.com', $jsonBooking[0]['status'], $customers[0]['billing']['phone'] );
 }
+add_action( 'check_booking_time', 'cw_function' );
 
-/*---TEMP-REMOVED-function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
+/*---@@@@TEMP-REMOVED-function calculate_distance($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'kilometers') {
 	$theta = $longitude1 - $longitude2; 
 	$distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2))) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))); 
 	$distance = acos($distance); 
@@ -986,6 +1019,10 @@ function cw_function($req) {
 	return (round($distance,2)); 
 }
 
+/* Complex system that calculates:
+ * - the distance from the Barber, to the searched location
+ * - removes Barber availability slots based on the distance away, or
+ * - whether the travel time is short enough * /
 function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 	
 	// Split html into array blocks
@@ -1101,7 +1138,6 @@ function edit_availability_slots_by_location( $available_blocks, $blocks ) {
 }
 add_filter( 'wc_bookings_get_time_slots_html', 'edit_availability_slots_by_location', 10, 2);
 
-
 // gets inputs and checks which ones have been selected, adds to the amount of time in javascript 
 // It needs to convert the javascript increase_time varibale into a php varibale variable
 // You then need to divide by 15 to get the amount of blocks it will take. 
@@ -1114,106 +1150,36 @@ function edit_length_of_booking($field_array) {
 	$total_time = 0;
 	echo <<<'EOD'
 	<script>
-	const times = {
-		"burst-fade": 30,
-		"crew-cut": 30,
-		"buzzcut": 15,
-		"beard-trim": 15,
-		"event-styling": 45,
-		"headshave": 15,
-		"kids-haircut": 30,
-		"taper": 30,
-		"porpadour": 45,
-		"head-+-beard": 60,
-		"hair-colour": 105,
-		"perm": 90,
-		"toupe": 90
-	}
-	document.addEventListener('DOMContentLoaded', function(event) {
-		let increase_time = 0;
-		const input_fields = document.querySelectorAll('input.wc-pao-addon-field');
-		for (key in input_fields) {
-			if (times[input_fields[key].value]) {
-				increase_time += times[input_fields[key].value];
-			}
+		const times = {
+			"burst-fade": 30,
+			"crew-cut": 30,
+			"buzzcut": 15,
+			"beard-trim": 15,
+			"event-styling": 45,
+			"headshave": 15,
+			"kids-haircut": 30,
+			"taper": 30,
+			"porpadour": 45,
+			"head-+-beard": 60,
+			"hair-colour": 105,
+			"perm": 90,
+			"toupe": 90
 		}
-	});
+		document.addEventListener('DOMContentLoaded', function(event) {
+			let increase_time = 0;
+			const input_fields = document.querySelectorAll('input.wc-pao-addon-field');
+			for (key in input_fields) {
+				if (times[input_fields[key].value]) {
+					increase_time += times[input_fields[key].value];
+				}
+			}
+		});
 	</script>
 	EOD;
 	
 	/*echo <<<'EOD'
 	<script>
 	document.addEventListener('DOMContentLoaded', function(event) {
-		// get the value of the start time
-		let increase_time = 0;
-		const input_fields = document.getElementsByTagName('input');
-		for (key in input_fields) {
-			if (input_fields[key].value == 'burst-fade') {
-				if (input_fields[key].checked != true) {
-					increase_time += 30;
-				}
-			}
-			else if (input_fields[key].value == 'crew-cut') {
-				if (input_fields[key].checked) {
-					increase_time += 30;
-				}
-			}
-			else if (input_fields[key].value == 'buzzcut') {
-				if (input_fields[key].checked) {
-					increase_time += 15;
-				}
-			}
-			else if (input_fields[key].value == 'beard-trim') {
-				if (input_fields[key].checked) {
-					increase_time += 15;
-				}
-			}
-			else if (input_fields[key].value == 'event-styling') {
-				if (input_fields[key].checked) {
-					increase_time += 45;
-				}
-			}
-			else if (input_fields[key].value == 'headshave') {
-				if (input_fields[key].checked) {
-					increase_time += 15;
-				}
-			}
-			else if (input_fields[key].value == 'kids-haircut') {
-				if (input_fields[key].checked) {
-					increase_time += 30;
-				}
-			}
-			else if (input_fields[key].value == 'taper') {
-				if (input_fields[key].checked) {
-					increase_time += 30;
-				}
-			}
-			else if (input_fields[key].value == 'porpadour') {
-				if (input_fields[key].checked) {
-					increase_time += 45;
-				}
-			}
-			else if (input_fields[key].value == 'head-+-beard') {
-				if (input_fields[key].checked) {
-					increase_time += 60;
-				}
-			}
-			else if (input_fields[key].value == 'hair-colour') {
-				if (input_fields[key].checked) {
-					increase_time += 105;
-				}
-			}
-			else if (input_fields[key].value == 'perm') {
-				if (input_fields[key].checked) {
-					increase_time += 90;
-				}
-			}
-			else if (input_fields[key].value == 'toup�e') {
-				if (input_fields[key].checked) {
-					increase_time += 90;
-				}
-			}
-		}
 		// this doesnt work yet, thought i could send the variable to the server and set it in php but it retrns null
 		$.ajax({
 			url: window.location, //window.location points to the current url. change is needed.
@@ -1245,7 +1211,7 @@ function edit_length_of_booking($field_array) {
 	return $field_array;
 }
 add_filter('booking_form_fields', 'edit_length_of_booking', 10, 1);
-
+add_filter('woocommerce_booking_form_get_posted_data', 'edit_length_of_booking', 10, 1);
 
 function edit_length_of_booking2($field_array) {
 	// $field_array['wc_bookings_field_duration']['max'] = 6;
@@ -1258,10 +1224,8 @@ function edit_length_of_booking2($field_array) {
 	// $field_array['_end_date']	=
 	return $field_array;
 }
-add_filter('woocommerce_booking_form_get_posted_data', 'edit_length_of_booking', 10, 1); 
 
 function brrad_geocode($street_address,$city,$state,$country){
-        
 	$street_address = str_replace(" ", "+", $street_address); //google doesn't like spaces in urls, but who does?
 	$city = str_replace(" ", "+", $city);
 	$state = str_replace(" ", "+", $state);
@@ -1290,14 +1254,13 @@ function brrad_geocode($street_address,$city,$state,$country){
 	}
 
 	$return = array(
-				'latitude'  => $latitude,
-				'longitude' => $longitude
-				);
+		'latitude'  => $latitude,
+		'longitude' => $longitude
+	);
 	return $return;
 }
 
 function distance($lat1, $lon1, $lat2, $lon2, $unit) {
-
 	$theta = $lon1 - $lon2;
 	$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
 	$dist = acos($dist);
@@ -1339,19 +1302,18 @@ function ml_woocommerce_email_footer( $email ) {
     // wc_get_template( $template, array( 'email_heading' => $email_heading ) );
 	wc_get_template( $template, array( 'email_id' => $email->id ) );
 }
-add_action( 'save_post_wc_booking', 'save_post_wc_booking', 10, 3 );
 
-function save_post_wc_booking( $post_id, \WP_Post $post, $update ) {
-
+/* Saves the latitude and longitude location to the Barber booking upon saving */
+function custom_save_booking( $post_id, \WP_Post $post, $update ) {
 	//Get customer's latitude and lontitude from COOKIE
 	$location = isset($_COOKIE['location_lat_long']) ? $_COOKIE['location_lat_long'] : false;
-	$location_latitutde = false;
-	$location_longtitude = false;
+	$location_latitude = false;
+	$location_longitude = false;
 	if($location){
 		$coord = explode(",",$location);
 		if(count($coord) == 2){
-			$location_latitutde = $coord[0];
-			$location_longtitude = $coord[1];
+			$location_latitude = $coord[0];
+			$location_longitude = $coord[1];
 		}
 		// else {
 		// 	echo 'testprint';
@@ -1359,25 +1321,25 @@ function save_post_wc_booking( $post_id, \WP_Post $post, $update ) {
 		// }
 	}
 
-	if($location_latitutde){
+	if($location_latitude){
 		if( ! get_post_meta( $post_id,'latitude', true ) ){
-			add_post_meta($post_id,'latitude',$location_latitutde);
+			add_post_meta($post_id,'latitude',$location_latitude);
 		}else{
-			update_post_meta($post_id,'latitude',$location_latitutde);
+			update_post_meta($post_id,'latitude',$location_latitude);
 		}
 	}
-	if($location_longtitude){
+	if($location_longitude){
 		if( ! get_post_meta( $post_id,'longitude', true ) ){
-			add_post_meta($post_id,'longitude',$location_longtitude);
+			add_post_meta($post_id,'longitude',$location_longitude);
 		}else{
-			update_post_meta($post_id,'longitude',$location_longtitude);
+			update_post_meta($post_id,'longitude',$location_longitude);
 		}
 	}
 }
+add_action( 'save_post_wc_booking', 'custom_save_booking', 10, 3 );
 
-add_filter( 'calculate_buffer_time','calculate_buffer_time_filter',10,6);
-
-function calculate_buffer_time_filter($buffertime,$latitude,$longitude,$booking_latitude,$booking_longitude,$duration){
+/* Calculates the buffering time needed for a Barber between appointments, to account for travel time, or setup and setdown, by removing Barber availability slots based on the travel distance */
+function custom_calculate_buffer_time($buffertime,$latitude,$longitude,$booking_latitude,$booking_longitude,$duration){
 	if($latitude && $longitude && $booking_latitude && $booking_longitude){
 		$distance = distance($latitude,$longitude,$booking_latitude,$booking_longitude,"K");
 		$speed = 50;
@@ -1393,6 +1355,7 @@ function calculate_buffer_time_filter($buffertime,$latitude,$longitude,$booking_
 
 	return $buffertime;
 }
+add_filter( 'calculate_buffer_time','custom_calculate_buffer_time',10,6);
 
 function calculate_totals($wc_price){
 	// Adds the fixed costs to the total
@@ -1438,8 +1401,6 @@ add_action('woocommerce_cart_calculate_fees', function() {
 	WC()->cart->add_fee(__('Booking Fee', 'txtdomain'), 1);
 });
 
-add_action( 'woocommerce_review_order_before_payment', 'bbloomer_privacy_message_below_checkout_button' );
- 
 function bbloomer_privacy_message_below_checkout_button() {
 	if (is_admin() && !defined('DOING_AJAX')) {
 		return;
@@ -1448,3 +1409,4 @@ function bbloomer_privacy_message_below_checkout_button() {
 	$percentage_fee = (WC()->cart->get_cart_contents_total() + 1) * $percentage;
   	echo '<p style="text-align: right;"><small>8% service fee included: $' . $percentage_fee . '</small></p>';
 }
+add_action( 'woocommerce_review_order_before_payment', 'bbloomer_privacy_message_below_checkout_button' );
