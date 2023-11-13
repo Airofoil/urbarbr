@@ -118,7 +118,7 @@
 			
 			<?php if(!$show_brife_product_tile){ ?>
 				<div class="jac-products-header-top-right">
-					<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-primary">Visit Barber</a>
+					<a href="<?php echo esc_url( get_permalink() ); ?>" class="jac-visit-barber btn btn-color-primary">Book Barber</a>
 				</div>
 			<?php } ?>
 		</div>
