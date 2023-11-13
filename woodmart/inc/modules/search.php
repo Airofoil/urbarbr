@@ -297,6 +297,11 @@ if( ! function_exists( 'woodmart_search_form' ) ) {
 									}
 								});
 							}, 60));
+
+							// Redirect 'Event Styling' to Contact-Us page - 24/10/23:
+							$('.booking-services-search').on('change', function(){ //-console.log($(this).val());
+								if ($(this).val() == 'Event_Styling') window.location = "/contact-us";
+							});
 						});
 
 						const client = {
